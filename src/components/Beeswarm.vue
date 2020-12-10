@@ -20,7 +20,7 @@ export default {
 	},
 	methods: {
 		drawChart: function () {
-			const margin = { top: 10, right: 30, bottom: 30, left: 50 };
+			const margin = { top: 10, right: 30, bottom: 30, left: 60 };
 			const width = this.width - margin.left - margin.right;
 			const height = this.height - margin.top - margin.bottom;
 
@@ -45,7 +45,7 @@ export default {
 
 			const xScale = d3
 				.scaleLinear()
-				.domain([-0.01, d3.max(filteredData, (d) => d.percent_hums)])
+				.domain([-0.003, d3.max(filteredData, (d) => d.percent_hums)])
 				.range([0, width]);
 
 			const yScale = d3
@@ -94,9 +94,9 @@ export default {
 				.attr("x", -album_cover_size)
 				.attr("y", -album_cover_size / 2);
 
-			// * OPTION: Add jitter by uncommenting code:
-			// const jitterWidth = height / 50;
-			const jitterWidth = 0;
+			// * OPTION: Add/remove jitter by toggling commented code:
+			const jitterWidth = height / 50;
+			// const jitterWidth = 0;
 
 			// Add dots
 			svg

@@ -78,7 +78,10 @@ export default {
 				.data(data)
 				.enter()
 				.append("circle")
-				.attr("cx", (d) => xScale(d.n_hums))
+				.attr("cx", (d) =>
+					// Here, add random jitter if number of hums is 0
+					d.n_hums == 0 ? xScale(d.n_hums + Math.random()) : xScale(d.n_hums)
+				)
 				.attr("cy", (d) => yScale(d.n_regulars))
 				.style("fill", (d) => colorScale(d.album_name))
 				.attr("r", 7.5)
