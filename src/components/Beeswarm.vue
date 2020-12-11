@@ -99,7 +99,12 @@ export default {
 			this.width = width;
 			this.height = height;
 
-			const album_cover_size = height / this.major_albums.length;
+			// Select whichever is smaller; the chart width / data.length (so each square fits perfectly)
+			// Or the left margin (rect size should never be greater than margin.left lest overflow)
+			const album_cover_size = Math.min(
+				height / this.major_albums.length,
+				margin.left
+			);
 			this.jitterWidth = 0; //*Optional: remove jitter by making this 0
 
 			// Append the svg object to the div
@@ -113,11 +118,9 @@ export default {
 
 			let data = this.data;
 
-			// data.sort((a,b) => d3.descending(a.percent_hums, b.percent_hums))
 			let filteredData = data.filter((d) =>
 				this.major_albums.includes(d.album_name)
 			);
-			// console.log(data);
 
 			this.xScale = d3
 				.scaleLinear()
@@ -130,7 +133,6 @@ export default {
 				.range([height, 0])
 				.padding(0.7); // Padding around bounds
 
-			console.log(this.major_albums);
 			this.colorScale = d3
 				.scaleOrdinal()
 				.domain(filteredData.map((d) => d.album_name))
@@ -147,13 +149,13 @@ export default {
 						.ticks(4)
 						.tickSizeOuter(0)
 				)
-				.attr("class", "x axis transparent-axis");
+				.attr("class", "x axis no-ticks");
 
 			// Y axis
 			svg
 				.append("g")
 				.call(d3.axisLeft(this.yScale).tickSize(0))
-				.attr("class", "y axis");
+				.attr("class", "y axis no-line");
 
 			svg.select(".y.axis").selectAll("text").remove();
 
@@ -197,7 +199,11 @@ export default {
 
 <style src="vue-scrollama/dist/vue-scrollama.css"></style>
 <style>
-.transparent-axis g.tick line {
+.no-ticks g.tick line {
+	stroke: transparent;
+}
+
+.no-line path {
 	stroke: transparent;
 }
 
