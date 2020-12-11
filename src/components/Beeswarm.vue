@@ -1,10 +1,32 @@
 <template>
-	<div id="beeswarm"></div>
+	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
+		<div slot="graphic" class="graphic" id="beeswarm"></div>
+		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
+			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
+			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
+			molestias libero?
+		</div>
+		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
+			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
+			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
+			molestias libero?
+		</div>
+		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
+			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
+			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
+			molestias libero?
+		</div>
+	</Scrollama>
 </template>
 
 <script>
 import * as d3 from "d3";
 import debounce from "lodash/debounce";
+import "intersection-observer";
+import Scrollama from "vue-scrollama";
 
 export default {
 	name: "Scatterplot",
@@ -12,19 +34,73 @@ export default {
 		data: Array,
 		major_albums: Array,
 		album_data: Array,
-		width: Number,
-		height: Number,
+		containerWidth: Number,
+		containerHeight: Number,
 	},
 	mounted() {
-		this.drawChart();
+		this.setupChart();
+		this.regularCircles();
+	},
+	components: {
+		Scrollama,
+	},
+	data() {
+		return {
+			circles: null,
+			xScale: null,
+			yScale: null,
+			colorScale: null,
+			jitterWidth: null,
+			width: null,
+			height: null,
+			currStep: null,
+		};
 	},
 	methods: {
-		drawChart: function () {
+		stepEnterHandler({ element, index, direction }) {
+			this.currStep = index;
+			console.log(element, index, direction);
+			if (index == 0) {
+				this.regularCircles();
+			}
+			if (index == 1) {
+				this.highlightCircles();
+			}
+			if (index == 2) {
+				this.regularCircles();
+			}
+		},
+		regularCircles: function () {
+			const { circles, xScale, yScale, colorScale, jitterWidth } = this;
+
+			circles
+				.transition()
+				.duration(1000)
+				.attr("cx", (d) => xScale(d.percent_hums))
+				.attr("cy", (d) =>
+					Math.random() >= 0.5 // Randomly put half of dots above line, half below
+						? yScale(d.album_name) - Math.random() * jitterWidth
+						: yScale(d.album_name) + Math.random() * jitterWidth
+				)
+				.attr("r", 7.5)
+				.attr("stroke", "black")
+				.attr("opacity", 0.8)
+				.attr("fill", (d) => colorScale(d.album_name));
+		},
+		highlightCircles: function () {
+			const { circles } = this;
+			circles.transition().duration(1000).attr("fill", "black");
+		},
+		setupChart: function () {
 			const margin = { top: 10, right: 30, bottom: 30, left: 60 };
-			const width = this.width - margin.left - margin.right;
-			const height = this.height - margin.top - margin.bottom;
+			const width = this.containerWidth - margin.left - margin.right;
+			const height = this.containerHeight - margin.top - margin.bottom;
+
+			this.width = width;
+			this.height = height;
 
 			const album_cover_size = height / this.major_albums.length;
+			this.jitterWidth = 0; //*Optional: remove jitter by making this 0
 
 			// Append the svg object to the div
 			var svg = d3
@@ -41,21 +117,21 @@ export default {
 			let filteredData = data.filter((d) =>
 				this.major_albums.includes(d.album_name)
 			);
-			console.log(data);
+			// console.log(data);
 
-			const xScale = d3
+			this.xScale = d3
 				.scaleLinear()
 				.domain([-0.003, d3.max(filteredData, (d) => d.percent_hums)])
 				.range([0, width]);
 
-			const yScale = d3
+			this.yScale = d3
 				.scalePoint()
 				.domain(filteredData.map((d) => d.album_name))
 				.range([height, 0])
 				.padding(0.7); // Padding around bounds
 
 			console.log(this.major_albums);
-			const colorScale = d3
+			this.colorScale = d3
 				.scaleOrdinal()
 				.domain(filteredData.map((d) => d.album_name))
 				.range(d3.schemeSet3);
@@ -66,7 +142,7 @@ export default {
 				.attr("transform", "translate(0," + height + ")")
 				.call(
 					d3
-						.axisBottom(xScale)
+						.axisBottom(this.xScale)
 						.tickFormat(d3.format(".0%"))
 						.ticks(4)
 						.tickSizeOuter(0)
@@ -76,7 +152,7 @@ export default {
 			// Y axis
 			svg
 				.append("g")
-				.call(d3.axisLeft(yScale).tickSize(0))
+				.call(d3.axisLeft(this.yScale).tickSize(0))
 				.attr("class", "y axis");
 
 			svg.select(".y.axis").selectAll("text").remove();
@@ -94,32 +170,20 @@ export default {
 				.attr("x", -album_cover_size)
 				.attr("y", -album_cover_size / 2);
 
-			// * OPTION: Add/remove jitter by toggling commented code:
-			const jitterWidth = height / 50;
-			// const jitterWidth = 0;
-
 			// Add dots
-			svg
+			const circles = svg
 				.append("g")
-				.selectAll("dot")
+				.selectAll("circle")
 				.data(filteredData)
 				.enter()
-				.append("circle")
-				.attr("class", "dot")
-				.attr("cx", (d) => xScale(d.percent_hums))
-				.attr("cy", (d) =>
-					Math.random() >= 0.5 // Randomly put half of dots above line, half below
-						? yScale(d.album_name) - Math.random() * jitterWidth
-						: yScale(d.album_name) + Math.random() * jitterWidth
-				)
-				.attr("r", 7.5)
-				.attr("stroke", "black")
-				.attr("opacity", 0.8)
-				.attr("fill", (d) => colorScale(d.album_name));
+				.append("circle");
+
+			this.circles = circles;
 		},
 		watchResize: function () {
 			d3.select("#beeswarm > svg").remove();
-			this.drawChart();
+			this.setupChart();
+			this.regularCircles();
 		},
 	},
 	created() {
@@ -131,6 +195,7 @@ export default {
 };
 </script>
 
+<style src="vue-scrollama/dist/vue-scrollama.css"></style>
 <style>
 .transparent-axis g.tick line {
 	stroke: transparent;
@@ -138,5 +203,29 @@ export default {
 
 g.tick text {
 	font-size: 1rem;
+}
+
+.graphic {
+	height: 100vh;
+	border: 1px solid #ccc;
+	background-color: white;
+	font-size: 10rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.step {
+	padding: 15vh 0;
+	min-width: 300px;
+	width: 50vw;
+	margin: 0 auto 30vh;
+	background-color: whitesmoke;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 1px solid black;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 </style>

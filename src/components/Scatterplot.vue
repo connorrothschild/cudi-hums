@@ -1,10 +1,32 @@
 <template>
-	<div id="scatterplot"></div>
+	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
+		<div slot="graphic" class="graphic" id="scatterplot"></div>
+		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
+			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
+			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
+			molestias libero?
+		</div>
+		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
+			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
+			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
+			molestias libero?
+		</div>
+		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
+			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
+			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
+			molestias libero?
+		</div>
+	</Scrollama>
 </template>
 
 <script>
 import * as d3 from "d3";
 import debounce from "lodash/debounce";
+import "intersection-observer";
+import Scrollama from "vue-scrollama";
 
 export default {
 	name: "Scatterplot",
@@ -12,17 +34,43 @@ export default {
 		data: Array,
 		major_albums: Array,
 		album_data: Array,
-		width: Number,
-		height: Number,
+		containerWidth: Number,
+		containerHeight: Number,
+	},
+	components: {
+		Scrollama,
 	},
 	mounted() {
-		this.drawChart();
+		this.setupChart();
+	},
+	data() {
+		return {
+			width: null,
+			height: null,
+			currStep: null,
+		};
 	},
 	methods: {
-		drawChart: function () {
+		stepEnterHandler({ element, index, direction }) {
+			this.currStep = index;
+			console.log(element, index, direction);
+			if (index == 0) {
+				this.regularCircles();
+			}
+			if (index == 1) {
+				this.highlightCircles();
+			}
+			if (index == 2) {
+				this.regularCircles();
+			}
+		},
+		setupChart: function () {
 			const margin = { top: 10, right: 30, bottom: 30, left: 60 };
-			const width = this.width - margin.left - margin.right;
-			const height = this.height - margin.top - margin.bottom;
+			const width = this.containerWidth - margin.left - margin.right;
+			const height = this.containerHeight - margin.top - margin.bottom;
+
+			this.width = width;
+			this.height = height;
 
 			// Append the svg object to the div
 			var svg = d3
@@ -78,6 +126,8 @@ export default {
 				.data(data)
 				.enter()
 				.append("circle")
+				.transition()
+				.duration(1000)
 				.attr("cx", (d) =>
 					// Here, add random jitter if number of hums is 0
 					d.n_hums == 0 ? xScale(d.n_hums + Math.random()) : xScale(d.n_hums)
@@ -90,7 +140,7 @@ export default {
 		},
 		watchResize: function () {
 			d3.select("#scatterplot > svg").remove();
-			this.drawChart();
+			this.setupChart();
 		},
 	},
 	created() {
