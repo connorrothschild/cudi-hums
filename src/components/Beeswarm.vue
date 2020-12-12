@@ -14,6 +14,55 @@
 			molestias libero?
 		</div>
 		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
+			<p class="mb-6">
+				This is the album's introduction, titled
+				<span class="highlight-word">"Beautiful Trip."</span> The intro track
+				lasts a mere 37 seconds, and around half of that duration is spent
+				humming. Clearly, this is a poor example for our purposes.
+			</p>
+			<div>
+				<iframe
+					src="https://open.spotify.com/embed/track/4IIuCotvqijraSdnVLaFnM"
+					width="300"
+					height="80"
+					frameborder="0"
+					allowtransparency="true"
+					allow="encrypted-media"
+				></iframe>
+			</div>
+		</div>
+		<div class="step" :class="{ active: 3 == currStep }" data-step-no="3">
+			<p class="mb-3">
+				<span class="highlight-word">Sept. 16</span> is a better example of
+				Cudi's famous hums.
+			</p>
+			<div>
+				<iframe
+					src="https://open.spotify.com/embed/track/3Uw2se3aQU1UFrpRBvBnB4"
+					width="300"
+					height="80"
+					frameborder="0"
+					allowtransparency="true"
+					allow="encrypted-media"
+				></iframe>
+			</div>
+			<p class="mt-3">
+				In this track, Cudi ____ ____ ____. Near the middle of the song, he
+				alternates between various ad-libs such as 'na-na-na', 'hmmm', and
+				'ooh.'
+				<br /><span class="has-text-weight-semibold"
+					>In total, the track includes 84 hums (out of 324 total words).</span
+				>
+			</p>
+		</div>
+
+		<div class="step" :class="{ active: 4 == currStep }" data-step-no="4">
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
+			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
+			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
+			molestias libero?
+		</div>
+		<div class="step" :class="{ active: 5 == currStep }" data-step-no="5">
 			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
 			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
 			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
@@ -39,7 +88,7 @@ export default {
 	},
 	mounted() {
 		this.setupChart();
-		this.regularCircles();
+		// this.transitionCircles();
 	},
 	components: {
 		Scrollama,
@@ -54,27 +103,57 @@ export default {
 			width: null,
 			height: null,
 			currStep: null,
+			alreadyTriggered: false,
+			defaultCircleRadius: 7.5,
 		};
 	},
 	methods: {
 		stepEnterHandler({ element, index, direction }) {
 			this.currStep = index;
-			console.log(element, index, direction);
-			if (index == 0) {
+			// THE VERY FIRST TIME (AND ONLY GOING DOWN), TRANSITION
+			if (index == 0 && direction == "down" && this.alreadyTriggered == false) {
+				this.transitionCircles();
+				this.alreadyTriggered = true;
+			}
+			if (index == 0 && direction == "up") {
 				this.regularCircles();
 			}
 			if (index == 1) {
-				this.highlightCircles();
+				this.highlightAlbum("Man on the Moon III: The Chosen");
 			}
 			if (index == 2) {
+				this.highlightSong("Beautiful Trip");
+			}
+			if (index == 3) {
+				this.highlightSong("Sept. 16");
+			}
+			if (index == 4) {
 				this.regularCircles();
 			}
+		},
+		transitionCircles: function () {
+			const { circles, xScale, yScale, colorScale, jitterWidth } = this;
+
+			circles
+				.attr("cx", 0)
+				.attr("cy", (d) =>
+					Math.random() >= 0.5 // Randomly put half of dots above line, half below
+						? yScale(d.album_name) - Math.random() * jitterWidth
+						: yScale(d.album_name) + Math.random() * jitterWidth
+				)
+				.attr("r", this.defaultCircleRadius)
+				.attr("stroke", "black")
+				.attr("opacity", 0.8)
+				.attr("fill", (d) => colorScale(d.album_name))
+				.transition("transitionCircles")
+				.duration(1000)
+				.attr("cx", (d) => xScale(d.percent_hums));
 		},
 		regularCircles: function () {
 			const { circles, xScale, yScale, colorScale, jitterWidth } = this;
 
 			circles
-				.transition()
+				.transition("regularCircles")
 				.duration(1000)
 				.attr("cx", (d) => xScale(d.percent_hums))
 				.attr("cy", (d) =>
@@ -82,14 +161,34 @@ export default {
 						? yScale(d.album_name) - Math.random() * jitterWidth
 						: yScale(d.album_name) + Math.random() * jitterWidth
 				)
-				.attr("r", 7.5)
+				.attr("r", this.defaultCircleRadius)
 				.attr("stroke", "black")
 				.attr("opacity", 0.8)
 				.attr("fill", (d) => colorScale(d.album_name));
 		},
-		highlightCircles: function () {
+		highlightAlbum: function (album) {
 			const { circles } = this;
-			circles.transition().duration(1000).attr("fill", "black");
+			circles
+				.transition("highlightAlbum")
+				.duration(1000)
+				.attr("fill", (d) => (d.album_name == album ? "#D96481" : "#4C6DBC"))
+				.attr("stroke", (d) => (d.album_name == album ? "black" : "white"))
+				.attr("opacity", (d) => (d.album_name == album ? 1 : 0.3))
+				.attr("r", this.defaultCircleRadius);
+		},
+		highlightSong: function (song) {
+			const { circles } = this;
+			circles
+				.transition("highlightSong")
+				.duration(1000)
+				.attr("fill", (d) => (d.song_name == song ? "#D96481" : "#4C6DBC"))
+				.attr("stroke", (d) => (d.song_name == song ? "black" : "white"))
+				.attr("opacity", (d) => (d.song_name == song ? 1 : 0.3))
+				.attr("r", (d) =>
+					d.song_name == song
+						? this.defaultCircleRadius * 2
+						: this.defaultCircleRadius
+				);
 		},
 		setupChart: function () {
 			const margin = { top: 10, right: 30, bottom: 30, left: 60 };
@@ -116,26 +215,28 @@ export default {
 				.append("g")
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-			let data = this.data;
-
-			let filteredData = data.filter((d) =>
+			let data = this.data.filter((d) =>
 				this.major_albums.includes(d.album_name)
 			);
 
 			this.xScale = d3
 				.scaleLinear()
-				.domain([-0.003, d3.max(filteredData, (d) => d.percent_hums)])
+				.domain([-0.003, d3.max(data, (d) => d.percent_hums)])
 				.range([0, width]);
 
 			this.yScale = d3
 				.scalePoint()
-				.domain(filteredData.map((d) => d.album_name))
+				.domain(
+					this.album_data
+						.sort((a, b) => d3.ascending(a.percent_hums, b.percent_hums))
+						.map((d) => d.album_name)
+				)
 				.range([height, 0])
 				.padding(0.7); // Padding around bounds
 
 			this.colorScale = d3
 				.scaleOrdinal()
-				.domain(filteredData.map((d) => d.album_name))
+				.domain(data.map((d) => d.album_name))
 				.range(d3.schemeSet3);
 
 			// X axis
@@ -162,7 +263,11 @@ export default {
 			svg
 				.select(".y.axis")
 				.selectAll(".tick")
-				.data(this.album_data)
+				.data([
+					...this.album_data.sort((a, b) =>
+						d3.ascending(a.percent_hums, b.percent_hums)
+					),
+				])
 				.append("svg:image")
 				.attr("xlink:href", function (d) {
 					return d.album_cover_art_url;
@@ -176,7 +281,7 @@ export default {
 			const circles = svg
 				.append("g")
 				.selectAll("circle")
-				.data(filteredData)
+				.data(data)
 				.enter()
 				.append("circle");
 
@@ -185,7 +290,7 @@ export default {
 		watchResize: function () {
 			d3.select("#beeswarm > svg").remove();
 			this.setupChart();
-			this.regularCircles();
+			this.transitionCircles();
 		},
 	},
 	created() {
@@ -209,29 +314,5 @@ export default {
 
 g.tick text {
 	font-size: 1rem;
-}
-
-.graphic {
-	height: 100vh;
-	border: 1px solid #ccc;
-	background-color: white;
-	font-size: 10rem;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.step {
-	padding: 15vh 0;
-	min-width: 300px;
-	width: 50vw;
-	margin: 0 auto 30vh;
-	background-color: whitesmoke;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	box-shadow: 1px solid black;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 }
 </style>

@@ -8,10 +8,8 @@
 				(album_hums.length > 0)
 			"
 		>
-			<Scatterplot
-				:data="song_hums"
-				:major_albums="major_albums"
-				:album_data="album_hums"
+			<Barchart
+				:data="album_hums"
 				:containerWidth="width"
 				:containerHeight="height"
 			/>
@@ -22,8 +20,10 @@
 				:containerWidth="width"
 				:containerHeight="height"
 			/>
-			<Barchart
-				:data="album_hums"
+			<Scatterplot
+				:data="song_hums"
+				:major_albums="major_albums"
+				:album_data="album_hums"
 				:containerWidth="width"
 				:containerHeight="height"
 			/>
@@ -77,6 +77,7 @@ export default {
 			d.sum_hums = +d.sum_hums;
 			d.sum_regulars = +d.sum_regulars;
 			d.percent_hums = +d.percent_hums;
+			d.year = +d.year;
 		});
 		album_hums.sort((a, b) => d3.descending(a.percent_hums, b.percent_hums));
 		this.album_hums = album_hums;
@@ -128,7 +129,7 @@ text {
 }
 
 .step {
-	padding: 15vh 5vh;
+	padding: 10vh 5vh;
 	min-width: 300px;
 	width: 50%;
 	margin: 0 auto 50vh;
@@ -137,6 +138,7 @@ text {
 	border-radius: 5px;
 	box-shadow: 1px solid black;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	color: #ccc;
@@ -144,5 +146,12 @@ text {
 
 .step.active {
 	color: black;
+}
+
+.highlight-word {
+	background: #d96481;
+	padding: 5px;
+	border-radius: 3px;
+	color: white;
 }
 </style>

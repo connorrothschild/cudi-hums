@@ -17,7 +17,8 @@ major_albums <-
     "Indicud",
     "Man on the Moon: The End of Day",
     "A Kid Named Cudi",
-    "KiD CuDi presents SATELLITE FLIGHT: The journey to Mother Moon"
+    "KiD CuDi presents SATELLITE FLIGHT: The journey to Mother Moon",
+    "Man on the Moon III: The Chosen"
   )
 
 album_id_lookup <- hums %>% distinct(album_name, album_id)
@@ -41,6 +42,7 @@ for (row in 1:nrow(albums)) {
   }
 }
 
-final <- left_join(albums, all_album_meta)
+final <- left_join(albums, all_album_meta) %>% 
+  mutate(year = lubridate::year(album_release_date))
 
 readr::write_csv(final, here::here('public/data/album_hums.csv'))

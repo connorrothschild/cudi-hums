@@ -54,15 +54,15 @@ export default {
 		stepEnterHandler({ element, index, direction }) {
 			this.currStep = index;
 			console.log(element, index, direction);
-			if (index == 0) {
-				this.regularCircles();
-			}
-			if (index == 1) {
-				this.highlightCircles();
-			}
-			if (index == 2) {
-				this.regularCircles();
-			}
+			// if (index == 0) {
+			// 	this.regularCircles();
+			// }
+			// if (index == 1) {
+			// 	this.highlightCircles();
+			// }
+			// if (index == 2) {
+			// 	this.regularCircles();
+			// }
 		},
 		setupChart: function () {
 			const margin = { top: 10, right: 30, bottom: 30, left: 60 };

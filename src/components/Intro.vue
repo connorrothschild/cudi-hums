@@ -1,29 +1,50 @@
 <template>
-	<section class="hero is-black is-fullheight has-text-centered">
-		<div class="hero-body">
-			<div class="container">
-				<div class="is-inline-flex place-items-center">
-					<figure class="image is-inline-block is-96x132">
-						<img class="is-inline-block shake" src="../assets/cudi.png" />
-					</figure>
-					<h1 class="title has-text-weight-light ml-3">
-						CLEVER TITLE GOES HERE
-					</h1>
+	<div>
+		<section class="hero is-black is-fullheight has-text-centered">
+			<div class="hero-body">
+				<div class="container">
+					<div class="is-inline-flex place-items-center">
+						<figure class="image is-inline-block is-96x132">
+							<img class="is-inline-block shake" src="../assets/cudi.png" />
+						</figure>
+						<h1 class="title has-text-weight-light ml-3">hmmmmmmmm</h1>
+					</div>
+					<h2 class="heading is-size-3 has-text-weight-semibold">
+						<span class="highlight-word"> How Much Does Kid Cudi Hum?</span>
+					</h2>
+					<p class="mt-6">First bit of intro text here...</p>
 				</div>
-				<div class="container is-max-desktop">
-					<p class="content my-3">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-						est ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
-						repellat quo tenetur molestias inventore, dolorum corporis, unde,
-						nobis nisi officia quos!
-					</p>
-				</div>
-				<h2 class="heading is-size-3 has-text-weight-semibold">
-					How Much Does Kid Cudi Hum?
-				</h2>
+			</div>
+		</section>
+		<div class="section hero is-black">
+			<div class="container is-max-desktop">
+				<p class="content my-3">
+					Kid Cudi dolor sit amet consectetur adipisicing elit. Quisquam est
+					ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
+					repellat quo tenetur molestias inventore, dolorum corporis, unde,
+					nobis nisi officia quos!
+				</p>
+				<p class="content my-3">
+					Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam est
+					ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
+					repellat quo tenetur molestias inventore, dolorum corporis, unde,
+					nobis nisi officia quos!
+				</p>
+				<p class="content my-3">
+					Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam est
+					ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
+					repellat quo tenetur molestias inventore, dolorum corporis, unde,
+					nobis nisi officia quos!
+				</p>
+				<p class="content my-3">
+					Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam est
+					ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
+					repellat quo tenetur molestias inventore, dolorum corporis, unde,
+					nobis nisi officia quos!
+				</p>
 			</div>
 		</div>
-	</section>
+	</div>
 </template>
 
 <script>
@@ -66,5 +87,15 @@ export default {
 .is-96x132 {
 	width: 92px;
 	height: 136px;
+}
+
+p:first-child:first-letter {
+	float: left;
+	font-family: Georgia;
+	font-size: 55px;
+	line-height: 40px;
+	padding-top: 4px;
+	padding-right: 8px;
+	padding-left: 3px;
 }
 </style>
