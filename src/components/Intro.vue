@@ -1,22 +1,24 @@
 <template>
-	<div>
-		<section class="hero is-black is-fullheight has-text-centered">
+	<div class="is-gradient">
+		<section class="hero is-fullheight has-text-centered">
 			<div class="hero-body">
 				<div class="container">
 					<div class="is-inline-flex place-items-center">
 						<figure class="image is-inline-block is-96x132">
 							<img class="is-inline-block shake" src="../assets/cudi.png" />
 						</figure>
-						<h1 class="title has-text-weight-light ml-3">hmmmmmmmm</h1>
+						<h1 class="title has-text-weight-light ml-3 has-text-black">
+							hmmmmmmmm
+						</h1>
 					</div>
 					<h2 class="heading is-size-3 has-text-weight-semibold">
-						<span class="highlight-word"> How Much Does Kid Cudi Hum?</span>
+						How Much Does Kid Cudi Hum?
 					</h2>
 					<p class="mt-6">First bit of intro text here...</p>
 				</div>
 			</div>
 		</section>
-		<div class="section hero is-black">
+		<div class="section">
 			<div class="container is-max-desktop">
 				<p class="content my-3">
 					Kid Cudi dolor sit amet consectetur adipisicing elit. Quisquam est
@@ -97,5 +99,9 @@ p:first-child:first-letter {
 	padding-top: 4px;
 	padding-right: 8px;
 	padding-left: 3px;
+}
+
+.is-gradient {
+	background-image: linear-gradient(#4c6dbc, #f5f5f5);
 }
 </style>

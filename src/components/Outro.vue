@@ -1,12 +1,12 @@
 <template>
-	<div>
-		<section class="hero is-dark is-fullheight has-text-centered">
+	<div class="is-gradient-reverse">
+		<section class="hero is-fullheight has-text-centered">
 			<div class="hero-body">
 				<div class="container">
 					<figure class="image is-inline-block is-96x96">
 						<img class="is-inline-block" src="../assets/cudi.png" />
 					</figure>
-					<h1 class="title has-text-weight-light mt-5">
+					<h1 class="title has-text-weight-light mt-5 has-text-black">
 						Awesome outro content goes here.
 					</h1>
 					<h2 class="heading is-size-3 has-text-weight-semibold">
@@ -25,4 +25,7 @@ export default {
 </script>
 
 <style scoped>
+.is-gradient-reverse {
+	background-image: linear-gradient(#f5f5f5, #4c6dbc);
+}
 </style>

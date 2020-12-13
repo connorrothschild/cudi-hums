@@ -62,8 +62,11 @@ export default {
 		};
 	},
 	async mounted() {
-		this.width = window.innerWidth * 0.9;
-		this.height = window.innerHeight * 0.75;
+		this.width =
+			window.innerWidth < 1000
+				? window.innerWidth * 0.9
+				: window.innerWidth * 0.5;
+		this.height = window.innerHeight * 0.9;
 		const song_hums = await d3.csv("./data/song_hums.csv");
 		song_hums.forEach((d) => {
 			d.n_hums = +d.n_hums;
@@ -84,11 +87,17 @@ export default {
 
 		const major_albums = album_hums.map((d) => d.album_name);
 		this.major_albums = major_albums;
+
+		console.log(album_hums);
+		console.log(song_hums);
 	},
 	methods: {
 		watchResize: function () {
-			this.width = window.innerWidth * 0.9;
-			this.height = window.innerHeight * 0.75;
+			this.width =
+				window.innerWidth < 1000
+					? window.innerWidth * 0.9
+					: window.innerWidth * 0.5;
+			this.height = window.innerHeight * 0.9;
 		},
 	},
 	created() {
@@ -119,39 +128,53 @@ text {
 
 /* SCROLLAMA */
 .graphic {
-	height: 100vh;
+	/* height: 50%; */
 	border: none;
-	background-color: whitesmoke;
-	font-size: 10rem;
+	background-color: whitesmoke; /* Should be same as #app background-color
+	/* font-size: 10rem; */
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
 .step {
-	padding: 10vh 5vh;
+	padding: 2.5%;
 	min-width: 300px;
-	width: 50%;
+	width: 60%;
 	margin: 0 auto 50vh;
 	background-color: whitesmoke;
 	border: 1px solid #ccc;
-	border-radius: 5px;
-	box-shadow: 1px solid black;
+	/* border-radius: 3px; */
+	box-shadow: 1px 1px 1px 1px #ccc;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	color: #ccc;
+	text-align: center;
+	/* opacity: 0.9; */
+	line-height: 1.6;
 }
 
 .step.active {
 	color: black;
+	border-left: 2px solid #d96481;
 }
 
-.highlight-word {
+.highlight-text {
 	background: #d96481;
-	padding: 5px;
+	font-weight: 600;
+	padding: 3px;
 	border-radius: 3px;
 	color: white;
+	/* white-space: nowrap; */
+}
+
+.blue {
+	background: #4c6dbc;
+}
+
+rect {
+	stroke: black;
 }
 </style>

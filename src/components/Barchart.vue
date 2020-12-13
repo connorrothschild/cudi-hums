@@ -2,22 +2,27 @@
 	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
 		<div slot="graphic" class="graphic" id="barchart"></div>
 		<div class="step" :class="{ active: 0 == currentStep }" data-step-no="0">
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
-			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
-			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
-			molestias libero?
+			<p>The first way to analyze Cudi hums is by album...</p>
 		</div>
 		<div class="step" :class="{ active: 1 == currentStep }" data-step-no="1">
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
-			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
-			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
-			molestias libero?
+			<p>
+				Most recently, Kid Cudi came out with his __th studio album,
+				<span class="highlight-text">Man on the Moon III: The Chosen</span>.
+				<br />Not only is this album Cudi's most recent, it also has the
+				greatest proportion of hums.
+			</p>
 		</div>
 		<div class="step" :class="{ active: 2 == currentStep }" data-step-no="2">
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
-			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
-			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
-			molestias libero?
+			<p>
+				And by organizing the albums by their release year, it becomes evident
+				that Kid Cudi has been humming more and more as his discography has
+				developed.
+				<br />
+				With the notable exception of
+				<span class="highlight-text blue"
+					>SATELLITE FLIGHT: The Journey to Mother Moon</span
+				>, Cudi's albums have become progressively more hum-centric.
+			</p>
 		</div>
 		<div class="step" :class="{ active: 3 == currentStep }" data-step-no="3">
 			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
@@ -69,7 +74,7 @@ export default {
 			if (index == 0 && direction == "down") {
 				if (this.alreadyTriggeredBars == false) {
 					this.transitionBars();
-					this.alreadyTriggeredBars = true;
+					// this.alreadyTriggeredBars = true;
 				}
 			}
 			if (index == 0 && direction == "up") {
@@ -78,11 +83,14 @@ export default {
 			}
 			if (index == 1) {
 				this.sortBarsByPopularity();
-				this.highlightBars();
+				this.highlightBars("Man on the Moon III: The Chosen", null);
 			}
 			if (index == 2) {
 				this.sortBarsByYear();
-				this.highlightBars();
+				this.highlightBars(
+					"Man on the Moon III: The Chosen",
+					"KiD CuDi presents SATELLITE FLIGHT: The journey to Mother Moon"
+				);
 			}
 			if (index == 3) {
 				this.sortBarsByPopularity();
@@ -102,6 +110,8 @@ export default {
 				.duration(500)
 				.attr("y", (d) => yScale(d.percent_hums))
 				.attr("height", (d) => this.height - yScale(d.percent_hums));
+
+			this.alreadyTriggeredBars = true;
 		},
 		sortBarsByPopularity: function () {
 			const { bars, svg, data, xScale, yScale, colorScale } = this;
@@ -126,7 +136,7 @@ export default {
 				.attr("width", this.album_cover_size)
 				.attr("height", this.album_cover_size)
 				.attr("x", -this.album_cover_size / 2)
-				.attr("y", 0);
+				.attr("y", 1);
 		},
 		sortBarsByYear: function () {
 			const { bars, svg, data, yScale, colorScale, width } = this;
@@ -156,24 +166,28 @@ export default {
 				.attr("width", this.album_cover_size)
 				.attr("height", this.album_cover_size)
 				.attr("x", -this.album_cover_size / 2)
-				.attr("y", 0);
+				.attr("y", 1);
 		},
-		highlightBars: function () {
+		highlightBars: function (album1, album2) {
 			const { bars } = this;
 
 			bars
 				.transition("highlightBars")
 				.duration(1000)
-				.attr("fill", (d) =>
-					d.album_name == "Man on the Moon III: The Chosen"
-						? "#D96481"
-						: "#4C6DBC"
-				);
+				.attr("fill", function (d) {
+					if (d.album_name == album1) {
+						return "#D96481";
+					} else if (d.album_name == album2) {
+						return "#4C6DBC";
+					} else {
+						return "#cecece";
+					}
+				});
 		},
 		unhighlightBars: function () {
 			const { bars } = this;
 
-			bars.transition("unhighlightBars").duration(1000).attr("fill", "#4C6DBC");
+			bars.transition("unhighlightBars").duration(1000).attr("fill", "grey");
 		},
 		setupChart: function () {
 			const margin = { top: 10, right: 30, bottom: 100, left: 60 };
@@ -211,14 +225,14 @@ export default {
 			this.colorScale = d3
 				.scaleOrdinal()
 				.domain(data.map((d) => d.album_name))
-				.range(["#4C6DBC"]); // #4C6DBC // d3.schemeSet3
+				.range(["grey"]); // #4C6DBC // d3.schemeSet3
 
 			// X axis
 			svg
 				.append("g")
 				.attr("transform", "translate(0," + height + ")")
 				.call(d3.axisBottom(this.xScale).tickSizeOuter(0))
-				.attr("class", "x axis no-line no-ticks");
+				.attr("class", "x axis"); // no-line no-ticks
 
 			// Y axis
 			svg
@@ -226,14 +240,12 @@ export default {
 				.call(
 					d3
 						.axisLeft(this.yScale)
-						.tickSize(0)
-						.tickFormat(d3.format(".0%"))
 						.ticks(4)
+						.tickSize(-width)
+						.tickFormat(d3.format(".0%"))
 						.tickSizeOuter(0)
 				)
 				.attr("class", "y axis");
-
-			// * OPTION: Add album covers instead of titles
 
 			// Select whichever is smaller; the chart width / data.length (so each square fits perfectly)
 			// Or the bottom margin (rect size should never be greater than margin.bottom lest overflow)
@@ -252,7 +264,7 @@ export default {
 				.attr("width", this.album_cover_size)
 				.attr("height", this.album_cover_size)
 				.attr("x", -this.album_cover_size / 2)
-				.attr("y", 0);
+				.attr("y", 1);
 
 			// Add dots
 			const bars = svg
@@ -281,4 +293,9 @@ export default {
 </script>
 
 <style src="vue-scrollama/dist/vue-scrollama.css"></style>
-<style></style>
+<style>
+.y.axis line {
+	stroke: grey;
+	opacity: 0.25;
+}
+</style>
