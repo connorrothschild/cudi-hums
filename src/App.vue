@@ -20,11 +20,11 @@
 				:containerWidth="width"
 				:containerHeight="height"
 			/>
-			<Scatterplot
-				:data="song_hums"
+			<Stripplot
+				:data="motm_tokenized"
 				:major_albums="major_albums"
 				:album_data="album_hums"
-				:containerWidth="width"
+				:containerWidth="largerChartWidth"
 				:containerHeight="height"
 			/>
 		</div>
@@ -36,7 +36,7 @@
 import * as d3 from "d3";
 import debounce from "lodash/debounce";
 
-import Scatterplot from "./components/Scatterplot.vue";
+import Stripplot from "./components/Stripplot.vue";
 import Beeswarm from "./components/Beeswarm.vue";
 import Barchart from "./components/Barchart.vue";
 
@@ -46,7 +46,7 @@ import Outro from "./components/Outro.vue";
 export default {
 	name: "App",
 	components: {
-		Scatterplot,
+		Stripplot,
 		Beeswarm,
 		Barchart,
 		Intro,
@@ -56,8 +56,10 @@ export default {
 		return {
 			song_hums: [],
 			album_hums: [],
+			motm_tokenized: [],
 			major_albums: [],
 			width: null,
+			largerChartWidth: null,
 			height: null,
 		};
 	},
@@ -66,6 +68,7 @@ export default {
 			window.innerWidth < 1000
 				? window.innerWidth * 0.9
 				: window.innerWidth * 0.5;
+		this.largerChartWidth = window.innerWidth * 0.8;
 		this.height = window.innerHeight * 0.9;
 		const song_hums = await d3.csv("./data/song_hums.csv");
 		song_hums.forEach((d) => {
@@ -75,7 +78,7 @@ export default {
 		});
 		this.song_hums = song_hums;
 
-		const album_hums = await d3.csv("./data/album_hums.csv");
+		let album_hums = await d3.csv("./data/album_hums.csv");
 		album_hums.forEach((d) => {
 			d.sum_hums = +d.sum_hums;
 			d.sum_regulars = +d.sum_regulars;
@@ -85,11 +88,24 @@ export default {
 		album_hums.sort((a, b) => d3.descending(a.percent_hums, b.percent_hums));
 		this.album_hums = album_hums;
 
-		const major_albums = album_hums.map((d) => d.album_name);
+		let motm_tokenized = await d3.csv("./data/motm_tokenized.csv");
+		motm_tokenized.forEach((d) => {
+			d.normalized_position = +d.normalized_position;
+			d.song_rank = +d.song_rank;
+		});
+		motm_tokenized.sort((a, b) => d3.descending(a.song_rank, b.song_rank));
+		motm_tokenized = motm_tokenized.filter(
+			(d) => d.song_name != "Beautiful Trip"
+		);
+
+		this.motm_tokenized = motm_tokenized;
+
+		let major_albums = album_hums.map((d) => d.album_name);
 		this.major_albums = major_albums;
 
 		console.log(album_hums);
 		console.log(song_hums);
+		console.log(motm_tokenized);
 	},
 	methods: {
 		watchResize: function () {
@@ -98,6 +114,8 @@ export default {
 					? window.innerWidth * 0.9
 					: window.innerWidth * 0.5;
 			this.height = window.innerHeight * 0.9;
+
+			// alert("You might want to refresh your browser");
 		},
 	},
 	created() {
@@ -137,6 +155,12 @@ text {
 	justify-content: center;
 }
 
+@media screen and (max-width: 768px) {
+	.graphic {
+		flex-direction: column-reverse;
+	}
+}
+
 .step {
 	padding: 2.5%;
 	min-width: 300px;
@@ -159,6 +183,10 @@ text {
 .step.active {
 	color: black;
 	border-left: 2px solid #d96481;
+}
+
+.scrollama-steps {
+	pointer-events: none;
 }
 
 .highlight-text {

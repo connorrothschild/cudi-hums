@@ -2,58 +2,7 @@ library(geniusr)
 library(dplyr)
 library(tidytext)
 
-hums <- c(
-  'hm',
-  'hmm',
-  'hmmm',
-  'hum',
-  'mm',
-  'mmm',
-  'mmmm',
-  'mmmmm',
-  'mmmmmm',
-  'mhmm',
-  'mhmmm',
-  'mhmmmm',
-  'mmhm',
-  'nah',
-  'na',
-  'oh',
-  'ooh',
-  'oooh',
-  'ooooh',
-  'oooooh',
-  'ohh',
-  'ohhh',
-  'ohhhh',
-  'ohhhhh',
-  'ohhhhhh',
-  'ohhhhhhh',
-  'ah',
-  'ahh',
-  'ahhh',
-  'ahhhh',
-  'ahhhhh',
-  'ahhhhhh',
-  'ahhhhhhh',
-  'ahhhhhhhh',
-  'aa',
-  'aaa',
-  'ay',
-  'ayy',
-  'meh',
-  'hey',
-  'heh',
-  'bmm',
-  'woah',
-  'wooah',
-  'woooah',
-  'woaah',
-  'woaaah',
-  'woaaaah',
-  'woaaaaah',
-  'woaaaaaah'
-)
+source(here::here('process/hums_list.R'))
 
 ## Cudi artist IDs: search_artist('Kid Cudi') # 68
 
@@ -139,7 +88,7 @@ for (row in 1:nrow(songs)) {
   }
 }
 
-hums <-
+final_songs <-
   left_join(final_hums_df, all_song_meta, by = c('song_id', 'song_name')) %>%
   ### Reorder
   select(
@@ -152,6 +101,8 @@ hums <-
     song_art_image_url,
     song_pageviews,
     everything()
-  )
+  ) %>% 
+  # Replace problematic
+  mutate(song_name = ifelse(song_id == 6250779, "Lovin’ Me", song_name))
 
-readr::write_csv(hums, here::here('public/data/song_hums.csv'))
+readr::write_csv(final_songs, here::here('public/data/song_hums.csv'))

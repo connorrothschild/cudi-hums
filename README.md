@@ -11,17 +11,19 @@
 ### Nice to have:
 * Hums per song compared to average sentiment per song (no way there's any relationship here?)
 * Where hums occur in a song (beginning, end, middle)
-    * Song on Y axis, one line for each term (all low opacity, thin), and hums are pink lines
+    * Strip plot per song
+    * When does Cudi hum? Intro, bridge, chorus, outro 
 
 ## Considerations
 * [Mobile responsiveness](https://pudding.cool/process/responsive-scrollytelling/)
     * How does the app handle resize? (current method doesn't work)
+* [Techniques for Data Visualization on both Mobile & Desktop](https://www.visualcinnamon.com/2019/04/mobile-vs-desktop-dataviz)
 * A table might break up the story nicely and allow for user exploration
     * See table in https://pudding.cool/2018/08/wiki-death/
 
 ## Things I need to fix:
 * Get rid of VW/VH (https://pudding.cool/process/responsive-scrollytelling/)
 * Handle resize better
-* Get rid of scatterplot
+    * A lil nudge to refresh the page on window resize
 * Beautify charts a bit more
 * Consider different background color?

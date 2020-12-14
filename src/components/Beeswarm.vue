@@ -12,7 +12,7 @@
 			</p>
 		</div>
 		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
-			<p class="mb-3">
+			<p class="content">
 				This is the album's introduction, titled
 				<span class="highlight-text">Beautiful Trip</span>. In that track, a
 				remarkable ___% of the lyrics are hums.
@@ -26,15 +26,15 @@
 					allowtransparency="true"
 					allow="encrypted-media"
 				></iframe>
-				<div class="mt-3">
+				<p class="content">
 					But this intro track lasts a mere 37 seconds, and around half of that
 					duration is spent humming. Clearly, this is a poor example for our
 					purposes.
-				</div>
+				</p>
 			</div>
 		</div>
 		<div class="step" :class="{ active: 3 == currStep }" data-step-no="3">
-			<p class="mb-3">
+			<p class="content">
 				But <span class="highlight-text">Sept. 16</span> is a better example of
 				Cudi's famous hums.
 			</p>
@@ -48,7 +48,7 @@
 					allow="encrypted-media"
 				></iframe>
 			</div>
-			<p class="mt-3">
+			<p class="content">
 				In this track, Cudi ____ ____ ____.
 				<br />Near the middle of the song, he alternates between various ad-libs
 				such as 'na-na-na', 'hmmm', and 'ooh.' <br /><span
@@ -59,16 +59,20 @@
 		</div>
 
 		<div class="step" :class="{ active: 4 == currStep }" data-step-no="4">
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
-			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
-			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
-			molestias libero?
+			<p class="content">
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus
+				quia deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt
+				ducimus sequi, corrupti eius ullam repellat temporibus id quibusdam
+				maxime molestias libero?
+			</p>
 		</div>
 		<div class="step" :class="{ active: 5 == currStep }" data-step-no="5">
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
-			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
-			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
-			molestias libero?
+			<p class="content">
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus
+				quia deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt
+				ducimus sequi, corrupti eius ullam repellat temporibus id quibusdam
+				maxime molestias libero?
+			</p>
 		</div>
 	</Scrollama>
 </template>
@@ -307,13 +311,13 @@ export default {
 
 <style src="vue-scrollama/dist/vue-scrollama.css"></style>
 <style>
-/* .no-ticks g.tick line {
+.no-ticks g.tick line {
 	stroke: transparent;
 }
 
 .no-line path {
 	stroke: transparent;
-} */
+}
 
 g.tick text {
 	font-size: 1rem;

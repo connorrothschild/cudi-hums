@@ -2,10 +2,10 @@
 	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
 		<div slot="graphic" class="graphic" id="barchart"></div>
 		<div class="step" :class="{ active: 0 == currentStep }" data-step-no="0">
-			<p>The first way to analyze Cudi hums is by album...</p>
+			<p class="content">The first way to analyze Cudi hums is by album...</p>
 		</div>
 		<div class="step" :class="{ active: 1 == currentStep }" data-step-no="1">
-			<p>
+			<p class="content">
 				Most recently, Kid Cudi came out with his __th studio album,
 				<span class="highlight-text">Man on the Moon III: The Chosen</span>.
 				<br />Not only is this album Cudi's most recent, it also has the
@@ -13,7 +13,7 @@
 			</p>
 		</div>
 		<div class="step" :class="{ active: 2 == currentStep }" data-step-no="2">
-			<p>
+			<p class="content">
 				And by organizing the albums by their release year, it becomes evident
 				that Kid Cudi has been humming more and more as his discography has
 				developed.
@@ -25,10 +25,12 @@
 			</p>
 		</div>
 		<div class="step" :class="{ active: 3 == currentStep }" data-step-no="3">
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus quia
-			deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt ducimus
-			sequi, corrupti eius ullam repellat temporibus id quibusdam maxime
-			molestias libero?
+			<p class="content">
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus
+				quia deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt
+				ducimus sequi, corrupti eius ullam repellat temporibus id quibusdam
+				maxime molestias libero?
+			</p>
 		</div>
 	</Scrollama>
 </template>

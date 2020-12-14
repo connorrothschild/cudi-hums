@@ -1,7 +1,12 @@
-hums <- readr::read_csv(here::here('public/data/song_hums.csv'))
+library(geniusr)
+library(dplyr)
+library(tidytext)
+
+source(here::here('process/hums_list.R'))
+song_hums <- readr::read_csv(here::here('public/data/song_hums.csv'))
 
 #### AGGREGATE BY ALBUM
-album_hums <- hums %>%
+album_hums <- song_hums %>%
   group_by(album_name) %>%
   summarise(sum_hums = sum(n_hums),
             sum_regulars = sum(n_regulars)) %>%
@@ -21,7 +26,7 @@ major_albums <-
     "Man on the Moon III: The Chosen"
   )
 
-album_id_lookup <- hums %>% distinct(album_name, album_id)
+album_id_lookup <- song_hums %>% distinct(album_name, album_id)
 
 albums <- album_hums %>%
   filter(album_name %in% major_albums) %>%
@@ -42,7 +47,7 @@ for (row in 1:nrow(albums)) {
   }
 }
 
-final <- left_join(albums, all_album_meta) %>% 
+final_albums <- left_join(albums, all_album_meta) %>% 
   mutate(year = lubridate::year(album_release_date))
 
-readr::write_csv(final, here::here('public/data/album_hums.csv'))
+readr::write_csv(final_albums, here::here('public/data/album_hums.csv'))
