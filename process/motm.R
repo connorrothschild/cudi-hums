@@ -44,7 +44,8 @@ for (row in 1:nrow(motm3)) {
                     collapse = FALSE) %>%
       # look for hums
       mutate(category = ifelse(bigram %in% hums, 'Hum', 'Regular')) %>%
-      mutate(normalized_position = row_number() / nrow(.))
+      mutate(position = row_number(),
+             normalized_position = row_number() / nrow(.))
   }
   
   motm_lyrics <- rbind(motm_lyrics, tokenized)
@@ -58,6 +59,18 @@ final_motm <- final_motm[order(final_motm$song_rank, decreasing = T), ]
 
 ## This is what to recreate in D3
 final_motm %>% ggplot(aes(x = normalized_position, y = song_name, color = category)) + geom_point()
+final_motm %>% group_by(section_name) %>% count(category)
+
+final_motm <-
+  final_motm %>% mutate(
+    section_name = ifelse(
+      section_name == 'Verse 1' |
+      section_name == 'Verse 2',
+      'Verse',
+      section_name
+    )
+  ) %>%
+  left_join(song_hums)
 
 readr::write_csv(final_motm, here::here('public/data/motm_tokenized.csv'))
 

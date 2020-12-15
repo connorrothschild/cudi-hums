@@ -1,6 +1,8 @@
 <template>
 	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
+		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="barchart"></div>
+		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currentStep }" data-step-no="0">
 			<p class="content">The first way to analyze Cudi hums is by album...</p>
 		</div>
@@ -124,11 +126,13 @@ export default {
 				.attr("width", xScale.bandwidth())
 				.attr("x", (d) => xScale(d.album_name));
 
-			svg.select(".x.axis").call(d3.axisBottom(xScale).tickSizeOuter(0));
-			svg.select(".x.axis").selectAll("text").remove();
+			svg
+				.select(".x.axis.barchart")
+				.call(d3.axisBottom(xScale).tickSizeOuter(0));
+			svg.select(".x.axis.barchart").selectAll("text").remove();
 
 			svg
-				.select(".x.axis")
+				.select(".x.axis.barchart")
 				.selectAll(".tick")
 				.data([
 					...data.sort((a, b) => d3.descending(a.percent_hums, b.percent_hums)),
@@ -156,11 +160,13 @@ export default {
 				.duration(1000)
 				.attr("x", (d) => yearScale(d.year));
 
-			svg.select(".x.axis").call(d3.axisBottom(yearScale).tickSizeOuter(0));
-			svg.select(".x.axis").selectAll("text").remove();
+			svg
+				.select(".x.axis.barchart")
+				.call(d3.axisBottom(yearScale).tickSizeOuter(0));
+			svg.select(".x.axis.barchart").selectAll("text").remove();
 
 			svg
-				.select(".x.axis")
+				.select(".x.axis.barchart")
 				.selectAll(".tick")
 				.data(yearData.sort((a, b) => d3.ascending(a.year, b.year)))
 				.append("svg:image")
@@ -192,7 +198,7 @@ export default {
 			bars.transition("unhighlightBars").duration(1000).attr("fill", "grey");
 		},
 		setupChart: function () {
-			const margin = { top: 10, right: 30, bottom: 100, left: 60 };
+			const margin = { top: 30, right: 30, bottom: 100, left: 60 };
 			const width = this.containerWidth - margin.left - margin.right;
 			const height = this.containerHeight - margin.top - margin.bottom;
 
@@ -234,7 +240,7 @@ export default {
 				.append("g")
 				.attr("transform", "translate(0," + height + ")")
 				.call(d3.axisBottom(this.xScale).tickSizeOuter(0))
-				.attr("class", "x axis"); // no-line no-ticks
+				.attr("class", "x axis barchart");
 
 			// Y axis
 			svg
@@ -247,16 +253,16 @@ export default {
 						.tickFormat(d3.format(".0%"))
 						.tickSizeOuter(0)
 				)
-				.attr("class", "y axis");
+				.attr("class", "y axis barchart");
 
 			// Select whichever is smaller; the chart width / data.length (so each square fits perfectly)
 			// Or the bottom margin (rect size should never be greater than margin.bottom lest overflow)
 			this.album_cover_size = Math.min(width / data.length, margin.bottom);
 
-			svg.select(".x.axis").selectAll("text").remove();
+			svg.select(".x.axis.barchart").selectAll("text").remove();
 
 			svg
-				.select(".x.axis")
+				.select(".x.axis.barchart")
 				.selectAll(".tick")
 				.data([
 					...data.sort((a, b) => d3.descending(a.percent_hums, b.percent_hums)),
@@ -295,9 +301,15 @@ export default {
 </script>
 
 <style src="vue-scrollama/dist/vue-scrollama.css"></style>
-<style>
-.y.axis line {
-	stroke: grey;
-	opacity: 0.25;
+<style lang="scss">
+.y.axis.barchart {
+	g.tick line {
+		stroke: grey;
+		opacity: 0.5;
+	}
+	text {
+		font-size: 12px;
+		font-weight: 200;
+	}
 }
 </style>

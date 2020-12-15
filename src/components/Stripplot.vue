@@ -1,8 +1,8 @@
 <template>
 	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
-		<div slot="graphic" class="graphic">
-			<div id="stripplot"></div>
-		</div>
+		<!-- SCROLLAMA GRAPHIC -->
+		<div slot="graphic" class="graphic" id="stripplot"></div>
+		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
 			<p class="content">
 				But where are Cudi's hums located? <br />Are they mostly concentrated at
@@ -11,46 +11,29 @@
 			<p class="content">
 				In this view, every line represents a lyric.
 				<span class="highlight-text blue">Blue lines</span>
-				<!-- <svg
-					width="10"
-					height="15"
-					viewBox="0 0 10 15"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<line
-						x1="5"
-						y1="0"
-						x2="5"
-						y2="15"
-						style="stroke: #4c6dbc; stroke-width: 3; stroke-linecap: round"
-					/>
-				</svg>
-				represent "regular" lyrics, such as normal words, while pink lines
-				<svg
-					width="10"
-					height="15"
-					viewBox="0 0 10 15"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<line
-						x1="5"
-						y1="0"
-						x2="5"
-						y2="15"
-						style="stroke: #d96481; stroke-width: 3; stroke-linecap: round"
-					/>
-				</svg> -->
 				represent "regular" lyrics, such as normal words, while
 				<span class="highlight-text">pink lines</span> represent "hums" and
 				other sounds, such as as 'oooh' and 'nahh.'
 			</p>
+			<p class="content">
+				The songs are different durations (The Void tops off the album at 5
+				minutes and 25 seconds), which is why the relative lengths of each bar
+				look different.
+			</p>
 		</div>
-		<div
-			class="step"
-			:class="{ active: 1 == currStep }"
-			style="pointer-events: auto"
-			data-step-no="1"
-		>
+		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
+			<p class="content">
+				For better reference, we can normalize the position of each lyric. Here,
+				each song is forced to the same bounds, so you're looking at where
+				lyrics fall relative to the song's structure (<span
+					class="has-text-weight-bold"
+					>e.g. middle of the song</span
+				>), rather than their minute-second (<span class="has-text-weight-bold"
+					>e.g. 3:22</span
+				>) placement.
+			</p>
+		</div>
+		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
 			<p class="content">
 				By focusing only on hum-type sounds, we can isolate the noises that Cudi
 				makes most frequently, and where in each song he makes them.
@@ -64,20 +47,41 @@
 				Only show hums
 			</button>
 		</div>
-		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
+		<div class="step" :class="{ active: 3 == currStep }" data-step-no="3">
 			<p class="content">
-				<b>Some focus here.</b> focus on one range of oohs ahhs and nahs. Maybe
-				in 'She Knows This,' highlight the pattern of 'mm mm mm' and how the
-				rhythm of those mms define the song's structure.
+				Different songs utilize hums in different ways. For example,
+				<span class="highlight-text">The Void</span>
+				captures Cudi's hums intermittently sprinkled throughout the song.
 			</p>
 		</div>
-		<div class="step" :class="{ active: 3 == currStep }" data-step-no="3">
+		<div class="step" :class="{ active: 4 == currStep }" data-step-no="4">
+			<p class="content">
+				While in other songs like
+				<span class="highlight-text">She Knows This</span>, Cudi is much more
+				rhythmic in his hums.
+			</p>
+
+			<iframe
+				src="https://open.spotify.com/embed/track/1xzUQMiCoY5pdego0pHMeV"
+				width="300"
+				height="80"
+				frameborder="0"
+				allowtransparency="true"
+				allow="encrypted-media"
+			></iframe>
+			<p class="content after-embed">
+				In that song, the hums
+				<em>define the structure of the song</em>, with the chorus being marked
+				by Cudi's alternations between the phrase "She Knows This" and hums.
+			</p>
+		</div>
+		<div class="step" :class="{ active: 5 == currStep }" data-step-no="5">
 			<p class="content">
 				Finally, group by song category: Intro, Chorus, Bridge, Outro, etc.
 				<i>some cool transition goes here for sure.</i>
 			</p>
 		</div>
-		<div class="step" :class="{ active: 4 == currStep }" data-step-no="4">
+		<div class="step" :class="{ active: 6 == currStep }" data-step-no="6">
 			<p class="content">Conclude this section.</p>
 		</div>
 	</Scrollama>
@@ -109,7 +113,8 @@ export default {
 			width: null,
 			height: null,
 			currStep: null,
-			xScale: null,
+			positionScale: null,
+			normalizedPositionScale: null,
 			yScale: null,
 			colorScale: null,
 			svg: null,
@@ -119,7 +124,7 @@ export default {
 		};
 	},
 	computed: {
-		strokeWidth: function () {
+		computedStrokeWidth: function () {
 			// container width divided by the length of the longest song (most words aka most lines)
 			// console.log(d3.rollup(
 			// 	this.data,
@@ -128,80 +133,195 @@ export default {
 			// ))
 			return this.containerWidth / 550;
 		},
+		computedHeightBuffer: function () {
+			return this.height / 100;
+		},
 	},
 	methods: {
 		stepEnterHandler({ element, index, direction }) {
 			this.currStep = index;
 			if (index == 0 && direction == "down" && this.alreadyTriggered == false) {
-				this.transitionStrip();
+				this.transitionStrip(this.positionScale);
+				this.stripByPosition();
+
 				this.alreadyTriggered = true;
 			}
+			if (index == 0 && direction == "down" && this.alreadyTriggered == true) {
+				// this.transitionStrip(this.positionScale);
+				this.stripByPosition();
+
+				// this.alreadyTriggered = true;
+			}
 			if (index == 0 && direction == "up") {
-				this.regularStrip();
+				this.stripByPosition();
 			}
 			if (index == 1) {
 				// * Highlight hums only
+				this.stripByNormalizedPosition();
+			}
+			if (index == 2 && direction == "down") {
+				// * Highlight hums only
 				this.filterHums();
 			}
-			if (index == 2) {
-				// ! Highlight a few hums...
-				this.regularStrip();
+			if (index == 2 && direction == "up") {
+				this.defaultHeight();
+				this.defaultOpacity();
 			}
 			if (index == 3) {
-				// ! When does Cudi hum? Intro, chorus, bridge, outro
-				this.regularStrip();
+				// ! Highlight a few hums...
+				this.filterHums();
+				this.highlightSong("The Void");
 			}
 			if (index == 4) {
-				// ! Sick transition of all of the lyrics into
-				this.regularStrip();
+				this.filterHums();
+				this.highlightSong("She Knows This");
+			}
+			if (index == 5) {
+				// ! When does Cudi hum? Intro, chorus, bridge, outro
+				this.defaultHeight();
+				this.stripByNormalizedPosition();
+				// this.filterHums();
+				this.groupBySection();
 			}
 		},
 		handleFilter: function () {
-			this.onlyHumsToggled ? this.regularStrip() : this.filterHums();
+			this.onlyHumsToggled
+				? this.stripByNormalizedPosition()
+				: this.filterHums();
+		},
+		// DEFAULTS:
+		defaultHeight: function () {
+			const { lines } = this;
+			lines
+				.transition("defaultHeight")
+				.duration(1000)
+				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
+				.attr(
+					"y2",
+					(d) => this.yScale(d.song_name) - this.computedHeightBuffer
+				);
+		},
+		defaultColor: function () {
+			const { lines } = this;
+			lines
+				.transition("defaultColor")
+				.duration(1000)
+				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
+				.attr(
+					"y2",
+					(d) => this.yScale(d.song_name) - this.computedHeightBuffer
+				);
+		},
+		defaultOpacity: function () {
+			const { lines } = this;
+			lines.transition("defaultOpacity").duration(1000).attr("opacity", 1);
 		},
 		filterHums: function () {
 			const { lines } = this;
 			lines
+				.attr("opacity", 1)
+				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
+				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
 				.filter((d) => d.category == "Regular")
-				.transition()
+				.transition("filterHums")
 				.duration(1000)
-				.attr("x1", this.xScale(1.01))
-				.attr("x2", this.xScale(1.01));
+				.attr("x1", this.normalizedPositionScale(1.01))
+				.attr("x2", this.normalizedPositionScale(1.01));
+
 			this.onlyHumsToggled = true;
 		},
-		transitionStrip: function () {
-			const { lines, svg, data } = this;
+		highlightSong: function (song) {
+			const { lines } = this;
+
 			lines
-				.attr("x1", this.xScale(1.01))
-				.attr("x2", this.xScale(1.01))
-				.attr("y1", (d) => this.yScale(d.song_name) + this.height / 100)
-				.attr("y2", (d) => this.yScale(d.song_name) - this.height / 100)
-				.attr("stroke", (d) => this.colorScale(d.category))
-				.transition()
+				.attr("opacity", (d) => (d.song_name == song ? 1 : 0.3))
+				.transition("highlightSong")
 				.duration(1000)
-				.attr("x1", (d) => this.xScale(d.normalized_position))
-				.attr("x2", (d) => this.xScale(d.normalized_position));
+				.attr("y1", (d) =>
+					d.song_name == song
+						? this.yScale(d.song_name) + this.computedHeightBuffer * 3
+						: this.yScale(d.song_name) + this.computedHeightBuffer
+				)
+				.attr("y2", (d) =>
+					d.song_name == song
+						? this.yScale(d.song_name) - this.computedHeightBuffer * 3
+						: this.yScale(d.song_name) - this.computedHeightBuffer
+				);
 		},
-		regularStrip: function () {
+		transitionStrip: function (xAxisScale) {
 			const { lines, svg, data } = this;
+
 			lines
-				.attr("y1", (d) => this.yScale(d.song_name) + this.height / 100)
-				.attr("y2", (d) => this.yScale(d.song_name) - this.height / 100)
-				.transition()
+				.attr("opacity", 1)
+				.attr("x1", xAxisScale(1.01))
+				.attr("x2", xAxisScale(1.01))
+				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
+				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
+				.attr("stroke", (d) => this.colorScale(d.category))
+				.transition("transitionStrip")
 				.duration(1000)
-				.attr("x1", (d) => this.xScale(d.normalized_position))
-				.attr("x2", (d) => this.xScale(d.normalized_position))
+				.attr("x1", (d) => xAxisScale(d.normalized_position))
+				.attr("x2", (d) => xAxisScale(d.normalized_position));
+		},
+		stripByNormalizedPosition: function () {
+			const { lines, svg, data, height } = this;
+
+			lines
+				.attr("opacity", 1)
+				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
+				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
+				.transition("stripByNormalizedPosition")
+				.duration(1000)
+				.attr("x1", (d) => this.normalizedPositionScale(d.normalized_position))
+				.attr("x2", (d) => this.normalizedPositionScale(d.normalized_position))
 				.attr("stroke", (d) => this.colorScale(d.category));
 			this.onlyHumsToggled = false;
+
+			// X axis
+			d3.select(".x.axis.stripplot").remove();
+
+			let xAxisLabels = ["Beginning of song", "End of song"];
+			svg
+				.append("g")
+				.attr("transform", "translate(0," + height + ")")
+				.call(
+					d3
+						.axisBottom(this.normalizedPositionScale)
+						.ticks(1)
+						.tickFormat((d, i) => xAxisLabels[i])
+						.tickSizeOuter(0)
+				)
+				.attr("class", "x axis no-line stripplot");
+		},
+		stripByPosition: function () {
+			const { lines, svg, data, width, height } = this;
+
+			lines
+				.attr("opacity", 1)
+				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
+				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
+				.transition("stripByPosition")
+				.duration(1000)
+				.attr("x1", (d) => this.positionScale(d.position))
+				.attr("x2", (d) => this.positionScale(d.position))
+				.attr("stroke", (d) => this.colorScale(d.category));
+			this.onlyHumsToggled = false;
+
+			d3.select(".x.axis.stripplot").remove();
+			svg
+				.append("g")
+				.attr("transform", "translate(0," + height + ")")
+				.call(d3.axisBottom(this.positionScale).ticks(0).tickSizeOuter(0))
+				.attr("class", "x axis stripplot");
 		},
 		setupChart: function () {
-			const { data, strokeWidth } = this;
-			const strokeWidthReg = strokeWidth.toString();
-			console.log(strokeWidthReg);
-			const strokeWidthBig = (strokeWidth * 5).toString();
+			const { data, computedStrokeWidth } = this;
+			const computedStrokeWidthReg = computedStrokeWidth.toString();
+			console.log(computedStrokeWidthReg);
+			const computedStrokeWidthBig = (computedStrokeWidth * 5).toString();
 
 			// Margin conventions
-			const margin = { top: 0, right: 0, bottom: 30, left: 100 };
+			const margin = { top: 30, right: 10, bottom: 30, left: 100 };
 			const width = this.containerWidth - margin.left - margin.right;
 			const height = this.containerHeight - margin.top - margin.bottom;
 
@@ -223,8 +343,16 @@ export default {
 				.attr("class", "tooltip")
 				.style("opacity", 0);
 
-			//Creates the xScale
-			this.xScale = d3.scaleLinear().domain([0, 1]).range([0, width]);
+			//Creates the normalizedPositionScale
+			this.normalizedPositionScale = d3
+				.scaleLinear()
+				.domain([0, 1])
+				.range([0, width]);
+
+			this.positionScale = d3
+				.scaleLinear()
+				.domain([0, d3.max(data, (d) => d.position)])
+				.range([0, width]);
 
 			//Creates the yScale
 			this.yScale = d3
@@ -237,21 +365,6 @@ export default {
 				.scaleOrdinal()
 				.domain(data.map((d) => d.category))
 				.range(["#4C6DBC", "#D96481"]);
-
-			// X axis
-			let xAxisLabels = ["Beginning of song", "End of song"];
-
-			svg
-				.append("g")
-				.attr("transform", "translate(0," + height + ")")
-				.call(
-					d3
-						.axisBottom(this.xScale)
-						.ticks(1)
-						.tickFormat((d, i) => xAxisLabels[i])
-						.tickSizeOuter(0)
-				)
-				.attr("class", "x axis no-line stripplot");
 
 			const wrap = function (text, width) {
 				text.each(function () {
@@ -307,15 +420,14 @@ export default {
 				.attr("stroke", (d) => this.colorScale(d.category))
 				.attr("fill", "white")
 				.attr("stroke-linecap", "round")
-				.style("stroke-width", strokeWidthReg);
+				.style("stroke-width", computedStrokeWidthReg);
 
 			lines
 				.on("mouseover", function (event, d) {
 					d3.select(this)
-						.transition()
+						.transition("mouseover")
 						.duration(100)
-						.style("stroke-width", strokeWidthBig)
-						.style("opacity", "1");
+						.style("stroke-width", computedStrokeWidthBig);
 
 					tip.transition(300).style("opacity", 1);
 					tip.html(
@@ -332,9 +444,9 @@ export default {
 				})
 				.on("mouseout", function (d) {
 					d3.select(this)
-						.transition()
+						.transition("mouseout")
 						.duration(100)
-						.style("stroke-width", strokeWidthReg);
+						.style("stroke-width", computedStrokeWidthReg);
 
 					tip.transition(300).style("opacity", 0);
 				});
@@ -356,16 +468,30 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
-.y.axis text {
+<style lang="scss">
+.y.axis.stripplot {
+	path {
+		stroke: transparent;
+	}
+	g.tick line {
+		stroke: grey;
+		opacity: 0.25;
+	}
+	text {
+		font-size: 12px;
+		font-weight: 200;
+	}
+}
+
+.x.axis.stripplot text {
+	font-weight: 300;
 	font-size: 12px;
-}
+	text-transform: uppercase;
 
-.bolded {
-	font-weight: 700;
+	@media screen and (max-width: 768px) {
+		font-size: 8px;
+	}
 }
-
 div.tooltip {
 	position: absolute;
 	text-align: left;
@@ -383,6 +509,10 @@ div.tooltip {
 .button.toggled {
 	background-color: #d96481;
 	color: white;
+
+	&:hover {
+		color: black;
+	}
 }
 
 .x.axis.stripplot g.tick:nth-child(2) text {

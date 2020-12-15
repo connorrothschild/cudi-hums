@@ -1,6 +1,8 @@
 <template>
 	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
+		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="beeswarm"></div>
+		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
 			By breaking down each album into its constituent songs, we can start to
 			see which tracks contribute the most to Cudi's hum-heavy albums.
@@ -17,38 +19,34 @@
 				<span class="highlight-text">Beautiful Trip</span>. In that track, a
 				remarkable ___% of the lyrics are hums.
 			</p>
-			<div>
-				<iframe
-					src="https://open.spotify.com/embed/track/4IIuCotvqijraSdnVLaFnM"
-					width="300"
-					height="80"
-					frameborder="0"
-					allowtransparency="true"
-					allow="encrypted-media"
-				></iframe>
-				<p class="content">
-					But this intro track lasts a mere 37 seconds, and around half of that
-					duration is spent humming. Clearly, this is a poor example for our
-					purposes.
-				</p>
-			</div>
+			<iframe
+				src="https://open.spotify.com/embed/track/4IIuCotvqijraSdnVLaFnM"
+				width="300"
+				height="80"
+				frameborder="0"
+				allowtransparency="true"
+				allow="encrypted-media"
+			></iframe>
+			<p class="content after-embed">
+				But this intro track lasts a mere 37 seconds, and around half of that
+				duration is spent humming. Clearly, this is a poor example for our
+				purposes.
+			</p>
 		</div>
 		<div class="step" :class="{ active: 3 == currStep }" data-step-no="3">
 			<p class="content">
 				But <span class="highlight-text">Sept. 16</span> is a better example of
 				Cudi's famous hums.
 			</p>
-			<div>
-				<iframe
-					src="https://open.spotify.com/embed/track/3Uw2se3aQU1UFrpRBvBnB4"
-					width="300"
-					height="80"
-					frameborder="0"
-					allowtransparency="true"
-					allow="encrypted-media"
-				></iframe>
-			</div>
-			<p class="content">
+			<iframe
+				src="https://open.spotify.com/embed/track/3Uw2se3aQU1UFrpRBvBnB4"
+				width="300"
+				height="80"
+				frameborder="0"
+				allowtransparency="true"
+				allow="encrypted-media"
+			></iframe>
+			<p class="content after-embed">
 				In this track, Cudi ____ ____ ____.
 				<br />Near the middle of the song, he alternates between various ad-libs
 				such as 'na-na-na', 'hmmm', and 'ooh.' <br /><span
@@ -198,7 +196,7 @@ export default {
 				);
 		},
 		setupChart: function () {
-			const margin = { top: 10, right: 30, bottom: 30, left: 60 };
+			const margin = { top: 30, right: 30, bottom: 30, left: 60 };
 			const width = this.containerWidth - margin.left - margin.right;
 			const height = this.containerHeight - margin.top - margin.bottom;
 
@@ -254,7 +252,7 @@ export default {
 					d3
 						.axisBottom(this.xScale)
 						.tickFormat(d3.format(".0%"))
-						.ticks(4)
+						.ticks(6)
 						.tickSizeOuter(0)
 				)
 				.attr("class", "x axis beeswarm");
@@ -310,21 +308,25 @@ export default {
 </script>
 
 <style src="vue-scrollama/dist/vue-scrollama.css"></style>
-<style>
-.no-ticks g.tick line {
-	stroke: transparent;
+<style lang="scss">
+.x.axis.beeswarm {
+	g.tick line {
+		stroke: transparent;
+	}
+	text {
+		font-size: 12px;
+		font-weight: 200;
+	}
+}
+.y.axis.beeswarm {
+	g.tick line {
+		stroke: grey;
+		stroke-width: 10px;
+		opacity: 0.25;
+	}
 }
 
-.no-line path {
-	stroke: transparent;
-}
-
-g.tick text {
-	font-size: 1rem;
-}
-
-.y.axis.beeswarm g.tick line {
-	stroke: grey;
-	stroke-width: 10px;
+.after-embed {
+	margin-top: 1rem;
 }
 </style>

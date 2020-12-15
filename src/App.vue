@@ -27,6 +27,12 @@
 				:containerWidth="largerChartWidth"
 				:containerHeight="height"
 			/>
+			<SongSelector
+				:data="motm_tokenized"
+				:song_names="song_names"
+				:containerWidth="largerChartWidth"
+				:containerHeight="height"
+			/>
 		</div>
 		<Outro />
 	</div>
@@ -39,6 +45,7 @@ import debounce from "lodash/debounce";
 import Stripplot from "./components/Stripplot.vue";
 import Beeswarm from "./components/Beeswarm.vue";
 import Barchart from "./components/Barchart.vue";
+import SongSelector from "./components/SongSelector.vue";
 
 import Intro from "./components/Intro.vue";
 import Outro from "./components/Outro.vue";
@@ -49,6 +56,7 @@ export default {
 		Stripplot,
 		Beeswarm,
 		Barchart,
+		SongSelector,
 		Intro,
 		Outro,
 	},
@@ -58,6 +66,7 @@ export default {
 			album_hums: [],
 			motm_tokenized: [],
 			major_albums: [],
+			song_names: [],
 			width: null,
 			largerChartWidth: null,
 			height: null,
@@ -69,7 +78,7 @@ export default {
 				? window.innerWidth * 0.9
 				: window.innerWidth * 0.5;
 		this.largerChartWidth = window.innerWidth * 0.8;
-		this.height = window.innerHeight * 0.9;
+		this.height = window.innerHeight * 0.8;
 		const song_hums = await d3.csv("./data/song_hums.csv");
 		song_hums.forEach((d) => {
 			d.n_hums = +d.n_hums;
@@ -91,6 +100,7 @@ export default {
 		let motm_tokenized = await d3.csv("./data/motm_tokenized.csv");
 		motm_tokenized.forEach((d) => {
 			d.normalized_position = +d.normalized_position;
+			d.position = +d.position;
 			d.song_rank = +d.song_rank;
 		});
 		motm_tokenized.sort((a, b) => d3.descending(a.song_rank, b.song_rank));
@@ -103,9 +113,13 @@ export default {
 		let major_albums = album_hums.map((d) => d.album_name);
 		this.major_albums = major_albums;
 
+		let song_names = [...new Set(motm_tokenized.map((d) => d.song_name))];
+		this.song_names = song_names;
+
 		console.log(album_hums);
 		console.log(song_hums);
 		console.log(motm_tokenized);
+		console.log(song_names);
 	},
 	methods: {
 		watchResize: function () {
@@ -204,5 +218,13 @@ text {
 
 rect {
 	stroke: black;
+}
+
+.step > iframe {
+	pointer-events: auto;
+}
+
+.step > button {
+	pointer-events: auto;
 }
 </style>

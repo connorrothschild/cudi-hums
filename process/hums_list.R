@@ -48,5 +48,10 @@ hums <- c(
   'woaaah',
   'woaaaah',
   'woaaaaah',
-  'woaaaaaah'
+  'woaaaaaah',
+  'uh',
+  'huh',
+  'yo',
+  'la',
+  'duh'
 )
