@@ -9,7 +9,8 @@
 				the beginnings and ends of each song, or somewhere in the middle?
 			</p>
 			<p class="content">
-				In this view, every line represents a lyric.
+				In this view, every line represents a lyric from
+				<span class="has-text-weight-semibold">Man on the Moon III</span>.
 				<span class="highlight-text blue">Blue lines</span>
 				represent "regular" lyrics, such as normal words, while
 				<span class="highlight-text">pink lines</span> represent "hums" and
@@ -40,7 +41,7 @@
 		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
 			<p class="content">
 				By focusing only on hum-type sounds, we can isolate the noises that Cudi
-				makes most frequently, and where in each song he makes them.
+				makes most frequently, and at what points in each song he makes them.
 			</p>
 			<div class="is-flex is-flex-direction-column">
 				<button

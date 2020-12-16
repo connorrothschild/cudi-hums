@@ -24,10 +24,10 @@
 				that Kid Cudi has been humming more and more as his discography has
 				developed.
 				<br />
-				With the notable exception of
-				<span class="highlight-text blue"
-					>SATELLITE FLIGHT: The Journey to Mother Moon</span
-				>, Cudi's albums have become progressively more hum-centric over time.
+				With exceptions of
+				<span class="highlight-text blue">Indicud</span> and
+				<span class="highlight-text blue">Speedin' Bullet 2 Heaven</span>,
+				Cudi's albums have become progressively more hum-centric over time.
 			</p>
 		</div>
 		<div class="step" :class="{ active: 3 == currentStep }" data-step-no="3">
@@ -94,7 +94,8 @@ export default {
 				this.sortBarsByYear();
 				this.highlightBars(
 					"Man on the Moon III: The Chosen",
-					"KiD CuDi presents SATELLITE FLIGHT: The journey to Mother Moon"
+					"Speedin’ Bullet 2 Heaven",
+					"Indicud"
 				);
 			}
 			if (index == 3) {
@@ -182,7 +183,7 @@ export default {
 				.attr("x", -this.album_cover_size / 2)
 				.attr("y", 1);
 		},
-		highlightBars: function (album1, album2) {
+		highlightBars: function (album1, album2, album3) {
 			const { bars } = this;
 
 			bars
@@ -191,7 +192,7 @@ export default {
 				.attr("fill", function (d) {
 					if (d.album_name == album1) {
 						return "#D96481";
-					} else if (d.album_name == album2) {
+					} else if ((d.album_name == album2) | (d.album_name == album3)) {
 						return "#4C6DBC";
 					} else {
 						return "#cecece";

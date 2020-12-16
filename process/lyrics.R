@@ -3,7 +3,6 @@ library(dplyr)
 library(tidytext)
 
 source(here::here('process/hums_list.R'))
-
 ## Cudi artist IDs: search_artist('Kid Cudi') # 68
 
 songs <-
@@ -17,6 +16,7 @@ final_hums_df <-
     n_hums = integer(),
     n_regulars = integer()
   )
+saved_colnames <- colnames(final_hums_df)
 
 for (row in 1:nrow(songs)) {
   ### Grab song names and IDs
@@ -57,8 +57,9 @@ for (row in 1:nrow(songs)) {
              song_id,
              most_common_hum)
     
-    if (!'n_hums' %in% colnames(song_hum_stats)) {
-      song_hum_stats$n_hums = 0
+    if (!identical(colnames(song_hum_stats), saved_colnames)) {
+      bad_cols <- dplyr::setdiff(saved_colnames, colnames(song_hum_stats))
+      song_hum_stats[, bad_cols] <- 0
     }
     
     final_hums_df <- rbind(song_hum_stats, final_hums_df)

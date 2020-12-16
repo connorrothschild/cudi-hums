@@ -228,7 +228,6 @@ text {
 	font-weight: 600;
 	padding: 3px;
 	border-radius: 3px;
-	white-space: nowrap;
 	display: inline;
 	background: #d96481;
 	color: white;
