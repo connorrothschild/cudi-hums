@@ -141,7 +141,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 #app {
 	font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen",
 		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -181,9 +181,8 @@ text {
 	width: 60%;
 	margin: 0 auto 50vh;
 	background-color: whitesmoke;
-	border: 1px solid #ccc;
+	border: 1px solid #cecece;
 	/* border-radius: 3px; */
-	box-shadow: 1px 1px 1px 1px #ccc;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -192,24 +191,51 @@ text {
 	text-align: center;
 	/* opacity: 0.9; */
 	line-height: 1.6;
+
+	.highlight-text {
+		font-weight: 600;
+		padding: 3px;
+		border-radius: 3px;
+		/* white-space: nowrap; */
+		display: inline-block;
+		background: #d96481;
+		background: linear-gradient(to left, whitesmoke 50%, #d96481 50%) right;
+		background-size: 200% 1.2em;
+		transition: 1s ease-out 200ms;
+
+		&.blue {
+			background: #4c6dbc;
+			background: linear-gradient(to left, whitesmoke 50%, #4c6dbc 50%) right;
+			background-size: 200% 1.2em;
+			transition: 1s ease-out 200ms;
+		}
+	}
+
+	&.active {
+		color: black;
+		border-left: 2px solid #d96481;
+		box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.12);
+
+		.highlight-text {
+			color: white;
+			background-position: left;
+		}
+	}
 }
 
-.step.active {
-	color: black;
-	border-left: 2px solid #d96481;
+// no animation text-highlight
+.highlight-text-static {
+	font-weight: 600;
+	padding: 3px;
+	border-radius: 3px;
+	white-space: nowrap;
+	display: inline;
+	background: #d96481;
+	color: white;
 }
 
 .scrollama-steps {
 	pointer-events: none;
-}
-
-.highlight-text {
-	background: #d96481;
-	font-weight: 600;
-	padding: 3px;
-	border-radius: 3px;
-	color: white;
-	/* white-space: nowrap; */
 }
 
 .blue {
@@ -220,11 +246,11 @@ rect {
 	stroke: black;
 }
 
-.step > iframe {
+.step iframe {
 	pointer-events: auto;
 }
 
-.step > button {
+.step button {
 	pointer-events: auto;
 }
 </style>

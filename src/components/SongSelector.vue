@@ -1,5 +1,11 @@
 <template>
 	<div class="container is-max-desktop">
+		<h1 class="title has-text-centered">Why don't you explore for yourself?</h1>
+		<h2 class="subtitle mt-2 has-text-centered has-text-black">
+			Here, you can select a song from
+			<span class="has-text-weight-semibold">Man on the Moon III</span> and read
+			the hums from each section.
+		</h2>
 		<div class="is-flex better-flex">
 			<!-- Here, user selects a song.
             Their options are all of the songs in MOTM3, provided as a prop from App.vue -->
@@ -22,8 +28,16 @@
 					v-bind:href="selectedSongUrl"
 					>See this song on Genius</a
 				>
+				<!-- FIXME: Add real data to R script -->
+				<iframe
+					src="https://open.spotify.com/embed/track/2yg7MXp8nSPaf61HVkhEr3"
+					width="300"
+					height="80"
+					frameborder="0"
+					allowtransparency="true"
+					allow="encrypted-media"
+				></iframe>
 			</div>
-			<!-- ! FIXME: Also do Spotify embed? -->
 		</div>
 		<!-- Once the user selects a song, render LyricExplorer component -->
 		<div v-if="selectedSong">

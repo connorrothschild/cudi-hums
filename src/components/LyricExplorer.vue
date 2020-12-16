@@ -30,7 +30,7 @@
 							(d) => d.section_name == section
 						)"
 						:key="index"
-						:class="{ 'highlight-text pr-0': val.category == 'Hum' }"
+						:class="{ 'highlight-text-static pr-0': val.category == 'Hum' }"
 					>
 						{{ val.bigram }}
 					</span>

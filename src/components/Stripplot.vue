@@ -16,9 +16,12 @@
 				other sounds, such as as 'oooh' and 'nahh.'
 			</p>
 			<p class="content">
-				The songs are different durations (The Void tops off the album at 5
-				minutes and 25 seconds), which is why the relative lengths of each bar
-				look different.
+				The songs are different durations (<span
+					class="has-text-weight-semibold"
+					>The Void</span
+				>
+				tops off the album at 5 minutes and 25 seconds), which is why the
+				lengths of each bar are different.
 			</p>
 		</div>
 		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
@@ -26,11 +29,12 @@
 				For better reference, we can normalize the position of each lyric. Here,
 				each song is forced to the same bounds, so you're looking at where
 				lyrics fall relative to the song's structure (<span
-					class="has-text-weight-bold"
+					class="has-text-weight-semibold"
 					>e.g. middle of the song</span
-				>), rather than their minute-second (<span class="has-text-weight-bold"
+				>), rather than their exact minute-second placement (<span
+					class="has-text-weight-semibold"
 					>e.g. 3:22</span
-				>) placement.
+				>).
 			</p>
 		</div>
 		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
@@ -38,14 +42,21 @@
 				By focusing only on hum-type sounds, we can isolate the noises that Cudi
 				makes most frequently, and where in each song he makes them.
 			</p>
-
-			<button
-				class="button"
-				@click="handleFilter()"
-				:class="{ toggled: onlyHumsToggled }"
-			>
-				Only show hums
-			</button>
+			<div class="is-flex is-flex-direction-column">
+				<button
+					class="button"
+					@click="
+						handleFilter();
+						unclicked = false;
+					"
+					:class="{ toggled: onlyHumsToggled }"
+				>
+					Only show hums
+				</button>
+				<p v-if="unclicked" class="mb-0 mt-3 heading is-size-7 has-text-grey">
+					👆 Click me!
+				</p>
+			</div>
 		</div>
 		<div class="step" :class="{ active: 3 == currStep }" data-step-no="3">
 			<p class="content">
@@ -53,6 +64,14 @@
 				<span class="highlight-text">The Void</span>
 				captures Cudi's hums intermittently sprinkled throughout the song.
 			</p>
+			<iframe
+				src="https://open.spotify.com/embed/track/2yg7MXp8nSPaf61HVkhEr3"
+				width="300"
+				height="80"
+				frameborder="0"
+				allowtransparency="true"
+				allow="encrypted-media"
+			></iframe>
 		</div>
 		<div class="step" :class="{ active: 4 == currStep }" data-step-no="4">
 			<p class="content">
@@ -119,6 +138,7 @@ export default {
 			colorScale: null,
 			svg: null,
 			lines: null,
+			unclicked: true,
 			onlyHumsToggled: false,
 			alreadyTriggered: false,
 		};
@@ -225,8 +245,8 @@ export default {
 				.filter((d) => d.category == "Regular")
 				.transition("filterHums")
 				.duration(1000)
-				.attr("x1", this.normalizedPositionScale(1.01))
-				.attr("x2", this.normalizedPositionScale(1.01));
+				.attr("x1", this.normalizedPositionScale(1.05))
+				.attr("x2", this.normalizedPositionScale(1.05));
 
 			this.onlyHumsToggled = true;
 		},
@@ -253,8 +273,8 @@ export default {
 
 			lines
 				.attr("opacity", 1)
-				.attr("x1", xAxisScale(1.01))
-				.attr("x2", xAxisScale(1.01))
+				.attr("x1", xAxisScale(1.05))
+				.attr("x2", xAxisScale(1.05))
 				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
 				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
 				.attr("stroke", (d) => this.colorScale(d.category))
@@ -432,7 +452,7 @@ export default {
 					tip.transition(300).style("opacity", 1);
 					tip.html(
 						d.category == "Hum"
-							? "<span class='highlight-text'>" + d.bigram + "</span>"
+							? "<span class='highlight-text-static'>" + d.bigram + "</span>"
 							: d.bigram
 					);
 
@@ -509,9 +529,10 @@ div.tooltip {
 .button.toggled {
 	background-color: #d96481;
 	color: white;
+	font-weight: 500;
 
 	&:hover {
-		color: black;
+		color: white;
 	}
 }
 

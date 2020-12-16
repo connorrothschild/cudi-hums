@@ -16,8 +16,8 @@
 		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
 			<p class="content">
 				This is the album's introduction, titled
-				<span class="highlight-text">Beautiful Trip</span>. In that track, a
-				remarkable ___% of the lyrics are hums.
+				<span class="highlight-text">Beautiful Trip</span>. In this track, a
+				remarkable 43% of the lyrics are hums.
 			</p>
 			<iframe
 				src="https://open.spotify.com/embed/track/4IIuCotvqijraSdnVLaFnM"
@@ -35,7 +35,7 @@
 		</div>
 		<div class="step" :class="{ active: 3 == currStep }" data-step-no="3">
 			<p class="content">
-				But <span class="highlight-text">Sept. 16</span> is a better example of
+				<span class="highlight-text">Sept. 16</span> is a better example of
 				Cudi's famous hums.
 			</p>
 			<iframe
@@ -47,7 +47,8 @@
 				allow="encrypted-media"
 			></iframe>
 			<p class="content after-embed">
-				In this track, Cudi ____ ____ ____.
+				In this track, which is named after his girlfriend's birthday, Cudi ____
+				____ ____.
 				<br />Near the middle of the song, he alternates between various ad-libs
 				such as 'na-na-na', 'hmmm', and 'ooh.' <br /><span
 					class="has-text-weight-semibold"
@@ -118,6 +119,9 @@ export default {
 			if (index == 0 && direction == "down" && this.alreadyTriggered == false) {
 				this.transitionCircles();
 			}
+			if (index == 0 && direction == "down" && this.alreadyTriggered == true) {
+				this.regularCircles();
+			}
 			if (index == 0 && direction == "up") {
 				this.regularCircles();
 			}
@@ -130,8 +134,11 @@ export default {
 			if (index == 3) {
 				this.highlightSong("Sept. 16");
 			}
-			if (index == 4) {
+			if (index == 4 && direction == "down") {
 				this.regularCircles();
+			}
+			if (index == 4 && direction == "up") {
+				this.transitionCircles();
 			}
 		},
 		transitionCircles: function () {

@@ -4,11 +4,15 @@
 		<div slot="graphic" class="graphic" id="barchart"></div>
 		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currentStep }" data-step-no="0">
-			<p class="content">The first way to analyze Cudi hums is by album...</p>
+			<p class="content">
+				The first way to analyze Cudi hums is by album. <br />Kid Cudi has an
+				extensive discography, having recorded seven studio albums and one
+				mixtape since 2008.
+			</p>
 		</div>
 		<div class="step" :class="{ active: 1 == currentStep }" data-step-no="1">
 			<p class="content">
-				Most recently, Kid Cudi came out with his __th studio album,
+				Most recently, Kid Cudi came out with his 7th studio album,
 				<span class="highlight-text">Man on the Moon III: The Chosen</span>.
 				<br />Not only is this album Cudi's most recent, it also has the
 				greatest proportion of hums.
@@ -16,22 +20,19 @@
 		</div>
 		<div class="step" :class="{ active: 2 == currentStep }" data-step-no="2">
 			<p class="content">
-				And by organizing the albums by their release year, it becomes evident
+				When we organize these albums by their release year, it becomes evident
 				that Kid Cudi has been humming more and more as his discography has
 				developed.
 				<br />
 				With the notable exception of
 				<span class="highlight-text blue"
 					>SATELLITE FLIGHT: The Journey to Mother Moon</span
-				>, Cudi's albums have become progressively more hum-centric.
+				>, Cudi's albums have become progressively more hum-centric over time.
 			</p>
 		</div>
 		<div class="step" :class="{ active: 3 == currentStep }" data-step-no="3">
 			<p class="content">
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus
-				quia deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt
-				ducimus sequi, corrupti eius ullam repellat temporibus id quibusdam
-				maxime molestias libero?
+				How do I conclude a section at the top of the stepper?
 			</p>
 		</div>
 	</Scrollama>
@@ -99,6 +100,11 @@ export default {
 			if (index == 3) {
 				this.sortBarsByPopularity();
 				this.unhighlightBars();
+			}
+			if (index == 3 && direction == "up") {
+				this.transitionBars();
+				// this.sortBarsByPopularity();
+				// this.unhighlightBars();
 			}
 		},
 		transitionBars: function () {
@@ -195,7 +201,7 @@ export default {
 		unhighlightBars: function () {
 			const { bars } = this;
 
-			bars.transition("unhighlightBars").duration(1000).attr("fill", "grey");
+			bars.transition("unhighlightBars").duration(1000).attr("fill", "#cecece");
 		},
 		setupChart: function () {
 			const margin = { top: 30, right: 30, bottom: 100, left: 60 };
@@ -233,7 +239,7 @@ export default {
 			this.colorScale = d3
 				.scaleOrdinal()
 				.domain(data.map((d) => d.album_name))
-				.range(["grey"]); // #4C6DBC // d3.schemeSet3
+				.range(["#cecece"]); // #4C6DBC // d3.schemeSet3
 
 			// X axis
 			svg
