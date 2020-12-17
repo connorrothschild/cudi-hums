@@ -13,11 +13,7 @@
 				:containerWidth="width"
 				:containerHeight="height"
 			/>
-			<div class="section">
-				<p class="heading title is-size-1 has-text-centered">
-					THIS IS A NEW SECTION
-				</p>
-			</div>
+
 			<Beeswarm
 				:data="song_hums"
 				:major_albums="major_albums"
@@ -148,20 +144,22 @@ export default {
 </script>
 
 <style lang="scss">
-$pink: #d96481;
-$background: #242424;
-
 body,
 text {
-	color: white;
+	color: $white-alt;
 }
+
+.title {
+	color: $white-alt !important;
+}
+
 #app {
 	font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen",
 		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
 		"Helvetica", "Arial", sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	color: #ccc;
+	color: $white-alt;
 	background-color: $background;
 }
 
@@ -178,14 +176,9 @@ text {
 	background-color: $background;
 	/* font-size: 10rem; */
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-}
-
-@media screen and (max-width: 768px) {
-	.graphic {
-		flex-direction: column-reverse;
-	}
 }
 
 .step {
@@ -193,7 +186,7 @@ text {
 	min-width: 300px;
 	width: 60%;
 	margin: 0 auto 50vh;
-	background-color: whitesmoke;
+	background-color: $white-alt;
 	border: 1px solid #cecece;
 	/* border-radius: 3px; */
 	display: flex;
@@ -211,14 +204,14 @@ text {
 		border-radius: 3px;
 		/* white-space: nowrap; */
 		display: inline-block;
-		background: $pink;
-		background: linear-gradient(to left, whitesmoke 50%, $pink 50%) right;
+		background: $cudi-pink;
+		background: linear-gradient(to left, $white-alt 50%, $cudi-pink 50%) right;
 		background-size: 200% 1.2em;
 		transition: 1s ease-out 200ms;
 
 		&.blue {
 			background: #4c6dbc;
-			background: linear-gradient(to left, whitesmoke 50%, #4c6dbc 50%) right;
+			background: linear-gradient(to left, $white-alt 50%, #4c6dbc 50%) right;
 			background-size: 200% 1.2em;
 			transition: 1s ease-out 200ms;
 		}
@@ -226,11 +219,11 @@ text {
 
 	&.active {
 		color: black;
-		border-left: 2px solid $pink;
+		border-left: 2px solid $cudi-pink;
 		box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.12);
 
 		.highlight-text {
-			color: white;
+			color: $white-alt;
 			background-position: left;
 		}
 	}
@@ -242,8 +235,8 @@ text {
 	padding: 3px;
 	border-radius: 3px;
 	display: inline;
-	background: $pink;
-	color: white;
+	background: $cudi-pink;
+	color: $white-alt;
 }
 
 .scrollama-steps {
@@ -251,7 +244,7 @@ text {
 }
 
 .blue {
-	background: #4c6dbc;
+	background: $cudi-blue;
 }
 
 rect {
@@ -264,5 +257,9 @@ rect {
 
 .step button {
 	pointer-events: auto;
+}
+
+.has-text-primary {
+	color: $cudi-pink !important;
 }
 </style>

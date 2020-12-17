@@ -13,14 +13,22 @@
 								<img class="shake" src="../assets/cudi.png" />
 							</div>
 							<div class="is-flex is-flex-direction-column max-width-70vw">
-								<!-- Intro subtitle -->
+								<!-- Intro title -->
 								<h2 class="big-title heading has-text-weight-bold">
 									How Much Does Kid Cudi Hum?
 								</h2>
-								<!-- Teaser for content below -->
-								<p class="big-subtitle has-text-weight-light has-text-danger">
+								<!-- Intro subtitle -->
+								<!-- <p class="big-subtitle has-text-weight-light has-text-danger">
 									An in-depth exploration of a question you never knew needed
 									asking.
+								</p> -->
+								<p
+									class="big-subtitle has-text-weight-light has-text-danger mt-2"
+								>
+									<span class="highlight-text-static px-2 py-1"
+										>An in-depth exploration of a question you never knew needed
+										asking.</span
+									>
 								</p>
 							</div>
 						</div>
@@ -81,8 +89,7 @@ p:first-child:first-letter {
 	font-size: 5vmax;
 	line-height: 1.125;
 	text-align: left;
-	color: white;
-
+	color: $white-alt;
 	@media screen and (max-width: 768px) {
 		text-align: center;
 	}
@@ -91,7 +98,7 @@ p:first-child:first-letter {
 .big-subtitle {
 	font-size: 1.5rem;
 	text-align: left;
-	color: white;
+	// color: $white-alt;
 
 	@media screen and (max-width: 768px) {
 		text-align: center;

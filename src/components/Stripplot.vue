@@ -1,7 +1,11 @@
 <template>
 	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
 		<!-- SCROLLAMA GRAPHIC -->
-		<div slot="graphic" class="graphic" id="stripplot"></div>
+		<div slot="graphic" class="graphic" id="stripplot">
+			<p class="mt-2 mb-2 is-size-2 has-text-weight-light">
+				Hums by song position
+			</p>
+		</div>
 		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
 			<p class="content">
@@ -312,7 +316,7 @@ export default {
 						.tickFormat((d, i) => xAxisLabels[i])
 						.tickSizeOuter(0)
 				)
-				.attr("class", "x axis no-line stripplot");
+				.attr("class", "x axis stripplot");
 		},
 		stripByPosition: function () {
 			const { lines, svg, data, width, height } = this;
@@ -384,7 +388,7 @@ export default {
 			this.colorScale = d3
 				.scaleOrdinal()
 				.domain(data.map((d) => d.category))
-				.range(["#4C6DBC", "#D96481"]);
+				.range(["#4C6DBC", "#ce496a"]);
 
 			const wrap = function (text, width) {
 				text.each(function () {
@@ -455,7 +459,7 @@ export default {
 					tip.transition(300).style("opacity", 1);
 					tip.html(
 						d.category == "Hum"
-							? "<span class='highlight-text-static'>" + d.bigram + "</span>"
+							? "<span class='has-text-primary'>" + d.bigram + "</span>"
 							: d.bigram
 					);
 
@@ -498,40 +502,53 @@ export default {
 <style src="vue-scrollama/dist/vue-scrollama.css"></style>
 <style lang="scss">
 .y.axis.stripplot {
+	// Axis line
 	path {
 		stroke: transparent;
 	}
+	// Axis gridlines
 	g.tick line {
-		stroke: whitesmoke;
+		stroke: $white-alt;
 		opacity: 0.25;
 	}
+	// Axis labels
 	text {
 		font-size: 12px;
 		font-weight: 200;
 	}
 }
 
-.x.axis.stripplot text {
-	font-weight: 300;
-	font-size: 12px;
-	text-transform: uppercase;
+.x.axis.stripplot {
+	// Axis text
+	text {
+		font-weight: 300;
+		font-size: 12px;
+		text-transform: uppercase;
+		letter-spacing: 1px;
 
-	@media screen and (max-width: 768px) {
-		font-size: 8px;
+		@media screen and (max-width: 768px) {
+			font-size: 8px;
+		}
+	}
+
+	// Axis ticks
+	g.tick line {
+		stroke: transparent;
 	}
 }
 div.tooltip {
 	position: absolute;
 	text-align: left;
-	font-family: sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 	font-size: 14px;
 	pointer-events: none;
-	color: white;
+	color: $white-alt;
 	z-index: 1000;
 	background: #242424;
 	padding: 5px;
 	border-radius: 3px;
-	// border: 1px solid white;
+	// border: 1px solid $white-alt
 }
 
 .x.axis.stripplot g.tick:nth-child(2) text {

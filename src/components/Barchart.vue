@@ -1,7 +1,9 @@
 <template>
 	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
 		<!-- SCROLLAMA GRAPHIC -->
-		<div slot="graphic" class="graphic" id="barchart"></div>
+		<div slot="graphic" class="graphic" id="barchart">
+			<p class="mt-2 mb-2 is-size-2 has-text-weight-light">Hums by album</p>
+		</div>
 		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currentStep }" data-step-no="0">
 			<p class="content">
@@ -191,7 +193,7 @@ export default {
 				.duration(1000)
 				.attr("fill", function (d) {
 					if (d.album_name == album1) {
-						return "#D96481";
+						return "#ce496a";
 					} else if ((d.album_name == album2) | (d.album_name == album3)) {
 						return "#4C6DBC";
 					} else {
@@ -314,13 +316,24 @@ export default {
 <style src="vue-scrollama/dist/vue-scrollama.css"></style>
 <style lang="scss">
 .y.axis.barchart {
+	// Axis ticks
 	g.tick line {
 		stroke: whitesmoke;
 		opacity: 0.5;
 	}
+	// Axis labels
 	text {
-		font-size: 12px;
+		font-size: 14px;
 		font-weight: 200;
+	}
+}
+
+.axis.barchart {
+	// Axis lines
+	path {
+		stroke: transparent;
+		// stroke: whitesmoke;
+		// opacity: 0.35;
 	}
 }
 </style>

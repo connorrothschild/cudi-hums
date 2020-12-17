@@ -1,7 +1,9 @@
 <template>
 	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
 		<!-- SCROLLAMA GRAPHIC -->
-		<div slot="graphic" class="graphic" id="beeswarm"></div>
+		<div slot="graphic" class="graphic" id="beeswarm">
+			<p class="mt-2 mb-2 is-size-2 has-text-weight-light">Hums by song</p>
+		</div>
 		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
 			<p class="content">
@@ -154,7 +156,7 @@ export default {
 						: yScale(d.album_name) + Math.random() * jitterWidth
 				)
 				.attr("r", this.defaultCircleRadius)
-				.attr("stroke", "black")
+				.attr("stroke", "white")
 				.attr("opacity", 0.8)
 				.attr("fill", (d) => colorScale(d.album_name))
 				.transition("transitionCircles")
@@ -176,7 +178,7 @@ export default {
 						: yScale(d.album_name) + Math.random() * jitterWidth
 				)
 				.attr("r", this.defaultCircleRadius)
-				.attr("stroke", "black")
+				.attr("stroke", "white")
 				.attr("opacity", 0.8)
 				.attr("fill", (d) => colorScale(d.album_name));
 		},
@@ -185,8 +187,8 @@ export default {
 			circles
 				.transition("highlightAlbum")
 				.duration(1000)
-				.attr("fill", (d) => (d.album_name == album ? "#D96481" : "#4C6DBC"))
-				.attr("stroke", (d) => (d.album_name == album ? "black" : "white"))
+				.attr("fill", (d) => (d.album_name == album ? "#ce496a" : "#4C6DBC"))
+				.attr("stroke", (d) => (d.album_name == album ? "white" : "black"))
 				.attr("opacity", (d) => (d.album_name == album ? 1 : 0.3))
 				.attr("r", this.defaultCircleRadius);
 		},
@@ -195,9 +197,9 @@ export default {
 			circles
 				.transition("highlightSong")
 				.duration(2000)
-				.attr("stroke", (d) => (d.song_name == song ? "black" : "white"))
+				.attr("stroke", (d) => (d.song_name == song ? "white" : "black"))
 				.attr("opacity", (d) => (d.song_name == song ? 1 : 0.3))
-				.attr("fill", (d) => (d.song_name == song ? "#D96481" : "#4C6DBC"))
+				.attr("fill", (d) => (d.song_name == song ? "#ce496a" : "#4C6DBC"))
 				.attr("r", (d) =>
 					d.song_name == song
 						? this.defaultCircleRadius * 2
@@ -233,10 +235,7 @@ export default {
 				this.major_albums.includes(d.album_name)
 			);
 
-			this.xScale = d3
-				.scaleLinear()
-				.domain([-0.005, d3.max(data, (d) => d.percent_hums)])
-				.range([0, width]);
+			this.xScale = d3.scaleLinear().domain([-0.005, 0.5]).range([0, width]);
 
 			this.yScale = d3
 				.scalePoint()
@@ -251,7 +250,7 @@ export default {
 			this.colorScale = d3
 				.scaleOrdinal()
 				.domain(data.map((d) => d.album_name))
-				.range(d3.schemeSet3);
+				.range(["#cecece"]);
 
 			// X axis
 			svg
@@ -323,18 +322,30 @@ export default {
 <style src="vue-scrollama/dist/vue-scrollama.css"></style>
 <style lang="scss">
 .x.axis.beeswarm {
+	// Axis ticks
 	g.tick line {
 		stroke: transparent;
 	}
+	// Axis text
 	text {
 		font-size: 12px;
 		font-weight: 200;
 	}
 }
+
 .y.axis.beeswarm {
+	// Axis gridlines
 	g.tick line {
-		stroke: whitesmoke;
+		stroke: $white-alt;
 		stroke-width: 10px;
+		opacity: 0.2;
+	}
+}
+
+.axis.beeswarm {
+	// Axis lines
+	path {
+		stroke: $white-alt;
 		opacity: 0.35;
 	}
 }

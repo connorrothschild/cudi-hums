@@ -43,10 +43,8 @@ export default {
 </script>
 
 <style lang="scss">
-$background: #242424;
-
 .is-gradient-reverse {
-	background-image: linear-gradient($background, #d96481);
+	background-image: linear-gradient($background, $cudi-pink);
 }
 
 .max-width-600-container {
