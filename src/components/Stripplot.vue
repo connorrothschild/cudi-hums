@@ -338,7 +338,6 @@ export default {
 		setupChart: function () {
 			const { data, computedStrokeWidth } = this;
 			const computedStrokeWidthReg = computedStrokeWidth.toString();
-			console.log(computedStrokeWidthReg);
 			const computedStrokeWidthBig = (computedStrokeWidth * 5).toString();
 
 			// Margin conventions
@@ -429,26 +428,29 @@ export default {
 				.selectAll(".tick text")
 				.call(wrap, margin.left * 0.9);
 
+			// X axis
+			svg
+				.append("g")
+				.attr("transform", "translate(0," + height + ")")
+				.call(d3.axisBottom(this.positionScale).ticks(0).tickSizeOuter(0))
+				.attr("class", "x axis stripplot");
+
 			//Binds data to strips
 			const lines = svg
-				.selectAll("line.percent")
+				.append("g")
+				.selectAll("line")
 				.data(data)
 				.enter()
 				.append("line")
-				.attr("class", "percentline");
-
-			lines
-				.attr("stroke", (d) => this.colorScale(d.category))
-				.attr("fill", "white")
-				.attr("stroke-linecap", "round")
+				.attr("class", "stripplot-lines")
 				.style("stroke-width", computedStrokeWidthReg);
 
 			lines
 				.on("mouseover", function (event, d) {
-					d3.select(this)
-						.transition("mouseover")
-						.duration(100)
-						.style("stroke-width", computedStrokeWidthBig);
+					// d3.select(this)
+					// 	.transition("mouseover")
+					// 	.duration(100)
+					// 	.style("stroke-width", computedStrokeWidthBig)
 
 					tip.transition(300).style("opacity", 1);
 					tip.html(
@@ -464,10 +466,10 @@ export default {
 						.style("top", event.clientY + "px");
 				})
 				.on("mouseout", function (d) {
-					d3.select(this)
-						.transition("mouseout")
-						.duration(100)
-						.style("stroke-width", computedStrokeWidthReg);
+					// d3.select(this)
+					// 	.transition("mouseout")
+					// 	.duration(100)
+					// 	.style("stroke-width", computedStrokeWidthReg)
 
 					tip.transition(300).style("opacity", 0);
 				});
@@ -478,6 +480,10 @@ export default {
 		watchResize: function () {
 			d3.select("#stripplot > svg").remove();
 			this.setupChart();
+
+			if (document.getElementsByClassName("stripplot-lines").length == 0) {
+				console.log("NO LINES! We need to rerender");
+			}
 		},
 	},
 	created() {
@@ -489,13 +495,14 @@ export default {
 };
 </script>
 
+<style src="vue-scrollama/dist/vue-scrollama.css"></style>
 <style lang="scss">
 .y.axis.stripplot {
 	path {
 		stroke: transparent;
 	}
 	g.tick line {
-		stroke: grey;
+		stroke: whitesmoke;
 		opacity: 0.25;
 	}
 	text {
@@ -519,22 +526,12 @@ div.tooltip {
 	font-family: sans-serif;
 	font-size: 14px;
 	pointer-events: none;
-	color: black;
+	color: white;
 	z-index: 1000;
-	background: whitesmoke;
+	background: #242424;
 	padding: 5px;
 	border-radius: 3px;
-	border: 1px solid black;
-}
-
-.button.toggled {
-	background-color: #d96481;
-	color: white;
-	font-weight: 500;
-
-	&:hover {
-		color: white;
-	}
+	// border: 1px solid white;
 }
 
 .x.axis.stripplot g.tick:nth-child(2) text {

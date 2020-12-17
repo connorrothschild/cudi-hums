@@ -13,6 +13,11 @@
 				:containerWidth="width"
 				:containerHeight="height"
 			/>
+			<div class="section">
+				<p class="heading title is-size-1 has-text-centered">
+					THIS IS A NEW SECTION
+				</p>
+			</div>
 			<Beeswarm
 				:data="song_hums"
 				:major_albums="major_albums"
@@ -127,7 +132,8 @@ export default {
 				window.innerWidth < 1000
 					? window.innerWidth * 0.9
 					: window.innerWidth * 0.5;
-			this.height = window.innerHeight * 0.9;
+			this.height = window.innerHeight * 0.8;
+			this.largerChartWidth = window.innerWidth * 0.8;
 
 			// alert("You might want to refresh your browser");
 		},
@@ -142,14 +148,21 @@ export default {
 </script>
 
 <style lang="scss">
+$pink: #d96481;
+$background: #242424;
+
+body,
+text {
+	color: white;
+}
 #app {
 	font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen",
 		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
 		"Helvetica", "Arial", sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	color: black;
-	background-color: whitesmoke; /* Should be same as graphic background-color */
+	color: #ccc;
+	background-color: $background;
 }
 
 text {
@@ -162,7 +175,7 @@ text {
 .graphic {
 	/* height: 50%; */
 	border: none;
-	background-color: whitesmoke; /* Should be same as #app background-color
+	background-color: $background;
 	/* font-size: 10rem; */
 	display: flex;
 	align-items: center;
@@ -189,7 +202,7 @@ text {
 	justify-content: center;
 	color: #ccc;
 	text-align: center;
-	/* opacity: 0.9; */
+	// opacity: 0.9;
 	line-height: 1.6;
 
 	.highlight-text {
@@ -198,8 +211,8 @@ text {
 		border-radius: 3px;
 		/* white-space: nowrap; */
 		display: inline-block;
-		background: #d96481;
-		background: linear-gradient(to left, whitesmoke 50%, #d96481 50%) right;
+		background: $pink;
+		background: linear-gradient(to left, whitesmoke 50%, $pink 50%) right;
 		background-size: 200% 1.2em;
 		transition: 1s ease-out 200ms;
 
@@ -213,7 +226,7 @@ text {
 
 	&.active {
 		color: black;
-		border-left: 2px solid #d96481;
+		border-left: 2px solid $pink;
 		box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.12);
 
 		.highlight-text {
@@ -229,7 +242,7 @@ text {
 	padding: 3px;
 	border-radius: 3px;
 	display: inline;
-	background: #d96481;
+	background: $pink;
 	color: white;
 }
 

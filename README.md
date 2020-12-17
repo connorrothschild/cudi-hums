@@ -18,16 +18,15 @@
 
 ## Considerations
 * [Mobile responsiveness](https://pudding.cool/process/responsive-scrollytelling/)
-    * How does the app handle resize? (current method doesn't work too well)
 * [Techniques for Data Visualization on both Mobile & Desktop](https://www.visualcinnamon.com/2019/04/mobile-vs-desktop-dataviz)
 * A table might break up the story nicely and allow for user exploration
     * See table in https://pudding.cool/2018/08/wiki-death/
 
 ## Things I need to fix:
-* Get rid of VW/VH (https://pudding.cool/process/responsive-scrollytelling/)
-* Handle resize better
-    * A lil nudge to refresh the page on window resize
-* Beautify charts a bit more
-* Consider different background color?
-* Ordering of sections in LyricExplorer should be same (toggled view currently reorders them) 
-* Finish stripplot grouping thing
+- [ ] Finish stripplot grouping thing
+- [ ] Handle resize better
+    * Take current console logs and make them into rerenders
+- [x] Get rid of VW/VH (https://pudding.cool/process/responsive-scrollytelling/)
+- [x] Beautify charts a bit more
+- [x] Consider different background color?
+- [x] Ordering of sections in LyricExplorer should be same (toggled view currently reorders them)

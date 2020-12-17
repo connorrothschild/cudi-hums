@@ -6,7 +6,7 @@
 			<button
 				v-for="section in sections"
 				:key="section"
-				class="button"
+				class="button no-border"
 				:class="{ toggled: selectedSections.includes(section) }"
 				@click="addSection(section)"
 			>
@@ -78,7 +78,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .has-text-underlined {
 	text-decoration: underline;
 }
@@ -89,5 +89,22 @@ export default {
 	place-items: center;
 	align-content: center;
 	flex-wrap: wrap;
+}
+
+.button {
+	font-weight: 400;
+
+	&.no-border {
+		border: none;
+	}
+
+	&.toggled {
+		background-color: #d96481;
+		color: white;
+
+		&:hover {
+			color: white;
+		}
+	}
 }
 </style>

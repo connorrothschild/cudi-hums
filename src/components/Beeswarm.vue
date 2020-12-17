@@ -4,8 +4,10 @@
 		<div slot="graphic" class="graphic" id="beeswarm"></div>
 		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
-			By breaking down each album into its constituent songs, we can start to
-			see which tracks contribute the most to Cudi's hum-heavy albums.
+			<p class="content">
+				By breaking down each album into its constituent songs, we can start to
+				see which tracks contribute the most to Cudi's hum-heavy albums.
+			</p>
 		</div>
 		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
 			<p>
@@ -295,14 +297,18 @@ export default {
 				.selectAll("circle")
 				.data(data)
 				.enter()
-				.append("circle");
+				.append("circle")
+				.attr("class", "beeswarm-circles");
 
 			this.circles = circles;
 		},
 		watchResize: function () {
 			d3.select("#beeswarm > svg").remove();
 			this.setupChart();
-			this.transitionCircles();
+
+			if (document.getElementsByClassName("beeswarm-circles").length == 0) {
+				console.log("NO CIRCLES! We need to rerender");
+			}
 		},
 	},
 	created() {
@@ -327,9 +333,9 @@ export default {
 }
 .y.axis.beeswarm {
 	g.tick line {
-		stroke: grey;
+		stroke: whitesmoke;
 		stroke-width: 10px;
-		opacity: 0.25;
+		opacity: 0.35;
 	}
 }
 

@@ -1,27 +1,33 @@
 <template>
-	<div class="is-gradient">
-		<section class="hero is-fullheight has-text-centered">
-			<div class="hero-body">
-				<div class="container">
-					<div class="is-inline-flex place-items-center">
-						<!-- Intro image -->
-						<figure class="image is-inline-block is-96x132">
-							<img class="is-inline-block shake" src="../assets/cudi.png" />
-						</figure>
-						<!-- Big intro title -->
-						<!-- <h1 class="title has-text-weight-light ml-3 has-text-black">
-							hmmmmmmmm
-						</h1> -->
+	<section>
+		<div class="has-background-black">
+			<section class="hero is-fullheight">
+				<div class="hero-body">
+					<div class="container">
+						<div
+							class="is-flex responsive-flex-direction place-items-center is-justify-content-space-evenly"
+						>
+							<div class="max-width-200">
+								<!-- Intro image -->
+								<!-- <figure class="image is-3by4"> -->
+								<img class="shake" src="../assets/cudi.png" />
+							</div>
+							<div class="is-flex is-flex-direction-column max-width-70vw">
+								<!-- Intro subtitle -->
+								<h2 class="big-title heading has-text-weight-bold">
+									How Much Does Kid Cudi Hum?
+								</h2>
+								<!-- Teaser for content below -->
+								<p class="big-subtitle has-text-weight-light has-text-danger">
+									An in-depth exploration of a question you never knew needed
+									asking.
+								</p>
+							</div>
+						</div>
 					</div>
-					<!-- Intro subtitle -->
-					<h2 class="heading is-size-1 has-text-weight-semibold has-text-white">
-						How Much Does Kid Cudi Hum?
-					</h2>
-					<!-- Teaser for content below -->
-					<p class="mt-6">First bit of intro text here...</p>
 				</div>
-			</div>
-		</section>
+			</section>
+		</div>
 		<div class="section">
 			<!-- Intro prose, with dropcap on first letter -->
 			<div class="container is-max-desktop">
@@ -51,7 +57,7 @@
 				</p>
 			</div>
 		</div>
-	</div>
+	</section>
 </template>
 
 <script>
@@ -71,7 +77,40 @@ p:first-child:first-letter {
 	padding-left: 3px;
 }
 
-.is-gradient {
-	background-image: linear-gradient(#4c6dbc, #f5f5f5);
+.big-title {
+	font-size: 5vmax;
+	line-height: 1.125;
+	text-align: left;
+	color: white;
+
+	@media screen and (max-width: 768px) {
+		text-align: center;
+	}
+}
+
+.big-subtitle {
+	font-size: 1.5rem;
+	text-align: left;
+	color: white;
+
+	@media screen and (max-width: 768px) {
+		text-align: center;
+	}
+}
+
+.max-width-200 {
+	max-width: 200px;
+}
+
+.max-width-70vw {
+	flex-basis: 70%;
+}
+
+.responsive-flex-direction {
+	flex-direction: row;
+
+	@media screen and (max-width: 768px) {
+		flex-direction: column;
+	}
 }
 </style>

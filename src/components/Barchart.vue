@@ -287,7 +287,8 @@ export default {
 				.selectAll("rect")
 				.data(data)
 				.enter()
-				.append("rect");
+				.append("rect")
+				.attr("class", "barchart-bars");
 
 			this.bars = bars;
 			this.svg = svg;
@@ -295,7 +296,10 @@ export default {
 		watchResize: function () {
 			d3.select("#barchart > svg").remove();
 			this.setupChart();
-			this.transitionBars();
+
+			if (document.getElementsByClassName("barchart-bars").length == 0) {
+				console.log("NO LINES! We need to rerender");
+			}
 		},
 	},
 	created() {
@@ -311,7 +315,7 @@ export default {
 <style lang="scss">
 .y.axis.barchart {
 	g.tick line {
-		stroke: grey;
+		stroke: whitesmoke;
 		opacity: 0.5;
 	}
 	text {

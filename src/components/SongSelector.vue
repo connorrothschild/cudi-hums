@@ -1,7 +1,9 @@
 <template>
-	<div class="container is-max-desktop">
-		<h1 class="title has-text-centered">Why don't you explore for yourself?</h1>
-		<h2 class="subtitle mt-2 has-text-centered has-text-black">
+	<div class="container is-max-desktop px-3">
+		<h1 class="title has-text-centered has-text-white">
+			Why don't you explore for yourself?
+		</h1>
+		<h2 class="subtitle mt-2 has-text-centered has-text-white">
 			Here, you can select a song from
 			<span class="has-text-weight-semibold">Man on the Moon III</span> and read
 			the hums from each section.
@@ -20,7 +22,7 @@
 				</div>
 			</div>
 			<!-- Once the user selects a song, provide them a link to the Genius lyrics page -->
-			<div v-if="selectedSong">
+			<div v-if="selectedSong" class="mobile-mt-3">
 				<a
 					class="heading button"
 					target="_blank"
@@ -111,5 +113,11 @@ export default {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+}
+
+.mobile-mt-3 {
+	@media screen and (max-width: 768px) {
+		margin-top: 1.5rem;
+	}
 }
 </style>

@@ -10,7 +10,9 @@
 							<img class="is-inline-block shake" src="../assets/cudi.png" />
 						</figure>
 						<!-- Big intro title -->
-						<h1 class="title has-text-weight-light ml-3 has-text-black">Hm.</h1>
+						<h1 class="title has-text-weight-light ml-3 has-text-white">
+							Hmmmmm
+						</h1>
 					</div>
 					<!-- Big outro text -->
 					<!-- <h1 class="title has-text-weight-light mt-5 has-text-black">
@@ -41,8 +43,10 @@ export default {
 </script>
 
 <style lang="scss">
+$background: #242424;
+
 .is-gradient-reverse {
-	background-image: linear-gradient(#f5f5f5, #d96481);
+	background-image: linear-gradient($background, #d96481);
 }
 
 .max-width-600-container {
