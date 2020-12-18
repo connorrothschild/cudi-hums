@@ -16,28 +16,30 @@
 		<!-- Here, I am doing v-for="(section, index) in sections" and then a v-if to show, 
         rather than  v-for="(section, index) in selectedSections." 
         This is because I want to maintain ordering of sections (Intro -> Verse -> Chorus etc.)-->
-		<div v-for="(section, index) in sections" :key="index">
-			<div v-if="selectedSections.includes(section)" class="box m-5">
-				<p
-					class="heading mb-4 is-size-5 has-text-weight-light has-text-centered has-text-underlined"
-				>
-					{{ section }}
-				</p>
-				<!-- This reactively filters and then renders each word (bigram) from the dataset that matches the user-specified section -->
-				<div class="content has-text-centered">
-					<span
-						v-for="(val, index) in songData.filter(
-							(d) => d.section_name == section
-						)"
-						:key="index"
-						:class="{ 'highlight-text-static pr-0': val.category == 'Hum' }"
+		<transition-group tag="div" name="list">
+			<div v-for="(section, index) in sections" :key="index">
+				<div class="box m-5" v-if="selectedSections.includes(section)">
+					<p
+						class="heading mb-4 is-size-5 has-text-weight-light has-text-centered has-text-underlined"
 					>
-						{{ val.bigram }}
-					</span>
+						{{ section }}
+					</p>
+					<!-- This reactively filters and then renders each word (bigram) from the dataset that matches the user-specified section -->
+					<div class="content has-text-centered">
+						<span
+							v-for="(val, index) in songData.filter(
+								(d) => d.section_name == section
+							)"
+							:key="index"
+							:class="{ 'highlight-text-static pr-0': val.category == 'Hum' }"
+						>
+							{{ val.bigram }}
+						</span>
+					</div>
 				</div>
 			</div>
-		</div>
-
+		</transition-group>
+		<!-- IF NONE, have Cudi nudge the user -->
 		<div v-if="selectedSections.length == 0">
 			<div class="is-flex is-justify-content-center is-align-items-center m-5">
 				<div style="max-width: 50px">
@@ -71,7 +73,7 @@ export default {
 	},
 	components: {},
 	data() {
-		return { selectedSections: [] };
+		return { selectedSections: [], show: false };
 	},
 	computed: {},
 	methods: {
@@ -147,5 +149,34 @@ export default {
 	border-bottom: 0;
 	margin-top: -10px;
 	margin-left: -10px;
+}
+
+// Animations on above toggleable boxes
+// https://codepen.io/ktsn/pen/vJgYxB
+.list-enter-active,
+.list-leave-active,
+.list-move {
+	transition: 500ms cubic-bezier(0.59, 0.12, 0.34, 0.95);
+	transition-property: opacity, transform;
+}
+
+.list-enter {
+	opacity: 0;
+	transform: translateX(50px) scaleY(0.5);
+}
+
+.list-enter-to {
+	opacity: 1;
+	transform: translateX(0) scaleY(1);
+}
+
+.list-leave-active {
+	position: absolute;
+}
+
+.list-leave-to {
+	opacity: 0;
+	transform: scaleY(0);
+	transform-origin: center top;
 }
 </style>
