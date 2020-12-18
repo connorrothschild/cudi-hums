@@ -114,10 +114,12 @@ export default {
 			currStep: null,
 			alreadyTriggered: false,
 			defaultCircleRadius: 7.5,
+			response: {},
 		};
 	},
 	methods: {
 		stepEnterHandler({ element, index, direction }) {
+			this.response = { element, index, direction };
 			this.currStep = index;
 			// THE VERY FIRST TIME (AND ONLY GOING DOWN), TRANSITION
 			if (index == 0 && direction == "down" && this.alreadyTriggered == false) {
@@ -216,7 +218,7 @@ export default {
 
 			// Select whichever is smaller; the chart width / data.length (so each square fits perfectly)
 			// Or the left margin (rect size should never be greater than margin.left lest overflow)
-			const album_cover_size = Math.min(
+			const albumCoverSize = Math.min(
 				height / this.major_albums.length,
 				margin.left
 			);
@@ -285,10 +287,10 @@ export default {
 				.attr("xlink:href", function (d) {
 					return d.album_cover_art_url;
 				})
-				.attr("width", album_cover_size)
-				.attr("height", album_cover_size)
-				.attr("x", -album_cover_size)
-				.attr("y", -album_cover_size / 2);
+				.attr("width", albumCoverSize)
+				.attr("height", albumCoverSize)
+				.attr("x", -albumCoverSize)
+				.attr("y", -albumCoverSize / 2);
 
 			// Add dots
 			const circles = svg
@@ -305,9 +307,14 @@ export default {
 			d3.select("#beeswarm > svg").remove();
 			this.setupChart();
 
-			if (document.getElementsByClassName("beeswarm-circles").length == 0) {
-				console.log("NO CIRCLES! We need to rerender");
-			}
+			// * My hacky workaround:
+			// On step enter (above), we saved the response which included index, direction, and element
+			// Now, we rereference those and pass them back into stepEnterHandler (to mimic the most recent method)
+
+			// But because the methods only transition certain elements (fill, x position, etc.)
+			// we first run the initializing method, transition bars
+			this.transitionCircles();
+			this.stepEnterHandler(this.response);
 		},
 	},
 	created() {

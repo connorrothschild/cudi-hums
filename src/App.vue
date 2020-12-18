@@ -237,6 +237,13 @@ text {
 	display: inline;
 	background: $cudi-pink;
 	color: $white-alt;
+
+	&.mobile-toggle {
+		@media screen and(max-width: 768px) {
+			background: none;
+			color: $cudi-pink;
+		}
+	}
 }
 
 .scrollama-steps {

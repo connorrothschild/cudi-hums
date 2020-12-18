@@ -137,8 +137,7 @@ export default {
 			width: null,
 			height: null,
 			currStep: null,
-			positionScale: null,
-			normalizedPositionScale: null,
+			xScale: null,
 			yScale: null,
 			colorScale: null,
 			svg: null,
@@ -146,6 +145,7 @@ export default {
 			unclicked: true,
 			onlyHumsToggled: false,
 			alreadyTriggered: false,
+			response: {},
 		};
 	},
 	computed: {
@@ -164,15 +164,17 @@ export default {
 	},
 	methods: {
 		stepEnterHandler({ element, index, direction }) {
+			this.response = { element, index, direction };
+
 			this.currStep = index;
+
 			if (index == 0 && direction == "down" && this.alreadyTriggered == false) {
-				this.transitionStrip(this.positionScale);
+				this.transitionStrips();
 				this.stripByPosition();
 
 				this.alreadyTriggered = true;
 			}
 			if (index == 0 && direction == "down" && this.alreadyTriggered == true) {
-				// this.transitionStrip(this.positionScale);
 				this.stripByPosition();
 
 				// this.alreadyTriggered = true;
@@ -181,11 +183,12 @@ export default {
 				this.stripByPosition();
 			}
 			if (index == 1) {
-				// * Highlight hums only
+				// * Normalize
 				this.stripByNormalizedPosition();
 			}
 			if (index == 2 && direction == "down") {
 				// * Highlight hums only
+				this.stripByNormalizedPosition();
 				this.filterHums();
 			}
 			if (index == 2 && direction == "up") {
@@ -194,10 +197,13 @@ export default {
 			}
 			if (index == 3) {
 				// ! Highlight a few hums...
+
 				this.filterHums();
 				this.highlightSong("The Void");
 			}
 			if (index == 4) {
+				// ! Highlight a few hums...
+
 				this.filterHums();
 				this.highlightSong("She Knows This");
 			}
@@ -243,6 +249,9 @@ export default {
 		},
 		filterHums: function () {
 			const { lines } = this;
+
+			this.xScale = d3.scaleLinear().domain([0, 1]).range([0, this.width]);
+
 			lines
 				.attr("opacity", 1)
 				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
@@ -250,8 +259,8 @@ export default {
 				.filter((d) => d.category == "Regular")
 				.transition("filterHums")
 				.duration(1000)
-				.attr("x1", this.normalizedPositionScale(1.05))
-				.attr("x2", this.normalizedPositionScale(1.05));
+				.attr("x1", this.xScale(1.05))
+				.attr("x2", this.xScale(1.05));
 
 			this.onlyHumsToggled = true;
 		},
@@ -273,23 +282,27 @@ export default {
 						: this.yScale(d.song_name) - this.computedHeightBuffer
 				);
 		},
-		transitionStrip: function (xAxisScale) {
+		transitionStrips: function () {
 			const { lines, svg, data } = this;
+
+			this.xScale = d3.scaleLinear().domain([0, 1]).range([0, this.width]);
 
 			lines
 				.attr("opacity", 1)
-				.attr("x1", xAxisScale(1.05))
-				.attr("x2", xAxisScale(1.05))
+				.attr("x1", this.xScale(1.05))
+				.attr("x2", this.xScale(1.05))
 				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
 				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
 				.attr("stroke", (d) => this.colorScale(d.category))
-				.transition("transitionStrip")
+				.transition("transitionStrips")
 				.duration(1000)
-				.attr("x1", (d) => xAxisScale(d.normalized_position))
-				.attr("x2", (d) => xAxisScale(d.normalized_position));
+				.attr("x1", (d) => this.xScale(d.normalized_position))
+				.attr("x2", (d) => this.xScale(d.normalized_position));
 		},
 		stripByNormalizedPosition: function () {
 			const { lines, svg, data, height } = this;
+
+			this.xScale = d3.scaleLinear().domain([0, 1]).range([0, this.width]);
 
 			lines
 				.attr("opacity", 1)
@@ -297,8 +310,8 @@ export default {
 				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
 				.transition("stripByNormalizedPosition")
 				.duration(1000)
-				.attr("x1", (d) => this.normalizedPositionScale(d.normalized_position))
-				.attr("x2", (d) => this.normalizedPositionScale(d.normalized_position))
+				.attr("x1", (d) => this.xScale(d.normalized_position))
+				.attr("x2", (d) => this.xScale(d.normalized_position))
 				.attr("stroke", (d) => this.colorScale(d.category));
 			this.onlyHumsToggled = false;
 
@@ -311,7 +324,7 @@ export default {
 				.attr("transform", "translate(0," + height + ")")
 				.call(
 					d3
-						.axisBottom(this.normalizedPositionScale)
+						.axisBottom(this.xScale)
 						.ticks(1)
 						.tickFormat((d, i) => xAxisLabels[i])
 						.tickSizeOuter(0)
@@ -321,14 +334,19 @@ export default {
 		stripByPosition: function () {
 			const { lines, svg, data, width, height } = this;
 
+			this.xScale = d3
+				.scaleLinear()
+				.domain([0, d3.max(data, (d) => d.position)])
+				.range([0, this.width]);
+
 			lines
 				.attr("opacity", 1)
 				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
 				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
 				.transition("stripByPosition")
 				.duration(1000)
-				.attr("x1", (d) => this.positionScale(d.position))
-				.attr("x2", (d) => this.positionScale(d.position))
+				.attr("x1", (d) => this.xScale(d.position))
+				.attr("x2", (d) => this.xScale(d.position))
 				.attr("stroke", (d) => this.colorScale(d.category));
 			this.onlyHumsToggled = false;
 
@@ -336,7 +354,7 @@ export default {
 			svg
 				.append("g")
 				.attr("transform", "translate(0," + height + ")")
-				.call(d3.axisBottom(this.positionScale).ticks(0).tickSizeOuter(0))
+				.call(d3.axisBottom(this.xScale).ticks(0).tickSizeOuter(0))
 				.attr("class", "x axis stripplot");
 		},
 		setupChart: function () {
@@ -367,16 +385,8 @@ export default {
 				.attr("class", "tooltip")
 				.style("opacity", 0);
 
-			//Creates the normalizedPositionScale
-			this.normalizedPositionScale = d3
-				.scaleLinear()
-				.domain([0, 1])
-				.range([0, width]);
-
-			this.positionScale = d3
-				.scaleLinear()
-				.domain([0, d3.max(data, (d) => d.position)])
-				.range([0, width]);
+			//Creates the xScale
+			this.xScale = d3.scaleLinear().range([0, width]);
 
 			//Creates the yScale
 			this.yScale = d3
@@ -436,7 +446,7 @@ export default {
 			svg
 				.append("g")
 				.attr("transform", "translate(0," + height + ")")
-				.call(d3.axisBottom(this.positionScale).ticks(0).tickSizeOuter(0))
+				.call(d3.axisBottom(this.xScale).ticks(0).tickSizeOuter(0))
 				.attr("class", "x axis stripplot");
 
 			//Binds data to strips
@@ -459,7 +469,7 @@ export default {
 					tip.transition(300).style("opacity", 1);
 					tip.html(
 						d.category == "Hum"
-							? "<span class='has-text-primary'>" + d.bigram + "</span>"
+							? "<span class='has-text-pink'>" + d.bigram + "</span>"
 							: d.bigram
 					);
 
@@ -485,9 +495,15 @@ export default {
 			d3.select("#stripplot > svg").remove();
 			this.setupChart();
 
-			if (document.getElementsByClassName("stripplot-lines").length == 0) {
-				console.log("NO LINES! We need to rerender");
-			}
+			// ! FIXME: Resize really breaks this whole thing
+			// * My hacky workaround:
+			// On step enter (above), we saved the response which included index, direction, and element
+			// Now, we rereference those and pass them back into stepEnterHandler (to mimic the most recent method)
+
+			// But because the methods only transition certain elements (fill, x position, etc.)
+			// we first run the initializing method, transition bars
+			this.transitionStrips();
+			this.stepEnterHandler(this.response);
 		},
 	},
 	created() {
@@ -556,5 +572,9 @@ div.tooltip {
 }
 .x.axis.stripplot g.tick:nth-child(3) text {
 	text-anchor: end !important;
+}
+
+.has-text-pink {
+	color: $cudi-pink;
 }
 </style>

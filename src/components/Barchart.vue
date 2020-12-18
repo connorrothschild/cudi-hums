@@ -55,7 +55,6 @@ export default {
 	},
 	mounted() {
 		this.setupChart();
-		// this.transitionBars();
 	},
 	components: {
 		Scrollama,
@@ -70,26 +69,33 @@ export default {
 			height: null,
 			width: null,
 			currentStep: null,
-			album_cover_size: null,
+			albumCoverSize: null,
 			alreadyTriggeredBars: false,
+			response: {},
 		};
 	},
 	methods: {
-		stepEnterHandler: function ({ element, index, direction }) {
+		stepEnterHandler: function ({ index, direction, element }) {
+			// Grab for resize, see below
+			this.response = { index, direction, element };
 			this.currentStep = index;
+
 			// THE VERY FIRST TIME (AND ONLY GOING DOWN), TRANSITION
 			if (index == 0 && direction == "down") {
+				console.log("trigering");
 				if (this.alreadyTriggeredBars == false) {
 					this.transitionBars();
 					// this.alreadyTriggeredBars = true;
+				} else {
+					this.sortBarsByHum();
 				}
 			}
 			if (index == 0 && direction == "up") {
-				this.sortBarsByPopularity();
+				this.sortBarsByHum();
 				this.unhighlightBars();
 			}
 			if (index == 1) {
-				this.sortBarsByPopularity();
+				this.sortBarsByHum();
 				this.highlightBars("Man on the Moon III: The Chosen", null);
 			}
 			if (index == 2) {
@@ -101,17 +107,15 @@ export default {
 				);
 			}
 			if (index == 3) {
-				this.sortBarsByPopularity();
+				this.sortBarsByHum();
 				this.unhighlightBars();
 			}
 			if (index == 3 && direction == "up") {
-				this.transitionBars();
-				// this.sortBarsByPopularity();
-				// this.unhighlightBars();
+				this.sortBarsByHum();
 			}
 		},
 		transitionBars: function () {
-			const { bars, xScale, yScale, colorScale } = this;
+			const { bars, xScale, width, yScale, colorScale } = this;
 
 			bars
 				.attr("width", xScale.bandwidth())
@@ -126,11 +130,11 @@ export default {
 
 			this.alreadyTriggeredBars = true;
 		},
-		sortBarsByPopularity: function () {
+		sortBarsByHum: function () {
 			const { bars, svg, data, xScale, yScale, colorScale } = this;
 
 			bars
-				.transition("sortBarsByPopularity")
+				.transition("sortBarsByHum")
 				.duration(1000)
 				.attr("width", xScale.bandwidth())
 				.attr("x", (d) => xScale(d.album_name));
@@ -148,13 +152,14 @@ export default {
 				])
 				.append("svg:image")
 				.attr("xlink:href", (d) => d.album_cover_art_url)
-				.attr("width", this.album_cover_size)
-				.attr("height", this.album_cover_size)
-				.attr("x", -this.album_cover_size / 2)
+				.attr("width", this.albumCoverSize)
+				.attr("height", this.albumCoverSize)
+				.attr("x", -this.albumCoverSize / 2)
 				.attr("y", 1);
 		},
 		sortBarsByYear: function () {
 			const { bars, svg, data, yScale, colorScale, width } = this;
+			console.log(bars);
 
 			const yearData = [...data.sort((a, b) => d3.ascending(a.year, b.year))];
 
@@ -165,6 +170,10 @@ export default {
 				.padding(0.1);
 
 			bars
+				.attr("width", yearScale.bandwidth())
+				.attr("y", (d) => yScale(d.percent_hums))
+				.attr("height", (d) => this.height - yScale(d.percent_hums))
+				// .attr("fill", (d) => colorScale(d.album_name))
 				.transition("sortBarsByYear")
 				.duration(1000)
 				.attr("x", (d) => yearScale(d.year));
@@ -180,9 +189,9 @@ export default {
 				.data(yearData.sort((a, b) => d3.ascending(a.year, b.year)))
 				.append("svg:image")
 				.attr("xlink:href", (d) => d.album_cover_art_url)
-				.attr("width", this.album_cover_size)
-				.attr("height", this.album_cover_size)
-				.attr("x", -this.album_cover_size / 2)
+				.attr("width", this.albumCoverSize)
+				.attr("height", this.albumCoverSize)
+				.attr("x", -this.albumCoverSize / 2)
 				.attr("y", 1);
 		},
 		highlightBars: function (album1, album2, album3) {
@@ -266,7 +275,7 @@ export default {
 
 			// Select whichever is smaller; the chart width / data.length (so each square fits perfectly)
 			// Or the bottom margin (rect size should never be greater than margin.bottom lest overflow)
-			this.album_cover_size = Math.min(width / data.length, margin.bottom);
+			this.albumCoverSize = Math.min(width / data.length, margin.bottom);
 
 			svg.select(".x.axis.barchart").selectAll("text").remove();
 
@@ -278,9 +287,9 @@ export default {
 				])
 				.append("svg:image")
 				.attr("xlink:href", (d) => d.album_cover_art_url)
-				.attr("width", this.album_cover_size)
-				.attr("height", this.album_cover_size)
-				.attr("x", -this.album_cover_size / 2)
+				.attr("width", this.albumCoverSize)
+				.attr("height", this.albumCoverSize)
+				.attr("x", -this.albumCoverSize / 2)
 				.attr("y", 1);
 
 			// Add dots
@@ -299,16 +308,21 @@ export default {
 			d3.select("#barchart > svg").remove();
 			this.setupChart();
 
-			if (document.getElementsByClassName("barchart-bars").length == 0) {
-				console.log("NO LINES! We need to rerender");
-			}
+			// * My hacky workaround:
+			// On step enter (above), we saved the response which included index, direction, and element
+			// Now, we rereference those and pass them back into stepEnterHandler (to mimic the most recent method)
+
+			// But because the methods only transition certain elements (fill, x position, etc.)
+			// we first run the initializing method, transition bars
+			this.transitionBars();
+			this.stepEnterHandler(this.response);
 		},
 	},
 	created() {
-		window.addEventListener("resize", debounce(this.watchResize, 500));
+		window.addEventListener("resize", debounce(this.watchResize, 1000));
 	},
 	destroyed() {
-		window.removeEventListener("resize", debounce(this.watchResize, 500));
+		window.removeEventListener("resize", debounce(this.watchResize, 1000));
 	},
 };
 </script>

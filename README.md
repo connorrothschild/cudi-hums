@@ -12,7 +12,7 @@
 
 ### Nice to have:
 * Hums per song compared to average sentiment per song (no way there's any relationship here?)
-* Where hums occur in a song (beginning, end, middle)
+* ~~Where hums occur in a song (beginning, end, middle)~~
     * ~~Strip plot per song~~
     * ~~When does Cudi hum? Intro, bridge, chorus, outro ~~
 
@@ -26,7 +26,7 @@
 ## Things I need to fix:
 - [ ] Finish stripplot grouping thing
 - [ ] Handle resize better
-    * Take current console logs and make them into rerenders
+    * Resize currently breaks stripplot
 - [ ] "Show Only Hums" should be a toggle, not a button... maybe?
 - [ ] Add axis titles
 - [x] Get rid of VW/VH (https://pudding.cool/process/responsive-scrollytelling/)

@@ -7,12 +7,12 @@
 						<div
 							class="is-flex responsive-flex-direction place-items-center is-justify-content-space-evenly"
 						>
-							<div class="max-width-200">
+							<div class="max-width-20">
 								<!-- Intro image -->
 								<!-- <figure class="image is-3by4"> -->
 								<img class="shake" src="../assets/cudi.png" />
 							</div>
-							<div class="is-flex is-flex-direction-column max-width-70vw">
+							<div class="is-flex is-flex-direction-column max-width-70">
 								<!-- Intro title -->
 								<h2 class="big-title heading has-text-weight-bold">
 									How Much Does Kid Cudi Hum?
@@ -25,7 +25,7 @@
 								<p
 									class="big-subtitle has-text-weight-light has-text-danger mt-2"
 								>
-									<span class="highlight-text-static px-2 py-1"
+									<span class="highlight-text-static mobile-toggle px-2 py-1"
 										>An in-depth exploration of a question you never knew needed
 										asking.</span
 									>
@@ -90,26 +90,32 @@ p:first-child:first-letter {
 	line-height: 1.125;
 	text-align: left;
 	color: $white-alt;
+
 	@media screen and (max-width: 768px) {
+		font-size: 3rem;
 		text-align: center;
 	}
 }
 
 .big-subtitle {
-	font-size: 1.5rem;
+	font-size: 1.7vw;
 	text-align: left;
-	// color: $white-alt;
+	color: $white-alt;
 
 	@media screen and (max-width: 768px) {
 		text-align: center;
+		font-size: 1rem;
 	}
 }
 
-.max-width-200 {
-	max-width: 200px;
+.max-width-20 {
+	max-width: 20%;
+	@media screen and (max-width: 768px) {
+		max-width: 30%;
+	}
 }
 
-.max-width-70vw {
+.max-width-70 {
 	flex-basis: 70%;
 }
 
