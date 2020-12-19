@@ -29,6 +29,9 @@
     * Resize currently breaks stripplot
 - [ ] "Show Only Hums" should be a toggle, not a button... maybe?
 - [ ] Add axis titles
+- [ ] Safari? Text shows up behind graphic
+    * Current solution is notification/alert
+- [ ] Make current notification for mobile and safari users fixed top 0
 - [x] Get rid of VW/VH (https://pudding.cool/process/responsive-scrollytelling/)
 - [x] Beautify charts a bit more
 - [x] Consider different background color?

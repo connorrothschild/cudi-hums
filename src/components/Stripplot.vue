@@ -165,7 +165,6 @@ export default {
 	methods: {
 		stepEnterHandler({ element, index, direction }) {
 			this.response = { element, index, direction };
-
 			this.currStep = index;
 
 			if (index == 0 && direction == "down" && this.alreadyTriggered == false) {
@@ -176,8 +175,6 @@ export default {
 			}
 			if (index == 0 && direction == "down" && this.alreadyTriggered == true) {
 				this.stripByPosition();
-
-				// this.alreadyTriggered = true;
 			}
 			if (index == 0 && direction == "up") {
 				this.stripByPosition();
@@ -211,8 +208,8 @@ export default {
 				// ! When does Cudi hum? Intro, chorus, bridge, outro
 				this.defaultHeight();
 				this.stripByNormalizedPosition();
-				// this.filterHums();
-				this.groupBySection();
+				this.filterHums();
+				// this.groupBySection();
 			}
 		},
 		handleFilter: function () {
@@ -502,16 +499,23 @@ export default {
 
 			// But because the methods only transition certain elements (fill, x position, etc.)
 			// we first run the initializing method, transition bars
-			this.transitionStrips();
+
+			// * NOTE: Only the first view (index 0) has 'non-normalized' x-axis positioning.
+			// Every other time, run stripByNormalizedPosition()
+			if (this.response.index == 0) {
+				this.stripByPosition();
+			} else {
+				this.stripByNormalizedPosition();
+			}
 			this.stepEnterHandler(this.response);
 		},
 	},
 	created() {
 		window.addEventListener("resize", debounce(this.watchResize, 500));
 	},
-	destroyed() {
-		window.removeEventListener("resize", debounce(this.watchResize, 500));
-	},
+	// destroyed() {
+	// 	window.removeEventListener("resize", debounce(this.watchResize, 500));
+	// },
 };
 </script>
 
@@ -560,7 +564,7 @@ div.tooltip {
 	font-size: 14px;
 	pointer-events: none;
 	color: $white-alt;
-	z-index: 1000;
+	// z-index: 1000;
 	background: #242424;
 	padding: 5px;
 	border-radius: 3px;

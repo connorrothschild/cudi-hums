@@ -1,5 +1,25 @@
 <template>
 	<div id="app">
+		<!-- If on Safari, nudge to another browser -->
+		<div class="notification is-fixed is-danger mb-0" v-if="showSafariWarning">
+			<button class="delete" @click="showSafariWarning = false"></button>
+			Thanks for visiting!
+			<span class="has-text-weight-semibold"
+				>There is a known issue with this project's appearance on Safari.</span
+			>
+			If possible, visit the page on another browser, such as Chrome or Firefox.
+		</div>
+		<!-- If mobile, nudge to larger screen -->
+		<!-- Only show mobile nudge on non-Safari browsers (don't want to duplicate) -->
+		<!-- Mobile safari users can attribute the bugginess to Safari, not mobile -->
+		<div
+			class="notification is-fixed is-danger mb-0"
+			v-if="showMobileNudge & !showSafariWarning"
+		>
+			<button class="delete" @click="showMobileNudge = false"></button>
+			Pssst. You might have a better experience on a wider screen, such as a
+			desktop computer.
+		</div>
 		<Intro />
 		<div
 			v-if="
@@ -71,15 +91,24 @@ export default {
 			width: null,
 			largerChartWidth: null,
 			height: null,
+			showSafariWarning: false,
+			showMobileNudge: false,
 		};
 	},
 	async mounted() {
+		// HANDLE SAFARI AND MOBILE USERS
+		if (navigator.userAgent.indexOf("Safari") != -1) {
+			this.showSafariWarning = true;
+		}
+		this.checkWidthForWarning();
+
 		this.width =
 			window.innerWidth < 1000
 				? window.innerWidth * 0.9
 				: window.innerWidth * 0.5;
 		this.largerChartWidth = window.innerWidth * 0.8;
 		this.height = window.innerHeight * 0.8;
+
 		const song_hums = await d3.csv("./data/song_hums.csv");
 		song_hums.forEach((d) => {
 			d.n_hums = +d.n_hums;
@@ -131,14 +160,23 @@ export default {
 			this.height = window.innerHeight * 0.8;
 			this.largerChartWidth = window.innerWidth * 0.8;
 
+			this.checkWidthForWarning();
+
 			// alert("You might want to refresh your browser");
+		},
+		checkWidthForWarning: function () {
+			if (window.innerWidth < 600) {
+				this.showMobileNudge = true;
+			} else {
+				this.showMobileNudge = false;
+			}
 		},
 	},
 	created() {
-		window.addEventListener("resize", debounce(this.watchResize, 500));
+		window.addEventListener("resize", this.watchResize); // debounce(this.watchResize, 500));
 	},
 	destroyed() {
-		window.removeEventListener("resize", debounce(this.watchResize, 500));
+		window.removeEventListener("resize", this.watchResize); //debounce(this.watchResize, 500));
 	},
 };
 </script>
@@ -197,6 +235,7 @@ text {
 	text-align: center;
 	// opacity: 0.9;
 	line-height: 1.6;
+	z-index: 1000;
 
 	.highlight-text {
 		font-weight: 600;
@@ -268,5 +307,11 @@ rect {
 
 .has-text-primary {
 	color: $cudi-pink !important;
+}
+
+.is-fixed {
+	position: fixed !important;
+	bottom: 0; // top: 0
+	z-index: 1000;
 }
 </style>
