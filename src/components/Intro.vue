@@ -4,27 +4,23 @@
 			<section class="hero is-fullheight">
 				<div class="hero-body">
 					<div class="container">
+						<!-- Flex container direction responsive to screen size -->
 						<div
 							class="is-flex responsive-flex-direction place-items-center is-justify-content-space-evenly"
 						>
+							<!-- CUDI HEAD -->
 							<div class="max-width-20">
-								<!-- Intro image -->
-								<!-- <figure class="image is-3by4"> -->
 								<img class="shake" src="../assets/cudi.png" />
 							</div>
 							<div class="is-flex is-flex-direction-column max-width-70">
-								<!-- Intro title -->
+								<!-- Title -->
 								<h2 class="big-title heading has-text-weight-bold">
 									How Much Does Kid Cudi Hum?
 								</h2>
-								<!-- Intro subtitle -->
-								<!-- <p class="big-subtitle has-text-weight-light has-text-danger">
-									An in-depth exploration of a question you never knew needed
-									asking.
-								</p> -->
 								<p
 									class="big-subtitle has-text-weight-light has-text-danger mt-2"
 								>
+									<!-- Subtitle -->
 									<span class="highlight-text-static mobile-toggle px-2 py-1"
 										>An in-depth exploration of a question you never knew needed
 										asking.</span
@@ -46,11 +42,20 @@
 					nobis nisi officia quos!
 				</p>
 				<p class="content">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam est
-					ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
-					repellat quo tenetur molestias inventore, dolorum corporis, unde,
-					nobis nisi officia quos!
+					Kid Cudi's 'claim to fame,' or his most defining musical feature, is
+					his hum. As one illustration of this, a loop of Cudi humming for 10
+					minutes has garnered over 2 million views.
 				</p>
+				<div class="has-text-centered mb-4 mt-2">
+					<iframe
+						:width="properWidth"
+						height="315"
+						src="https://www.youtube.com/embed/X08tO_jxmyk?fs=0&disablekb=1&modestbranding=1"
+						frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						allowfullscreen
+					></iframe>
+				</div>
 				<p class="content">
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam est
 					ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
@@ -71,6 +76,12 @@
 <script>
 export default {
 	name: "Intro",
+	props: { width: Number },
+	computed: {
+		properWidth() {
+			return Math.min(500, this.width) - 50;
+		},
+	},
 };
 </script>
 

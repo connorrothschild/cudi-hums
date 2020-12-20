@@ -2,7 +2,7 @@
 
 ## Ideas 
 
-#### Need to have:
+#### Need to have
 * ~~Hums over time, by album etc.~~
 * ~~Tokenized view of lyrics of a song, with all of the hums highlighted~~
     * Spotify embed for each of the songs in this section (done on the data processing side)
@@ -10,7 +10,7 @@
 * Hums by popularity (`song_pageviews` in my data)
 * YouTube link to the vid that has Cudi humming for 10 mins
 
-### Nice to have:
+### Nice to have
 * Hums per song compared to average sentiment per song (no way there's any relationship here?)
 * ~~Where hums occur in a song (beginning, end, middle)~~
     * ~~Strip plot per song~~
@@ -23,15 +23,18 @@
     * See table in https://pudding.cool/2018/08/wiki-death/
 * [VH and VW on mobile](https://css-tricks.com/the-trick-to-viewport-units-on-mobile/)
 
-## Things I need to fix:
+## Things I need to fix
 - [ ] Finish stripplot grouping thing
-- [ ] Handle resize better
-    * Resize currently breaks stripplot
-- [ ] "Show Only Hums" should be a toggle, not a button... maybe?
 - [ ] Add axis titles
-- [ ] Safari? Text shows up behind graphic
+
+## Things I fixed
+- [x] ? Handle resize better
+    * Resize currently breaks stripplot
+- [x] ~~"Show Only Hums" should be a toggle, not a button... maybe?~~
+    * Usage of bulma switch extension was annoyingly hard
+- [x] Safari? Text shows up behind graphic
     * Current solution is notification/alert
-- [ ] Make current notification for mobile and safari users fixed top 0
+- [x] Make current notification for mobile and safari users fixed top 0
 - [x] Get rid of VW/VH (https://pudding.cool/process/responsive-scrollytelling/)
 - [x] Beautify charts a bit more
 - [x] Consider different background color?

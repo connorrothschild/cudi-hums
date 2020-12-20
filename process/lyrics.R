@@ -107,3 +107,4 @@ final_songs <-
   mutate(song_name = ifelse(song_id == 6250779, "Lovin’ Me", song_name))
 
 readr::write_csv(final_songs, here::here('public/data/song_hums.csv'))
+# lyrics <- readr::read_csv(here::here('public/data/song_hums.csv'))

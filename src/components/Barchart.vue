@@ -32,11 +32,8 @@
 				Cudi's albums have become progressively more hum-centric over time.
 			</p>
 		</div>
-		<div class="step" :class="{ active: 3 == currentStep }" data-step-no="3">
-			<p class="content">
-				How do I conclude a section at the top of the stepper?
-			</p>
-		</div>
+		<!-- BUFFER CLASS -->
+		<div class="step empty"></div>
 	</Scrollama>
 </template>
 
@@ -105,13 +102,6 @@ export default {
 					"Speedin’ Bullet 2 Heaven",
 					"Indicud"
 				);
-			}
-			if (index == 3) {
-				this.sortBarsByHum();
-				this.unhighlightBars();
-			}
-			if (index == 3 && direction == "up") {
-				this.sortBarsByHum();
 			}
 		},
 		transitionBars: function () {

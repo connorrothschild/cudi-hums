@@ -51,3 +51,4 @@ final_albums <- left_join(albums, all_album_meta) %>%
   mutate(year = lubridate::year(album_release_date))
 
 readr::write_csv(final_albums, here::here('public/data/album_hums.csv'))
+# albums <- readr::read_csv(here::here('public/data/album_hums.csv'))

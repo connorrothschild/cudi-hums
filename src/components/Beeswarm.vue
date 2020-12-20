@@ -51,10 +51,8 @@
 				allow="encrypted-media"
 			></iframe>
 			<p class="content after-embed">
-				In this track, which is named after his girlfriend's birthday, Cudi ____
-				____ ____.
-				<br />Near the middle of the song, he alternates between various ad-libs
-				such as 'na-na-na', 'hmmm', and 'ooh.' <br /><span
+				Near the middle of this song, he alternates between various ad-libs such
+				as 'na-na-na', 'hmmm', and 'ooh.' <br /><span
 					class="has-text-weight-semibold"
 					>In total, the track includes 84 hums (out of 324 total words).</span
 				>
@@ -69,14 +67,8 @@
 				maxime molestias libero?
 			</p>
 		</div>
-		<div class="step" :class="{ active: 5 == currStep }" data-step-no="5">
-			<p class="content">
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus
-				quia deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt
-				ducimus sequi, corrupti eius ullam repellat temporibus id quibusdam
-				maxime molestias libero?
-			</p>
-		</div>
+		<!-- BUFFER CLASS -->
+		<div class="step empty"></div>
 	</Scrollama>
 </template>
 

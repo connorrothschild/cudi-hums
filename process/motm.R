@@ -72,5 +72,38 @@ final_motm <-
   ) %>%
   left_join(song_hums)
 
-readr::write_csv(final_motm, here::here('public/data/motm_tokenized.csv'))
+### ADD SPOTIFY EMBED URLS
 
+# Used to add the embed code before each song uri, and remove spotify:track: from the URIs (copied from Spotify)
+add_embed_pre <- function(str) {
+  str <- stringr::str_replace(str, 'spotify:track:', '')
+  paste0('https://open.spotify.com/embed/track/', str)
+}
+
+# unique(final_motm$song_name)
+
+# Get song URI and use the above function to make into embed code
+final_motm <- final_motm %>% 
+  mutate(embed_url = 
+           case_when(
+             song_name == "Elsie’s Baby Boy (flashback)" ~ "spotify:track:6jiwr6xTHqjdun5d3cEwXV",
+             song_name == "Another Day" ~ "spotify:track:6myUpr3GDR80Dg3zqNTmmG",
+             song_name == "The Void" ~ "spotify:track:2yg7MXp8nSPaf61HVkhEr3",
+             song_name == "Dive" ~ "spotify:track:7Hc3YL8oDiAzbiAW32KXrw",
+             song_name == "Heaven on Earth" ~ "spotify:track:2koUj1Fn5TKFEkChSmBPIb",
+             song_name == "Sad People" ~ "spotify:track:4nuAslShoN77tq12fzwjUq",
+             song_name == "Tequila Shots" ~ "spotify:track:30KctD1WsHKTIYczXjip5a",
+             song_name == "She Knows This" ~ "spotify:track:1xzUQMiCoY5pdego0pHMeV",
+             song_name == "Lord I Know" ~ "spotify:track:7f2voPcnDEAzX4yB8SLnU2",
+             song_name == "Lovin’ Me" ~ "spotify:track:3JdwGk8j7lHN5qdzJZklam",
+             song_name == "Sept. 16" ~ "spotify:track:3Uw2se3aQU1UFrpRBvBnB4",
+             song_name == "Damaged" ~ "spotify:track:2n7Ao4nyESBa5ti8gcAbBt",
+             song_name == "The Pale Moonlight" ~ "spotify:track:4EjbAh7YHU3VARkfkamZ8R",
+             song_name == "Mr. Solo Dolo III" ~ "spotify:track:27oVCAziETRbNuo5A8LNpg",
+             song_name == "4 da Kidz" ~ "spotify:track:2ZDRkJrKbceJRgLKkuex14",
+             song_name == "Beautiful Trip" ~ "spotify:track:4IIuCotvqijraSdnVLaFnM"),
+         embed_url = add_embed_pre(embed_url))
+
+
+readr::write_csv(final_motm, here::here('public/data/motm_tokenized.csv'))
+# motm <- readr::read_csv(here::here('public/data/motm_tokenized.csv'))

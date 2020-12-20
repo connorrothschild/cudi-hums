@@ -20,7 +20,7 @@
 			Pssst. You might have a better experience on a wider screen, such as a
 			desktop computer.
 		</div>
-		<Intro />
+		<Intro :width="windowWidth" />
 		<div
 			v-if="
 				(song_hums.length > 0) &
@@ -88,6 +88,7 @@ export default {
 			motm_tokenized: [],
 			major_albums: [],
 			song_names: [],
+			windowWidth: null,
 			width: null,
 			largerChartWidth: null,
 			height: null,
@@ -102,6 +103,7 @@ export default {
 		}
 		this.checkWidthForWarning();
 
+		this.windowWidth = window.innerWidth;
 		this.width =
 			window.innerWidth < 1000
 				? window.innerWidth * 0.9
@@ -159,6 +161,7 @@ export default {
 					: window.innerWidth * 0.5;
 			this.height = window.innerHeight * 0.8;
 			this.largerChartWidth = window.innerWidth * 0.8;
+			this.windowWidth = window.innerWidth;
 
 			this.checkWidthForWarning();
 
@@ -265,6 +268,11 @@ text {
 			color: $white-alt;
 			background-position: left;
 		}
+	}
+
+	// Adding an empty modifier to the last section of each Scrollama instance
+	&.empty {
+		visibility: hidden;
 	}
 }
 

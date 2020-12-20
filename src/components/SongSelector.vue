@@ -24,15 +24,15 @@
 			<!-- Once the user selects a song, provide them a link to the Genius lyrics page -->
 			<div v-if="selectedSong" class="mobile-mt-3">
 				<a
-					class="heading button"
+					class="heading button genius-style"
 					target="_blank"
 					rel="noopener"
 					v-bind:href="selectedSongUrl"
 					>See this song on Genius</a
 				>
-				<!-- FIXME: Add real data to R script -->
+				<!-- Embed of spotify player -->
 				<iframe
-					src="https://open.spotify.com/embed/track/2yg7MXp8nSPaf61HVkhEr3"
+					:src="selectedSongEmbed"
 					width="300"
 					height="80"
 					frameborder="0"
@@ -86,6 +86,11 @@ export default {
 			const { selectedSongData } = this;
 			return [...new Set(selectedSongData.map((d) => d.song_lyrics_url))];
 		},
+		selectedSongEmbed: function () {
+			// The Spotify embed code for user-selected song
+			const { selectedSongData } = this;
+			return [...new Set(selectedSongData.map((d) => d.embed_url))];
+		},
 		allSongSections: function () {
 			// All of the song 'sections' in user-selected song (intro, chorus, outro, etc.)
 			const { selectedSongData } = this;
@@ -118,6 +123,17 @@ export default {
 .mobile-mt-3 {
 	@media screen and (max-width: 768px) {
 		margin-top: 1.5rem;
+	}
+}
+
+.button.genius-style {
+	background: #121212;
+	color: yellow;
+	border-color: transparent;
+
+	&:hover {
+		color: yellow;
+		border-color: yellow;
 	}
 }
 </style>
