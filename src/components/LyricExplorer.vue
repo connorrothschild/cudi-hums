@@ -6,7 +6,7 @@
 			<button
 				v-for="section in sections"
 				:key="section"
-				class="button no-border ml-1"
+				class="button font-alt no-border ml-1"
 				:class="{ toggled: selectedSections.includes(section) }"
 				@click="addSection(section)"
 			>
@@ -19,9 +19,7 @@
 		<transition-group tag="div" name="list">
 			<div v-for="(section, index) in sections" :key="index">
 				<div class="box m-5" v-if="selectedSections.includes(section)">
-					<p
-						class="heading mb-4 is-size-5 has-text-weight-light has-text-centered has-text-underlined"
-					>
+					<p class="heading mb-4 is-size-5 has-text-centered font-alt">
 						{{ section }}
 					</p>
 					<!-- This reactively filters and then renders each word (bigram) from the dataset that matches the user-specified section -->
@@ -127,6 +125,7 @@ export default {
 }
 
 .speech-bubble {
+	font-family: "Proxima Nova";
 	position: relative;
 	background: $cudi-blue;
 	border-radius: 0.4em;

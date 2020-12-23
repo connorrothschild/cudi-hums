@@ -50,7 +50,7 @@
 			/>
 			<SongSelector
 				:data="motm_tokenized"
-				:song_names="song_names"
+				:songData="song_hums"
 				:containerWidth="largerChartWidth"
 				:containerHeight="height"
 			/>
@@ -276,6 +276,19 @@ text {
 	}
 }
 
+.scrollama-steps {
+	pointer-events: none;
+}
+
+.step iframe {
+	pointer-events: auto;
+}
+
+.step button {
+	pointer-events: auto;
+}
+
+// TEXT HIGHLIGHTING AND OTHER GLOBALs
 // no animation text-highlight
 .highlight-text-static {
 	font-weight: 600;
@@ -293,10 +306,6 @@ text {
 	}
 }
 
-.scrollama-steps {
-	pointer-events: none;
-}
-
 .blue {
 	background: $cudi-blue;
 }
@@ -305,18 +314,15 @@ rect {
 	stroke: black;
 }
 
-.step iframe {
-	pointer-events: auto;
-}
-
-.step button {
-	pointer-events: auto;
-}
-
 .has-text-primary {
 	color: $cudi-pink !important;
 }
 
+.font-alt {
+	font-family: $font-alt;
+}
+
+// For notification/warnings
 .is-fixed {
 	position: fixed !important;
 	bottom: 0; // top: 0

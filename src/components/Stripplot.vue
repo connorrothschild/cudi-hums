@@ -5,6 +5,16 @@
 			<p class="mt-2 mb-2 is-size-2 has-text-weight-light">
 				Hums by song position
 			</p>
+			<button
+				class="button font-alt"
+				@click="
+					handleFilter();
+					unclicked = false;
+				"
+				:class="{ toggled: onlyHumsToggled }"
+			>
+				Only show hums
+			</button>
 		</div>
 		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
@@ -49,7 +59,7 @@
 			</p>
 			<div class="is-flex is-flex-direction-column">
 				<button
-					class="button"
+					class="button font-alt"
 					@click="
 						handleFilter();
 						unclicked = false;

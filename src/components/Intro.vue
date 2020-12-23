@@ -34,7 +34,7 @@
 		</div>
 		<div class="section">
 			<!-- Intro prose, with dropcap on first letter -->
-			<div class="container is-max-desktop">
+			<div class="container better-container">
 				<p class="content">
 					Kid Cudi dolor sit amet consectetur adipisicing elit. Quisquam est
 					ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
@@ -57,16 +57,76 @@
 					></iframe>
 				</div>
 				<p class="content">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam est
-					ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
-					repellat quo tenetur molestias inventore, dolorum corporis, unde,
-					nobis nisi officia quos!
+					And Kid Cudi is aware of the impact his hums have had on his fans. In
+					one song,
+					<span
+						class="audio-clicker"
+						@click="
+							playAudio(
+								'https://p.scdn.co/mp3-preview/37adec4ab0523c1807ecd241624e168ab3501139?cid=774b29d4f13844c495f206cafdad9c86'
+							)
+						"
+						><span class="highlight-text-static">Surfin'</span>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							xmlns:xlink="http://www.w3.org/1999/xlink"
+							width="16"
+							height="16"
+							viewBox="0 0 16 16"
+							version="1.1"
+						>
+							<g>
+								<path
+									style="
+										fill-rule: nonzero;
+										fill: white;
+										fill-opacity: 1;
+										stroke-width: 5;
+										stroke-linecap: butt;
+										stroke-linejoin: round;
+										stroke: white;
+										stroke-opacity: 1;
+										stroke-miterlimit: 4;
+									"
+									d="M 39.385986 13.769531 L 22.229004 28.601074 L 6.005859 28.601074 L 6.005859 47.698975 L 21.990967 47.698975 L 39.385986 62.750244 Z M 39.385986 13.769531 "
+									transform="matrix(0.213333,0,0,0.213333,0,0)"
+								/>
+								<path
+									style="
+										fill: none;
+										stroke-width: 5;
+										stroke-linecap: round;
+										stroke-linejoin: miter;
+										stroke: white;
+										stroke-opacity: 1;
+										stroke-miterlimit: 4;
+									"
+									d="M 47.991943 27.593994 C 52.258301 34.094238 52.258301 42.498779 47.991943 48.999023 M 55.096436 20.507812 C 62.896729 31.091309 62.896729 45.52002 55.096436 56.103516 M 61.59668 14.007568 C 73.00415 28.198242 73.00415 48.413086 61.59668 62.60376 "
+									transform="matrix(0.213333,0,0,0.213333,0,0)"
+								/>
+							</g></svg></span
+					>, he raps:
 				</p>
+				<div
+					class="is-flex is-justify-content-center is-align-items-center m-5"
+				>
+					<div style="max-width: 50px">
+						<!-- Intro image -->
+						<!-- <figure class="image is-3by4"> -->
+						<img src="../assets/cudi.png" />
+					</div>
+
+					<p class="speech-bubble">
+						Make ‘em go dumb with them hums <br />Mhmm, mhmm, mhmm
+					</p>
+				</div>
 				<p class="content">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam est
-					ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
-					repellat quo tenetur molestias inventore, dolorum corporis, unde,
-					nobis nisi officia quos!
+					Despite the buzz, no one has analyzed the prevalence of hums in Kid
+					Cudi's discography. Given his most recent album's release, it's the
+					best time to ask:
+					<span class="highlight-text-static"
+						>how much does Kid Cudi really hum?</span
+					>
 				</p>
 			</div>
 		</div>
@@ -80,6 +140,12 @@ export default {
 	computed: {
 		properWidth() {
 			return Math.min(500, this.width) - 50;
+		},
+	},
+	methods: {
+		playAudio(url) {
+			const audio = new Audio(url);
+			audio.play();
 		},
 	},
 };
@@ -136,5 +202,13 @@ p:first-child:first-letter {
 	@media screen and (max-width: 768px) {
 		flex-direction: column;
 	}
+}
+
+.container.better-container {
+	max-width: 700px !important;
+}
+
+.audio-clicker {
+	cursor: pointer;
 }
 </style>
