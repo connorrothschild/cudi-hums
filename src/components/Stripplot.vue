@@ -508,12 +508,17 @@ export default {
 			this.stepEnterHandler(this.response);
 		},
 	},
-	created() {
-		window.addEventListener("resize", debounce(this.watchResize, 500));
+	watch: {
+		containerWidth: function () {
+			this.watchResize();
+		},
 	},
-	destroyed() {
-		window.removeEventListener("resize", debounce(this.watchResize, 500));
-	},
+	// created() {
+	// 	window.addEventListener("resize", debounce(this.watchResize, 500));
+	// },
+	// destroyed() {
+	// 	window.removeEventListener("resize", debounce(this.watchResize, 500));
+	// },
 };
 </script>
 

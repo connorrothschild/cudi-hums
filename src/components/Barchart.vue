@@ -324,6 +324,7 @@ export default {
 			this.svg = svg;
 		},
 		watchResize: function () {
+			console.log("here");
 			d3.select("#barchart > svg").remove();
 			this.setupChart();
 
@@ -337,12 +338,17 @@ export default {
 			this.stepEnterHandler(this.response);
 		},
 	},
-	created() {
-		window.addEventListener("resize", debounce(this.watchResize, 1000));
+	watch: {
+		containerWidth: function () {
+			this.watchResize();
+		},
 	},
-	destroyed() {
-		window.removeEventListener("resize", debounce(this.watchResize, 1000));
-	},
+	// created() {
+	// 	window.addEventListener("resize", debounce(this.watchResize, 1000));
+	// },
+	// destroyed() {
+	// 	window.removeEventListener("resize", debounce(this.watchResize, 1000));
+	// },
 };
 </script>
 

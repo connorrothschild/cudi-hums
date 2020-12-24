@@ -187,17 +187,22 @@ export default {
 	},
 	methods: {
 		watchResize: function () {
-			this.width =
-				window.innerWidth < 1000
-					? window.innerWidth * 0.9
-					: window.innerWidth * 0.5;
-			this.height = window.innerHeight * 0.8;
-			this.largerChartWidth = window.innerWidth * 0.8;
-			this.windowWidth = window.innerWidth;
+			// * On mobile devices, only trigger resize if width changes
+			// https://stackoverflow.com/questions/8898412/iphone-ipad-triggering-unexpected-resize-events
+			// if (window.innerWidth < 600) {
+			if (window.innerWidth != this.windowWidth) {
+				console.log("TRIGGERING RESIZE");
+				this.width =
+					window.innerWidth < 1000
+						? window.innerWidth * 0.9
+						: window.innerWidth * 0.5;
+				this.height = window.innerHeight * 0.8;
+				this.largerChartWidth = window.innerWidth * 0.8;
+				this.windowWidth = window.innerWidth;
 
-			this.checkWidthForWarning();
-
-			// alert("You might want to refresh your browser");
+				this.checkWidthForWarning();
+			}
+			// }
 		},
 		checkWidthForWarning: function () {
 			if (window.innerWidth < 600) {
@@ -208,8 +213,8 @@ export default {
 		},
 		visibilityChanged(isVisible, entry, section) {
 			this.isVisible = isVisible;
-			console.log(entry);
-			console.log(section);
+			// console.log(entry);
+			// console.log(section);
 			if (entry.isIntersecting) {
 				this.section = section;
 			}
@@ -217,10 +222,10 @@ export default {
 	},
 	computed: {},
 	created() {
-		window.addEventListener("resize", this.watchResize); // debounce(this.watchResize, 500));
+		window.addEventListener("resize", debounce(this.watchResize, 500)); // this.watchResize
 	},
 	destroyed() {
-		window.removeEventListener("resize", this.watchResize); //debounce(this.watchResize, 500));
+		window.removeEventListener("resize", debounce(this.watchResize, 500)); // this.watchResize
 	},
 };
 </script>
