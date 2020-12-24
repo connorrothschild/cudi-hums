@@ -189,20 +189,19 @@ export default {
 		watchResize: function () {
 			// * On mobile devices, only trigger resize if width changes
 			// https://stackoverflow.com/questions/8898412/iphone-ipad-triggering-unexpected-resize-events
-			// if (window.innerWidth < 600) {
-			if (window.innerWidth != this.windowWidth) {
-				console.log("TRIGGERING RESIZE");
-				this.width =
-					window.innerWidth < 1000
-						? window.innerWidth * 0.9
-						: window.innerWidth * 0.5;
-				this.height = window.innerHeight * 0.8;
-				this.largerChartWidth = window.innerWidth * 0.8;
-				this.windowWidth = window.innerWidth;
+			if (window.innerWidth < 600) {
+				if (window.innerWidth != this.windowWidth) {
+					this.width =
+						window.innerWidth < 1000
+							? window.innerWidth * 0.9
+							: window.innerWidth * 0.5;
+					this.height = window.innerHeight * 0.8;
+					this.largerChartWidth = window.innerWidth * 0.8;
+					this.windowWidth = window.innerWidth;
 
-				this.checkWidthForWarning();
+					this.checkWidthForWarning();
+				}
 			}
-			// }
 		},
 		checkWidthForWarning: function () {
 			if (window.innerWidth < 600) {
@@ -238,6 +237,14 @@ text {
 
 .title {
 	color: $white-alt !important;
+}
+
+html {
+	font-family: $font-stack;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: $white-alt;
+	background-color: $background;
 }
 
 #app {
@@ -354,10 +361,6 @@ text {
 
 rect {
 	stroke: black;
-}
-
-.has-text-primary {
-	color: $cudi-pink !important;
 }
 
 .font-alt {

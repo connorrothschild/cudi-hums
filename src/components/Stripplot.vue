@@ -1,11 +1,11 @@
 <template>
-	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
+	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.7">
 		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="stripplot">
 			<p
-				class="mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
+				class="font-alt mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
 			>
-				Hums by song position
+				Hums by lyric position
 			</p>
 		</div>
 		<!-- SCROLLAMA STEPS -->

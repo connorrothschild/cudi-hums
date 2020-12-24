@@ -1,9 +1,9 @@
 <template>
 	<div class="container is-max-desktop px-3">
-		<h1 class="title has-text-centered has-text-white">
+		<h1 class="title has-text-centered has-text-white font-alt">
 			Why don't you explore for yourself?
 		</h1>
-		<h2 class="subtitle mt-2 has-text-centered has-text-white">
+		<h2 class="subtitle mt-2 has-text-centered has-text-white font-alt">
 			Here, you can select a song from
 			<span class="has-text-weight-semibold">Man on the Moon III</span> and read
 			the hums from each section.

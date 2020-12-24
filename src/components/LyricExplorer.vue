@@ -6,7 +6,7 @@
 			<button
 				v-for="section in sections"
 				:key="section"
-				class="button font-alt no-border ml-1"
+				class="button font-alt no-border m-1"
 				:class="{ toggled: selectedSections.includes(section) }"
 				@click="addSection(section)"
 			>

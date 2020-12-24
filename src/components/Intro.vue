@@ -35,14 +35,14 @@
 		<div class="has-dropcap section is-gradient">
 			<!-- Intro prose, with dropcap on first letter -->
 			<div class="container better-container">
-				<p class="content">
+				<p>
 					Kid Cudi dolor sit amet consectetur adipisicing elit. Quisquam est
 					ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
 					repellat quo tenetur molestias inventore, dolorum corporis, unde,
 					nobis nisi officia quos!
 				</p>
 				<a
-					class="title heading has-text-primary has-text-right"
+					class="heading has-text-right content"
 					href="https://en.wikipedia.org/wiki/Kid_Cudi"
 					target="_blank"
 					rel="noopener"
@@ -74,7 +74,7 @@
 								'https://p.scdn.co/mp3-preview/37adec4ab0523c1807ecd241624e168ab3501139?cid=774b29d4f13844c495f206cafdad9c86'
 							)
 						"
-						><span class="highlight-text-static"
+						><span class="highlight-text-static blue"
 							>Surfin'
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -134,16 +134,22 @@
 					Despite the buzz, no one has analyzed the prevalence of hums in Kid
 					Cudi's discography. Given his most recent album's release, it's the
 					best time to ask:
+					<span class="has-text-pink">how much does Kid Cudi hum?</span>
 				</p>
-				<div class="has-text-centered">
+				<!-- <div class="has-text-centered">
 					<p class="highlight-text-static heading is-size-4">
 						How much does Kid Cudi really hum?
 					</p>
-				</div>
-			</div>
-		</div>
-		<div class="section">
-			<div class="container better-container">
+				</div> -->
+				<hr
+					style="
+						height: 1px;
+						border-width: 0;
+						color: #cecece;
+						width: 30%;
+						margin: 1.5rem auto;
+					"
+				/>
 				<p class="content">
 					In the writing that follows, I go to painstaking lengths to explore
 					this question at a variety of levels of granularity. First, I look at
