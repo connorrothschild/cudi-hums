@@ -106,5 +106,12 @@ final_songs <-
   # Replace problematic
   mutate(song_name = ifelse(song_id == 6250779, "Lovin’ Me", song_name))
 
+## Add rankings per album
+final_songs <- final_songs %>% 
+  group_by(album_name) %>% 
+  arrange(desc(percent_hums)) %>% 
+  mutate(rank = row_number()) %>% 
+  ungroup()
+
 readr::write_csv(final_songs, here::here('public/data/song_hums.csv'))
 # lyrics <- readr::read_csv(here::here('public/data/song_hums.csv'))

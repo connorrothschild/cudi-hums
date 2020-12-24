@@ -14,7 +14,9 @@
     "intersection-observer": "^0.12.0",
     "lodash": "^4.17.20",
     "vue": "^2.6.11",
-    "vue-scrollama": "^1.1.9"
+    "vue-observe-visibility": "^0.4.6",
+    "vue-scrollama": "^1.1.9",
+    "vuex": "^3.6.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

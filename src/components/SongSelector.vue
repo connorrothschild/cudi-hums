@@ -19,28 +19,8 @@
 			</div>
 		</div>
 		<div v-if="selectedSongData" class="is-flex better-flex">
-			<!-- Here, user selects a song.
-            Their options are all of the songs in MOTM3, provided as a prop from App.vue -->
-			<!-- <p>{{ selectedSong }}</p> -->
-			<div class="is-flex">
-				<div class="card has-background-dark m-1">
-					<div class="card-content has-text-white font-alt">
-						{{ commaFormat(selectedSongData.n_hums) }} /
-						{{
-							commaFormat(selectedSongData.n_hums + selectedSongData.n_regulars)
-						}}
-						<br />
-						{{ percentFormat(selectedSongData.percent_hums) }}
-					</div>
-				</div>
-				<div class="card has-background-dark m-1">
-					<div class="card-content has-text-white font-alt">
-						Ranking within MOTM3
-					</div>
-				</div>
-			</div>
 			<!-- Once the user selects a song, provide them a link to the Genius lyrics page -->
-			<div class="mobile-mt-3">
+			<div class="mobile-my-2">
 				<!-- <a
 					class="heading button genius-style"
 					target="_blank"
@@ -57,6 +37,41 @@
 					allowtransparency="true"
 					allow="encrypted-media"
 				></iframe>
+			</div>
+			<!-- Here, user selects a song.
+            Their options are all of the songs in MOTM3, provided as a prop from App.vue -->
+			<!-- <p>{{ selectedSong }}</p> -->
+			<div class="is-flex">
+				<div
+					class="card is-flex is-justify-content-center has-background-dark m-1"
+				>
+					<div
+						class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white font-alt"
+					>
+						<p class="card-title">
+							{{ percentFormat(selectedSongData.percent_hums) }} hums
+						</p>
+						<p class="small">{{ commaFormat(selectedSongData.n_hums) }} hums</p>
+						<p class="small">
+							{{
+								commaFormat(
+									selectedSongData.n_hums + selectedSongData.n_regulars
+								)
+							}}
+							regular lyrics
+						</p>
+					</div>
+				</div>
+				<div
+					class="card is-flex is-justify-content-center has-background-dark m-1"
+				>
+					<div
+						class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white font-alt"
+					>
+						<p class="card-title">#{{ selectedSongData.rank }}</p>
+						<p class="small">Out of 16 songs</p>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!-- Once the user selects a song, render LyricExplorer component -->
@@ -97,7 +112,6 @@ export default {
 				.map((d) => d.song_name);
 		},
 		selectedSongData: function () {
-			// console.log(this.songData.find((d) => d.song_name == this.selectedSong));
 			return this.songData.find((d) => d.song_name == this.selectedSong);
 		},
 		selectedSongLyrics: function () {
@@ -108,7 +122,6 @@ export default {
 			const selectedSongLyrics = allData.filter(function (d) {
 				return d.song_name == selectedSong;
 			});
-			// console.log(selectedSongLyrics);
 			return selectedSongLyrics;
 		},
 		selectedSongEmbed: function () {
@@ -148,9 +161,9 @@ export default {
 	align-items: center;
 }
 
-.mobile-mt-3 {
+.mobile-my-2 {
 	@media screen and (max-width: 768px) {
-		margin-top: 1.5rem;
+		margin: 0.5rem 0;
 	}
 }
 
@@ -162,6 +175,24 @@ export default {
 	&:hover {
 		color: yellow;
 		border-color: yellow;
+	}
+}
+
+// CARD FORMATTING
+.card-content {
+	&.less-padding {
+		padding: 1rem !important;
+	}
+	.card-title {
+		text-align: center;
+		text-transform: uppercase;
+		font-size: 1.1rem;
+	}
+	.small {
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		font-size: 0.5rem;
+		text-align: center;
 	}
 }
 </style>

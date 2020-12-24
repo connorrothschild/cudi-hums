@@ -2,7 +2,11 @@
 	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
 		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="beeswarm">
-			<p class="mt-2 mb-2 is-size-2 has-text-weight-light">Hums by song</p>
+			<p
+				class="mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
+			>
+				Hums by song
+			</p>
 		</div>
 		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
@@ -51,8 +55,8 @@
 				allow="encrypted-media"
 			></iframe>
 			<p class="content after-embed">
-				Near the middle of this song, he alternates between various ad-libs such
-				as 'na-na-na', 'hmmm', and 'ooh.' <br /><span
+				Near the middle of this song, Kid Cudi alternates between various
+				ad-libs such as 'na-na-na', 'hmmm', and 'ooh.' <br /><span
 					class="has-text-weight-semibold"
 					>In total, the track includes 84 hums (out of 324 total words).</span
 				>
@@ -132,13 +136,8 @@ export default {
 			if (index == 3) {
 				this.highlightSong("Sept. 16");
 			}
-			if (index == 4 && direction == "down") {
-				this.regularCircles();
-			}
-			if (index == 4 && direction == "up") {
-				this.transitionCircles();
-			}
 		},
+		percentFormat: d3.format(".1%"),
 		transitionCircles: function () {
 			const { circles, xScale, yScale, colorScale, jitterWidth } = this;
 
@@ -217,7 +216,7 @@ export default {
 			this.jitterWidth = 0; // *Optional: remove jitter by making this 0
 
 			// Append the svg object to the div
-			var svg = d3
+			const svg = d3
 				.select("#beeswarm")
 				.append("svg")
 				.attr("width", width + margin.left + margin.right)
@@ -284,6 +283,13 @@ export default {
 				.attr("x", -albumCoverSize)
 				.attr("y", -albumCoverSize / 2);
 
+			// Tooltip
+			const tip = d3
+				.select("#beeswarm")
+				.append("div")
+				.attr("class", "tooltip")
+				.style("opacity", 0);
+
 			// Add dots
 			const circles = svg
 				.append("g")
@@ -292,6 +298,24 @@ export default {
 				.enter()
 				.append("circle")
 				.attr("class", "beeswarm-circles");
+
+			const self = this;
+			circles
+				.on("mouseover", function (event, d) {
+					tip.transition(300).style("opacity", 1);
+					tip.html(`<p class='heading'> ${d.song_name} </p>
+							  <p> ${self.percentFormat(d.percent_hums)} hums</p>`);
+
+					const right = event.clientX > window.innerWidth / 2;
+					const offset = right ? tip.node().offsetWidth + 15 : -15;
+
+					tip
+						.style("left", event.clientX - offset + "px")
+						.style("top", event.clientY + "px");
+				})
+				.on("mouseout", function (d) {
+					tip.transition(300).style("opacity", 0);
+				});
 
 			this.circles = circles;
 		},
@@ -351,5 +375,19 @@ export default {
 
 .after-embed {
 	margin-top: 1rem;
+}
+
+#beeswarm div.tooltip {
+	position: absolute;
+	text-align: center;
+	font-family: $font-alt;
+	font-size: 14px;
+	pointer-events: none;
+	color: $white-alt;
+	background: #242424;
+	padding: 5px;
+	border-radius: 3px;
+	z-index: 100;
+	border: 1px solid grey;
 }
 </style>

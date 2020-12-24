@@ -125,7 +125,7 @@ export default {
 }
 
 .speech-bubble {
-	font-family: "Proxima Nova";
+	font-family: $font-alt;
 	position: relative;
 	background: $cudi-blue;
 	border-radius: 0.4em;

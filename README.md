@@ -33,9 +33,11 @@
 ## Things I need to fix
 - [ ] Finish stripplot grouping thing
 - [ ] Add axis titles
-- [ ] Add tooltips to barchart and beeswarm
+- [ ] Disable stripplot tooltip on mobile?
+- [ ] A lil explainer like 'Know literally nothing about Kid Cudi? Click here! With modal popup or smth
 
 ## Things I fixed
+- [x] Add tooltips to barchart and beeswarm
 - [x] ? Handle resize better
     * Resize currently breaks stripplot
 - [x] ~~"Show Only Hums" should be a toggle, not a button... maybe?~~

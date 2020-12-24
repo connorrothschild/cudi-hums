@@ -2,19 +2,11 @@
 	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
 		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="stripplot">
-			<p class="mt-2 mb-2 is-size-2 has-text-weight-light">
+			<p
+				class="mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
+			>
 				Hums by song position
 			</p>
-			<button
-				class="button font-alt"
-				@click="
-					handleFilter();
-					unclicked = false;
-				"
-				:class="{ toggled: onlyHumsToggled }"
-			>
-				Only show hums
-			</button>
 		</div>
 		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
@@ -31,12 +23,9 @@
 				other sounds, such as as 'oooh' and 'nahh.'
 			</p>
 			<p class="content">
-				The songs are different durations (<span
-					class="has-text-weight-semibold"
-					>The Void</span
-				>
-				tops off the album at 5 minutes and 25 seconds), which is why the
-				lengths of each bar are different.
+				The songs are different durations (notice how short
+				<span class="has-text-weight-semibold">Beautiful Trip</span>
+				is?), which is why the lengths of each bar are different.
 			</p>
 		</div>
 		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
@@ -295,8 +284,8 @@ export default {
 
 			lines
 				.attr("opacity", 1)
-				.attr("x1", this.xScale(1.05))
-				.attr("x2", this.xScale(1.05))
+				.attr("x1", 0)
+				.attr("x2", 0)
 				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
 				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
 				.attr("stroke", (d) => this.colorScale(d.category))
@@ -377,7 +366,7 @@ export default {
 			this.height = height;
 
 			// Appends the svg to the chart-container div
-			var svg = d3
+			const svg = d3
 				.select("#stripplot")
 				.append("svg")
 				.attr("width", width + margin.left + margin.right)
@@ -385,7 +374,7 @@ export default {
 				.append("g")
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-			var tip = d3
+			const tip = d3
 				.select("#stripplot")
 				.append("div")
 				.attr("class", "tooltip")
@@ -522,9 +511,9 @@ export default {
 	created() {
 		window.addEventListener("resize", debounce(this.watchResize, 500));
 	},
-	// destroyed() {
-	// 	window.removeEventListener("resize", debounce(this.watchResize, 500));
-	// },
+	destroyed() {
+		window.removeEventListener("resize", debounce(this.watchResize, 500));
+	},
 };
 </script>
 
@@ -565,19 +554,23 @@ export default {
 		stroke: transparent;
 	}
 }
-div.tooltip {
+
+#stripplot div.tooltip {
 	position: absolute;
 	text-align: left;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+	font-family: $font-alt;
 	font-size: 14px;
 	pointer-events: none;
 	color: $white-alt;
-	// z-index: 1000;
+	z-index: 100;
 	background: #242424;
 	padding: 5px;
 	border-radius: 3px;
 	// border: 1px solid $white-alt
+
+	@media screen and(max-width:480px) {
+		display: none;
+	}
 }
 
 .x.axis.stripplot g.tick:nth-child(2) text {
@@ -589,63 +582,5 @@ div.tooltip {
 
 .has-text-pink {
 	color: $cudi-pink;
-}
-
-// SWITCH SLIDER CSS
-/* The switch - the box around the slider */
-.switch {
-	position: relative;
-	display: inline-block;
-	width: 60px;
-	height: 34px;
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-	opacity: 0;
-	width: 0;
-	height: 0;
-}
-
-/* The slider */
-.slider {
-	background-color: #ccc;
-	-webkit-transition: 0.4s;
-	transition: 0.4s;
-}
-
-.slider:before {
-	position: absolute;
-	content: "";
-	height: 26px;
-	width: 26px;
-	left: 4px;
-	bottom: 4px;
-	background-color: white;
-	-webkit-transition: 0.4s;
-	transition: 0.4s;
-}
-
-.slider {
-	background-color: #2196f3;
-}
-
-.slider {
-	box-shadow: 0 0 1px #2196f3;
-}
-
-.slider:before {
-	-webkit-transform: translateX(26px);
-	-ms-transform: translateX(26px);
-	transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-	border-radius: 34px;
-}
-
-.slider.round:before {
-	border-radius: 50%;
 }
 </style>

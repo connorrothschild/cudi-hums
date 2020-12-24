@@ -1,5 +1,8 @@
 <template>
 	<div id="app">
+		<div class="absolute-bottom-right">
+			<p class="heading">{{ section }}</p>
+		</div>
 		<!-- If on Safari, nudge to another browser -->
 		<div class="notification is-fixed is-danger mb-0" v-if="showSafariWarning">
 			<button class="delete" @click="showSafariWarning = false"></button>
@@ -20,7 +23,12 @@
 			Pssst. You might have a better experience on a wider screen, such as a
 			desktop computer.
 		</div>
-		<Intro :width="windowWidth" />
+		<Intro
+			:width="windowWidth"
+			v-observe-visibility="
+				(isVisible, entry) => visibilityChanged(isVisible, entry, '')
+			"
+		/>
 		<div
 			v-if="
 				(song_hums.length > 0) &
@@ -29,12 +37,19 @@
 			"
 		>
 			<Barchart
+				v-observe-visibility="
+					(isVisible, entry) =>
+						visibilityChanged(isVisible, entry, '01. Albums')
+				"
 				:data="album_hums"
 				:containerWidth="width"
 				:containerHeight="height"
 			/>
-
 			<Beeswarm
+				v-observe-visibility="
+					(isVisible, entry) =>
+						visibilityChanged(isVisible, entry, '02. Tracks')
+				"
 				:data="song_hums"
 				:major_albums="major_albums"
 				:album_data="album_hums"
@@ -42,6 +57,10 @@
 				:containerHeight="height"
 			/>
 			<Stripplot
+				v-observe-visibility="
+					(isVisible, entry) =>
+						visibilityChanged(isVisible, entry, '03. Lyrics')
+				"
 				:data="motm_tokenized"
 				:major_albums="major_albums"
 				:album_data="album_hums"
@@ -55,7 +74,11 @@
 				:containerHeight="height"
 			/>
 		</div>
-		<Outro />
+		<Outro
+			v-observe-visibility="
+				(isVisible, entry) => visibilityChanged(isVisible, entry, '')
+			"
+		/>
 	</div>
 </template>
 
@@ -94,11 +117,16 @@ export default {
 			height: null,
 			showSafariWarning: false,
 			showMobileNudge: false,
+			DEBUG: true,
+			section: null,
 		};
 	},
 	async mounted() {
 		// HANDLE SAFARI AND MOBILE USERS
-		if (navigator.userAgent.indexOf("Safari") != -1) {
+		if (
+			navigator.userAgent.indexOf("Safari") != -1 &&
+			navigator.userAgent.indexOf("Chrome") == -1
+		) {
 			this.showSafariWarning = true;
 		}
 		this.checkWidthForWarning();
@@ -136,9 +164,9 @@ export default {
 			d.song_rank = +d.song_rank;
 		});
 		motm_tokenized.sort((a, b) => d3.descending(a.song_rank, b.song_rank));
-		motm_tokenized = motm_tokenized.filter(
-			(d) => d.song_name != "Beautiful Trip"
-		);
+		// motm_tokenized = motm_tokenized.filter(
+		// 	(d) => d.song_name != "Beautiful Trip"
+		// );
 
 		this.motm_tokenized = motm_tokenized;
 
@@ -148,10 +176,12 @@ export default {
 		let song_names = [...new Set(motm_tokenized.map((d) => d.song_name))];
 		this.song_names = song_names;
 
-		console.log(album_hums);
-		console.log(song_hums);
-		console.log(motm_tokenized);
-		console.log(song_names);
+		if (this.DEBUG) {
+			console.log(album_hums);
+			console.log(song_hums);
+			console.log(motm_tokenized);
+			console.log(song_names);
+		}
 	},
 	methods: {
 		watchResize: function () {
@@ -174,7 +204,16 @@ export default {
 				this.showMobileNudge = false;
 			}
 		},
+		visibilityChanged(isVisible, entry, section) {
+			this.isVisible = isVisible;
+			console.log(entry);
+			console.log(section);
+			if (entry.isIntersecting) {
+				this.section = section;
+			}
+		},
 	},
+	computed: {},
 	created() {
 		window.addEventListener("resize", this.watchResize); // debounce(this.watchResize, 500));
 	},
@@ -327,5 +366,21 @@ rect {
 	position: fixed !important;
 	bottom: 0; // top: 0
 	z-index: 1000;
+	width: 100%;
+}
+
+a[href] {
+	color: $cudi-pink;
+	text-decoration: underline;
+
+	&:hover {
+		color: white;
+	}
+}
+
+.absolute-bottom-right {
+	position: fixed;
+	bottom: 0;
+	right: 0;
 }
 </style>

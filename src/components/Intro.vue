@@ -32,7 +32,7 @@
 				</div>
 			</section>
 		</div>
-		<div class="section">
+		<div class="has-dropcap section is-gradient">
 			<!-- Intro prose, with dropcap on first letter -->
 			<div class="container better-container">
 				<p class="content">
@@ -66,45 +66,47 @@
 								'https://p.scdn.co/mp3-preview/37adec4ab0523c1807ecd241624e168ab3501139?cid=774b29d4f13844c495f206cafdad9c86'
 							)
 						"
-						><span class="highlight-text-static">Surfin'</span>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							xmlns:xlink="http://www.w3.org/1999/xlink"
-							width="16"
-							height="16"
-							viewBox="0 0 16 16"
-							version="1.1"
-						>
-							<g>
-								<path
-									style="
-										fill-rule: nonzero;
-										fill: white;
-										fill-opacity: 1;
-										stroke-width: 5;
-										stroke-linecap: butt;
-										stroke-linejoin: round;
-										stroke: white;
-										stroke-opacity: 1;
-										stroke-miterlimit: 4;
-									"
-									d="M 39.385986 13.769531 L 22.229004 28.601074 L 6.005859 28.601074 L 6.005859 47.698975 L 21.990967 47.698975 L 39.385986 62.750244 Z M 39.385986 13.769531 "
-									transform="matrix(0.213333,0,0,0.213333,0,0)"
-								/>
-								<path
-									style="
-										fill: none;
-										stroke-width: 5;
-										stroke-linecap: round;
-										stroke-linejoin: miter;
-										stroke: white;
-										stroke-opacity: 1;
-										stroke-miterlimit: 4;
-									"
-									d="M 47.991943 27.593994 C 52.258301 34.094238 52.258301 42.498779 47.991943 48.999023 M 55.096436 20.507812 C 62.896729 31.091309 62.896729 45.52002 55.096436 56.103516 M 61.59668 14.007568 C 73.00415 28.198242 73.00415 48.413086 61.59668 62.60376 "
-									transform="matrix(0.213333,0,0,0.213333,0,0)"
-								/>
-							</g></svg></span
+						><span class="highlight-text-static"
+							>Surfin'
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								xmlns:xlink="http://www.w3.org/1999/xlink"
+								width="12"
+								height="12"
+								viewBox="0 0 12 12"
+								version="1.1"
+							>
+								<g id="surface1">
+									<path
+										style="
+											fill-rule: nonzero;
+											fill: white;
+											fill-opacity: 1;
+											stroke-width: 5;
+											stroke-linecap: butt;
+											stroke-linejoin: round;
+											stroke: white;
+											stroke-opacity: 1;
+											stroke-miterlimit: 4;
+										"
+										d="M 39.379883 13.769531 L 22.241211 28.613281 L 6.005859 28.613281 L 6.005859 47.705078 L 21.99707 47.705078 L 39.379883 62.744141 Z M 39.379883 13.769531 "
+										transform="matrix(0.16,0,0,0.16,0,0)"
+									/>
+									<path
+										style="
+											fill: none;
+											stroke-width: 5;
+											stroke-linecap: round;
+											stroke-linejoin: miter;
+											stroke: white;
+											stroke-opacity: 1;
+											stroke-miterlimit: 4;
+										"
+										d="M 47.998047 27.587891 C 52.270508 34.106445 52.270508 42.504883 47.998047 48.999023 M 55.102539 20.507812 C 62.890625 31.079102 62.890625 45.507812 55.102539 56.103516 M 61.59668 13.989258 C 72.998047 28.198242 72.998047 48.413086 61.59668 62.597656 "
+										transform="matrix(0.16,0,0,0.16,0,0)"
+									/>
+								</g>
+							</svg> </span></span
 					>, he raps:
 				</p>
 				<div
@@ -124,9 +126,36 @@
 					Despite the buzz, no one has analyzed the prevalence of hums in Kid
 					Cudi's discography. Given his most recent album's release, it's the
 					best time to ask:
-					<span class="highlight-text-static"
-						>how much does Kid Cudi really hum?</span
-					>
+				</p>
+				<div class="has-text-centered">
+					<p class="highlight-text-static heading is-size-4">
+						How much does Kid Cudi really hum?
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="container better-container">
+				<p class="content">
+					In the writing that follows, I go to painstaking lengths to explore
+					this question at a variety of levels of granularity. First, I look at
+					each of Kid Cudi's <span class="has-text-weight-bold">albums</span>,
+					then at each of those albums'
+					<span class="has-text-weight-bold">songs</span>, until I finally look
+					at each individual song and analyze its
+					<span class="has-text-weight-bold">lyrics</span>.
+				</p>
+				<p class="content">
+					Technically, a hum is defined as any noise that Kid Cudi makes that is
+					not a 'normal' word. For the purposes of this analysis, that could
+					include noises ranging from 'hmmm' to 'meh' to 'nah.' I have to be
+					inclusive of all of these hums (rather than just 'hum') because my
+					data source,
+					<a href="https://genius.com/" target="_blank" rel="noopener">Genius</a
+					>, is comprised of
+					<span class="has-text-weight-bold"
+						>community members' contributions</span
+					>, and different transcribers have different ways of recording hums.
 				</p>
 			</div>
 		</div>
@@ -137,6 +166,9 @@
 export default {
 	name: "Intro",
 	props: { width: Number },
+	data() {
+		return { audio: null };
+	},
 	computed: {
 		properWidth() {
 			return Math.min(500, this.width) - 50;
@@ -144,15 +176,23 @@ export default {
 	},
 	methods: {
 		playAudio(url) {
-			const audio = new Audio(url);
-			audio.play();
+			if (this.audio == null || this.audio.paused) {
+				this.audio = new Audio(url);
+				this.audio.play();
+			} else {
+				this.audio.pause();
+			}
 		},
 	},
 };
 </script>
 
 <style scoped lang="scss">
-p:first-child:first-letter {
+.is-gradient {
+	background-image: linear-gradient(#0a0a0a, $background);
+}
+
+.has-dropcap p:first-child:first-letter {
 	float: left;
 	font-family: Georgia;
 	font-size: 55px;

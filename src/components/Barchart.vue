@@ -2,7 +2,11 @@
 	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.5">
 		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="barchart">
-			<p class="mt-2 mb-2 is-size-2 has-text-weight-light">Hums by album</p>
+			<p
+				class="mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
+			>
+				Hums by album
+			</p>
 		</div>
 		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currentStep }" data-step-no="0">
@@ -79,7 +83,6 @@ export default {
 
 			// THE VERY FIRST TIME (AND ONLY GOING DOWN), TRANSITION
 			if (index == 0 && direction == "down") {
-				console.log("trigering");
 				if (this.alreadyTriggeredBars == false) {
 					this.transitionBars();
 					// this.alreadyTriggeredBars = true;
@@ -104,6 +107,7 @@ export default {
 				);
 			}
 		},
+		percentFormat: d3.format(".1%"),
 		transitionBars: function () {
 			const { bars, xScale, width, yScale, colorScale } = this;
 
@@ -149,7 +153,6 @@ export default {
 		},
 		sortBarsByYear: function () {
 			const { bars, svg, data, yScale, colorScale, width } = this;
-			console.log(bars);
 
 			const yearData = [...data.sort((a, b) => d3.ascending(a.year, b.year))];
 
@@ -263,6 +266,7 @@ export default {
 				)
 				.attr("class", "y axis barchart");
 
+			// X axis album cover ticks
 			// Select whichever is smaller; the chart width / data.length (so each square fits perfectly)
 			// Or the bottom margin (rect size should never be greater than margin.bottom lest overflow)
 			this.albumCoverSize = Math.min(width / data.length, margin.bottom);
@@ -282,7 +286,14 @@ export default {
 				.attr("x", -this.albumCoverSize / 2)
 				.attr("y", 1);
 
-			// Add dots
+			// Tooltip
+			const tip = d3
+				.select("#barchart")
+				.append("div")
+				.attr("class", "tooltip")
+				.style("opacity", 0);
+
+			// Add bars
 			const bars = svg
 				.append("g")
 				.selectAll("rect")
@@ -290,6 +301,24 @@ export default {
 				.enter()
 				.append("rect")
 				.attr("class", "barchart-bars");
+
+			const self = this;
+			bars
+				.on("mouseover", function (event, d) {
+					tip.transition(300).style("opacity", 1);
+					tip.html(`<p class='heading'> ${d.album_name} </p>
+							  <p> ${self.percentFormat(d.percent_hums)} hums</p>`);
+
+					const right = event.clientX > window.innerWidth / 2;
+					const offset = right ? tip.node().offsetWidth + 15 : -15;
+
+					tip
+						.style("left", event.clientX - offset + "px")
+						.style("top", event.clientY + "px");
+				})
+				.on("mouseout", function (d) {
+					tip.transition(300).style("opacity", 0);
+				});
 
 			this.bars = bars;
 			this.svg = svg;
@@ -339,5 +368,19 @@ export default {
 		// stroke: whitesmoke;
 		// opacity: 0.35;
 	}
+}
+
+#barchart div.tooltip {
+	position: absolute;
+	text-align: center;
+	font-family: $font-alt;
+	font-size: 14px;
+	pointer-events: none;
+	color: $white-alt;
+	background: #242424;
+	padding: 5px;
+	border-radius: 3px;
+	z-index: 100;
+	border: 1px solid grey;
 }
 </style>
