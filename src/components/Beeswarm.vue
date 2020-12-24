@@ -5,7 +5,7 @@
 			<p
 				class="mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
 			>
-				Hums by song
+				Hums by track
 			</p>
 		</div>
 		<!-- SCROLLAMA STEPS -->

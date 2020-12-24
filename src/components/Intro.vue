@@ -41,15 +41,23 @@
 					repellat quo tenetur molestias inventore, dolorum corporis, unde,
 					nobis nisi officia quos!
 				</p>
+				<a
+					class="title heading has-text-primary has-text-right"
+					href="https://en.wikipedia.org/wiki/Kid_Cudi"
+					target="_blank"
+					rel="noopener"
+				>
+					(Who is Kid Cudi?)
+				</a>
 				<p class="content">
 					Kid Cudi's 'claim to fame,' or his most defining musical feature, is
-					his hum. As one illustration of this, a loop of Cudi humming for 10
+					his hum. As one illustration of this, a loop of Cudi humming for 9
 					minutes has garnered over 2 million views.
 				</p>
 				<div class="has-text-centered mb-4 mt-2">
 					<iframe
 						:width="properWidth"
-						height="315"
+						height="450"
 						src="https://www.youtube.com/embed/X08tO_jxmyk?fs=0&disablekb=1&modestbranding=1"
 						frameborder="0"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -171,7 +179,7 @@ export default {
 	},
 	computed: {
 		properWidth() {
-			return Math.min(500, this.width) - 50;
+			return Math.min(700, this.width) - 50;
 		},
 	},
 	methods: {

@@ -37,6 +37,8 @@
 - [ ] A lil explainer like 'Know literally nothing about Kid Cudi? Click here! With modal popup or smth
 
 ## Things I fixed
+- [ ] **BIG: On mobile, scrolling up causes URL bar to reappear and therefore triggers resize events...
+    * Do this https://stackoverflow.com/a/24212316/14518978
 - [x] Add tooltips to barchart and beeswarm
 - [x] ? Handle resize better
     * Resize currently breaks stripplot

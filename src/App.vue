@@ -67,6 +67,8 @@
 				:containerWidth="largerChartWidth"
 				:containerHeight="height"
 			/>
+		</div>
+		<div>
 			<SongSelector
 				:data="motm_tokenized"
 				:songData="song_hums"
@@ -234,9 +236,7 @@ text {
 }
 
 #app {
-	font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen",
-		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-		"Helvetica", "Arial", sans-serif;
+	font-family: $font-stack;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	color: $white-alt;
@@ -244,9 +244,7 @@ text {
 }
 
 text {
-	font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen",
-		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-		"Helvetica", "Arial", sans-serif;
+	font-family: $font-stack;
 }
 
 /* SCROLLAMA */
@@ -265,7 +263,7 @@ text {
 	padding: 2.5%;
 	min-width: 300px;
 	width: 60%;
-	margin: 0 auto 50vh;
+	margin: 0 auto 50%;
 	background-color: $white-alt;
 	border: 1px solid #cecece;
 	/* border-radius: 3px; */
@@ -371,7 +369,7 @@ rect {
 
 a[href] {
 	color: $cudi-pink;
-	text-decoration: underline;
+	// text-decoration: underline;
 
 	&:hover {
 		color: white;
