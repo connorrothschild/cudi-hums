@@ -204,8 +204,8 @@ export default {
 				this.height = window.innerHeight * 0.8;
 				this.largerChartWidth = window.innerWidth * 0.8;
 				this.windowWidth = window.innerWidth;
+				this.checkWidthForWarning();
 			}
-			this.checkWidthForWarning();
 		},
 		checkWidthForWarning: function () {
 			if (window.innerWidth < 600) {
@@ -393,9 +393,5 @@ a[href] {
 	position: fixed;
 	bottom: 0;
 	right: 0;
-}
-
-.spacer {
-	height: 200px;
 }
 </style>

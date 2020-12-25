@@ -87,7 +87,7 @@ export default {
 	},
 	computed: {
 		responsiveOffset() {
-			return window.innerWidth > 600 ? 0.5 : 0.75;
+			return window.innerWidth > 600 ? 0.5 : 0.85;
 		},
 	},
 	methods: {
