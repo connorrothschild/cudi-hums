@@ -1,5 +1,9 @@
 <template>
-	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.7">
+	<Scrollama
+		@step-enter="stepEnterHandler"
+		:debug="true"
+		:offset="responsiveOffset"
+	>
 		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="stripplot">
 			<p
@@ -14,13 +18,15 @@
 				But where are Cudi's hums located? <br />Are they mostly concentrated at
 				the beginnings and ends of each song, or somewhere in the middle?
 			</p>
+		</div>
+		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
 			<p class="content">
 				In this view, every line represents a lyric from
 				<span class="has-text-weight-semibold">Man on the Moon III</span>.
 				<span class="highlight-text blue">Blue lines</span>
-				represent "regular" lyrics, such as normal words, while
+				represent "regular" lyrics while
 				<span class="highlight-text">pink lines</span> represent "hums" and
-				other sounds, such as as 'oooh' and 'nahh.'
+				other sounds, such as as 'oooh' and 'nah.'
 			</p>
 			<p class="content">
 				The songs are different durations (notice how short
@@ -28,7 +34,7 @@
 				is?), which is why the lengths of each bar are different.
 			</p>
 		</div>
-		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
+		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
 			<p class="content">
 				For better reference, we can normalize the position of each lyric. Here,
 				each song is forced to the same bounds, so you're looking at where
@@ -41,7 +47,7 @@
 				>).
 			</p>
 		</div>
-		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
+		<div class="step" :class="{ active: 3 == currStep }" data-step-no="3">
 			<p class="content">
 				By focusing only on hum-type sounds, we can isolate the noises that Cudi
 				makes most frequently, and at what points in each song he makes them.
@@ -62,7 +68,7 @@
 				</p>
 			</div>
 		</div>
-		<div class="step" :class="{ active: 3 == currStep }" data-step-no="3">
+		<div class="step" :class="{ active: 4 == currStep }" data-step-no="4">
 			<p class="content">
 				Different songs utilize hums in different ways. For example,
 				<span class="highlight-text">The Void</span>
@@ -77,7 +83,7 @@
 				allow="encrypted-media"
 			></iframe>
 		</div>
-		<div class="step" :class="{ active: 4 == currStep }" data-step-no="4">
+		<div class="step" :class="{ active: 5 == currStep }" data-step-no="5">
 			<p class="content">
 				While in other songs like
 				<span class="highlight-text">She Knows This</span>, Cudi is much more
@@ -92,13 +98,24 @@
 				allowtransparency="true"
 				allow="encrypted-media"
 			></iframe>
-			<p class="content after-embed">
-				In that song, the hums
-				<em>define the structure of the song</em>, with the chorus being marked
-				by Cudi's alternations between the phrase "She Knows This" and hums.
+		</div>
+		<div class="step" :class="{ active: 6 == currStep }" data-step-no="6">
+			<p class="content">
+				And so, in some songs, Cudi interlaces hums alongside the rest of his
+				lyrics. But in others, the hums
+				<em>define the structure of the song</em>.
+			</p>
+			<p class="content">
+				Kid Cudi uses hums like any other artist would use an instrument. MORE
+				HERE
 			</p>
 		</div>
-		<div class="step" :class="{ active: 5 == currStep }" data-step-no="5">
+		<!-- Last step should remain active even when .step.empty enters viewport -->
+		<div
+			class="step"
+			:class="{ active: (7 == currStep) | (8 == currStep) }"
+			data-step-no="7"
+		>
 			<p class="content">
 				Finally, group by song category: Intro, Chorus, Bridge, Outro, etc.
 				<i>some cool transition goes here for sure.</i>
@@ -159,6 +176,9 @@ export default {
 		computedHeightBuffer: function () {
 			return this.height / 100;
 		},
+		responsiveOffset() {
+			return window.innerWidth > 600 ? 0.5 : 0.75;
+		},
 	},
 	methods: {
 		stepEnterHandler({ element, index, direction }) {
@@ -178,31 +198,39 @@ export default {
 				this.stripByPosition();
 			}
 			if (index == 1) {
+				this.stripByPosition();
+			}
+			if (index == 2) {
 				// * Normalize
 				this.stripByNormalizedPosition();
 			}
-			if (index == 2 && direction == "down") {
+			if (index == 3 && direction == "down") {
 				// * Highlight hums only
 				this.stripByNormalizedPosition();
 				this.filterHums();
 			}
-			if (index == 2 && direction == "up") {
+			if (index == 3 && direction == "up") {
 				this.defaultHeight();
 				this.defaultOpacity();
-			}
-			if (index == 3) {
-				// ! Highlight a few hums...
-
-				this.filterHums();
-				this.highlightSong("The Void");
 			}
 			if (index == 4) {
 				// ! Highlight a few hums...
 
 				this.filterHums();
-				this.highlightSong("She Knows This");
+				this.highlightSong("The Void");
 			}
 			if (index == 5) {
+				// ! Highlight a few hums...
+
+				this.filterHums();
+				this.highlightSong("She Knows This");
+			}
+			if (index == 6) {
+				this.defaultHeight();
+				this.stripByNormalizedPosition();
+				this.filterHums();
+			}
+			if (index == 7) {
 				// ! When does Cudi hum? Intro, chorus, bridge, outro
 				this.defaultHeight();
 				this.stripByNormalizedPosition();
@@ -254,8 +282,8 @@ export default {
 				.filter((d) => d.category == "Regular")
 				.transition("filterHums")
 				.duration(1000)
-				.attr("x1", this.xScale(1.05))
-				.attr("x2", this.xScale(1.05));
+				.attr("x1", this.xScale(1.1))
+				.attr("x2", this.xScale(1.1));
 
 			this.onlyHumsToggled = true;
 		},
@@ -263,9 +291,9 @@ export default {
 			const { lines } = this;
 
 			lines
-				.attr("opacity", (d) => (d.song_name == song ? 1 : 0.3))
 				.transition("highlightSong")
 				.duration(1000)
+				.attr("opacity", (d) => (d.song_name == song ? 1 : 0.3))
 				.attr("y1", (d) =>
 					d.song_name == song
 						? this.yScale(d.song_name) + this.computedHeightBuffer * 3

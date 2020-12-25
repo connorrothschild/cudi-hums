@@ -4,3 +4,4 @@
 .Ruserdata
 node_modules
 .Renviron
+key.pub

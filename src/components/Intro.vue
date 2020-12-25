@@ -32,10 +32,10 @@
 				</div>
 			</section>
 		</div>
-		<div class="has-dropcap section is-gradient">
+		<div class="section is-gradient">
 			<!-- Intro prose, with dropcap on first letter -->
 			<div class="container better-container">
-				<p>
+				<p class="has-dropcap">
 					Kid Cudi dolor sit amet consectetur adipisicing elit. Quisquam est
 					ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
 					repellat quo tenetur molestias inventore, dolorum corporis, unde,
@@ -64,7 +64,22 @@
 						allowfullscreen
 					></iframe>
 				</div>
-				<p class="content">
+				<div>
+					<p class="content">
+						Perhaps nothing captures it better than this Reddit post:
+					</p>
+					<div style="max-width: 600px; margin: 0 auto; background: whitesmoke">
+						<blockquote class="reddit-card" data-card-created="1608866419">
+							<a
+								href="https://www.reddit.com/r/KidCudi/comments/946pml/how_does_kid_cudi_just_hum_on_a_song_and_its_the/"
+								>HOW DOES KID CUDI JUST HUM ON A SONG AND ITS THE MOST FIRE
+								THING IVE HEARD?!?</a
+							>
+							from <a href="http://www.reddit.com/r/KidCudi">r/KidCudi</a>
+						</blockquote>
+					</div>
+				</div>
+				<p class="content after-embed">
 					And Kid Cudi is aware of the impact his hums have had on his fans. In
 					one song,
 					<span
@@ -198,15 +213,23 @@ export default {
 			}
 		},
 	},
+	created() {
+		let redditEmbed = document.createElement("script");
+		redditEmbed.setAttribute(
+			"src",
+			"//embed.redditmedia.com/widgets/platform.js"
+		);
+		document.head.appendChild(redditEmbed);
+	},
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .is-gradient {
 	background-image: linear-gradient(#0a0a0a, $background);
 }
 
-.has-dropcap p:first-child:first-letter {
+.has-dropcap:first-child:first-letter {
 	float: left;
 	font-family: Georgia;
 	font-size: 55px;

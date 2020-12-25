@@ -1,5 +1,9 @@
 <template>
-	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.7">
+	<Scrollama
+		@step-enter="stepEnterHandler"
+		:debug="false"
+		:offset="responsiveOffset"
+	>
 		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="barchart">
 			<p
@@ -9,14 +13,14 @@
 			</p>
 		</div>
 		<!-- SCROLLAMA STEPS -->
-		<div class="step" :class="{ active: 0 == currentStep }" data-step-no="0">
+		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
 			<p class="content">
 				The first way to analyze Cudi hums is by album. <br />Kid Cudi has an
 				extensive discography, having recorded seven studio albums and one
 				mixtape since 2008.
 			</p>
 		</div>
-		<div class="step" :class="{ active: 1 == currentStep }" data-step-no="1">
+		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
 			<p class="content">
 				Most recently, Kid Cudi came out with his 7th studio album,
 				<span class="highlight-text">Man on the Moon III: The Chosen</span>.
@@ -24,13 +28,19 @@
 				greatest proportion of hums.
 			</p>
 		</div>
-		<div class="step" :class="{ active: 2 == currentStep }" data-step-no="2">
+		<!-- Last step should remain active even when .step.empty enters viewport -->
+		<div
+			class="step"
+			:class="{ active: (2 == currStep) | (3 == currStep) }"
+			data-step-no="2"
+		>
 			<p class="content">
 				When we organize these albums by their release year, it becomes evident
 				that Kid Cudi has been humming more and more as his discography has
 				developed.
-				<br />
-				With exceptions of
+			</p>
+			<p class="content">
+				With the exceptions of
 				<span class="highlight-text blue">Indicud</span> and
 				<span class="highlight-text blue">Speedin' Bullet 2 Heaven</span>,
 				Cudi's albums have become progressively more hum-centric over time.
@@ -48,7 +58,7 @@ import "intersection-observer";
 import Scrollama from "vue-scrollama";
 
 export default {
-	name: "Scatterplot",
+	name: "Barchart",
 	props: {
 		data: Array,
 		containerHeight: Number,
@@ -69,17 +79,22 @@ export default {
 			colorScale: null,
 			height: null,
 			width: null,
-			currentStep: null,
+			currStep: null,
 			albumCoverSize: null,
 			alreadyTriggeredBars: false,
 			response: {},
 		};
 	},
+	computed: {
+		responsiveOffset() {
+			return window.innerWidth > 600 ? 0.5 : 0.75;
+		},
+	},
 	methods: {
 		stepEnterHandler: function ({ index, direction, element }) {
 			// Grab for resize, see below
 			this.response = { index, direction, element };
-			this.currentStep = index;
+			this.currStep = index;
 
 			// THE VERY FIRST TIME (AND ONLY GOING DOWN), TRANSITION
 			if (index == 0 && direction == "down") {

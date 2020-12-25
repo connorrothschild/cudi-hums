@@ -4,21 +4,18 @@
 			<p class="heading">{{ section }}</p>
 		</div>
 		<!-- If on Safari, nudge to another browser -->
-		<div class="notification is-fixed is-danger mb-0" v-if="showSafariWarning">
+		<!-- <div class="notification is-fixed is-danger mb-0" v-if="showSafariWarning">
 			<button class="delete" @click="showSafariWarning = false"></button>
 			Thanks for visiting!
 			<span class="has-text-weight-semibold"
 				>There is a known issue with this project's appearance on Safari.</span
 			>
 			If possible, visit the page on another browser, such as Chrome or Firefox.
-		</div>
+		</div> -->
 		<!-- If mobile, nudge to larger screen -->
 		<!-- Only show mobile nudge on non-Safari browsers (don't want to duplicate) -->
 		<!-- Mobile safari users can attribute the bugginess to Safari, not mobile -->
-		<div
-			class="notification is-fixed is-danger mb-0"
-			v-if="showMobileNudge & !showSafariWarning"
-		>
+		<div class="notification is-fixed is-danger mb-0" v-if="showMobileNudge">
 			<button class="delete" @click="showMobileNudge = false"></button>
 			Pssst. You might have a better experience on a wider screen, such as a
 			desktop computer.
@@ -45,6 +42,15 @@
 				:containerWidth="width"
 				:containerHeight="height"
 			/>
+			<!-- <div class="section container better-container">
+				<p class="content">
+					Kid Cudi hums a good amount—in some albums, up to 8% of his lyrics are
+					hums or hum-like sounds. But is this really an accurate statistic? Are
+					Cudi's hums equally distributed across songs, or could it be the case
+					that one song with two-hundred hums is artificially inflating the
+					proportions?
+				</p>
+			</div> -->
 			<Beeswarm
 				v-observe-visibility="
 					(isVisible, entry) =>
@@ -117,20 +123,20 @@ export default {
 			width: null,
 			largerChartWidth: null,
 			height: null,
-			showSafariWarning: false,
+			// showSafariWarning: false,
 			showMobileNudge: false,
-			DEBUG: true,
+			DEBUG: false,
 			section: null,
 		};
 	},
 	async mounted() {
 		// HANDLE SAFARI AND MOBILE USERS
-		if (
-			navigator.userAgent.indexOf("Safari") != -1 &&
-			navigator.userAgent.indexOf("Chrome") == -1
-		) {
-			this.showSafariWarning = true;
-		}
+		// if (
+		// 	navigator.userAgent.indexOf("Safari") != -1 &&
+		// 	navigator.userAgent.indexOf("Chrome") == -1
+		// ) {
+		// 	this.showSafariWarning = true;
+		// }
 		this.checkWidthForWarning();
 
 		this.windowWidth = window.innerWidth;
@@ -187,21 +193,19 @@ export default {
 	},
 	methods: {
 		watchResize: function () {
-			// * On mobile devices, only trigger resize if width changes
+			// * Only trigger resize if width changes
+			// ! Make this for mobile only, in each of the charts resize events
 			// https://stackoverflow.com/questions/8898412/iphone-ipad-triggering-unexpected-resize-events
-			if (window.innerWidth < 600) {
-				if (window.innerWidth != this.windowWidth) {
-					this.width =
-						window.innerWidth < 1000
-							? window.innerWidth * 0.9
-							: window.innerWidth * 0.5;
-					this.height = window.innerHeight * 0.8;
-					this.largerChartWidth = window.innerWidth * 0.8;
-					this.windowWidth = window.innerWidth;
-
-					this.checkWidthForWarning();
-				}
+			if (window.innerWidth != this.windowWidth) {
+				this.width =
+					window.innerWidth < 1000
+						? window.innerWidth * 0.9
+						: window.innerWidth * 0.5;
+				this.height = window.innerHeight * 0.8;
+				this.largerChartWidth = window.innerWidth * 0.8;
+				this.windowWidth = window.innerWidth;
 			}
+			this.checkWidthForWarning();
 		},
 		checkWidthForWarning: function () {
 			if (window.innerWidth < 600) {
@@ -272,22 +276,22 @@ text {
 }
 
 .step {
-	padding: 2.5%;
+	padding: 2%;
 	min-width: 300px;
 	width: 60%;
-	margin: 0 auto 50%;
+	margin: 30rem auto; // 0 auto 50%
 	background-color: $white-alt;
 	border: 1px solid #cecece;
-	/* border-radius: 3px; */
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	color: #ccc;
+	color: #cecece;
 	text-align: center;
-	// opacity: 0.9;
-	line-height: 1.6;
+	line-height: 1.5;
 	z-index: 1000;
+	opacity: 0.85;
+	// border-radius: 3px;
 
 	.highlight-text {
 		font-weight: 600;
@@ -312,6 +316,7 @@ text {
 		color: black;
 		border-left: 2px solid $cudi-pink;
 		box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.12);
+		opacity: 1;
 
 		.highlight-text {
 			color: $white-alt;
@@ -388,5 +393,9 @@ a[href] {
 	position: fixed;
 	bottom: 0;
 	right: 0;
+}
+
+.spacer {
+	height: 200px;
 }
 </style>

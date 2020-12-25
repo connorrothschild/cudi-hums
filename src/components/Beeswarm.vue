@@ -1,5 +1,9 @@
 <template>
-	<Scrollama @step-enter="stepEnterHandler" :debug="false" :offset="0.7">
+	<Scrollama
+		@step-enter="stepEnterHandler"
+		:debug="true"
+		:offset="responsiveOffset"
+	>
 		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="beeswarm">
 			<p
@@ -56,14 +60,18 @@
 			></iframe>
 			<p class="content after-embed">
 				Near the middle of this song, Kid Cudi alternates between various
-				ad-libs such as 'na-na-na', 'hmmm', and 'ooh.' <br /><span
-					class="has-text-weight-semibold"
+				ad-libs such as 'na', 'hmmm', and 'ooh.'
+				<br /><span class="has-text-weight-semibold"
 					>In total, the track includes 84 hums (out of 324 total words).</span
 				>
 			</p>
 		</div>
-
-		<div class="step" :class="{ active: 4 == currStep }" data-step-no="4">
+		<!-- Last step should remain active even when .step.empty enters viewport -->
+		<div
+			class="step"
+			:class="{ active: (4 == currStep) | (5 == currStep) }"
+			data-step-no="4"
+		>
 			<p class="content">
 				Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus
 				quia deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt
@@ -112,6 +120,11 @@ export default {
 			defaultCircleRadius: 7.5,
 			response: {},
 		};
+	},
+	computed: {
+		responsiveOffset() {
+			return window.innerWidth > 600 ? 0.5 : 0.75;
+		},
 	},
 	methods: {
 		stepEnterHandler({ element, index, direction }) {

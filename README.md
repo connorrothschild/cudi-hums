@@ -12,6 +12,9 @@
 * Somewhere (intro?), explanation of the definition of 'hums'
 * Conclusion prose? 
     * Before or after song/lyric exploration?
+    * This should summarize the top level stats (e.g. *actually answer the question*)
+        * Number of hums, total (including the breakdown of hmm, hum, ahhh, etc.)
+        * Proportion over his entire discography
 * Some obvious separation (like a horizontal rule, but better) between intro prose and chart content
 
 ### Nice to have
@@ -33,13 +36,12 @@
 ## Things I need to fix
 - [ ] Finish stripplot grouping thing
 - [ ] Add axis titles
-- [ ] Disable stripplot tooltip on mobile?
+- [ ] On mobile, the last step only lasts for a few pixels before losing `.active`
 - [ ] A lil explainer like 'Know literally nothing about Kid Cudi? Click here! With modal popup or smth
 
 ## Things I fixed
-- [ ] The safari warning shows up on Firefox mobile?
-- [ ] Stripplot steps activate a little late
-- [x] **BIG: On mobile, scrolling up causes URL bar to reappear and therefore triggers resize events...**
+- [x] Disable stripplot tooltip on mobile?
+- [x] On mobile, scrolling up causes URL bar to reappear and therefore triggers resize events...
     * ~~Do this https://stackoverflow.com/a/24212316/14518978~~
 - [x] Add tooltips to barchart and beeswarm
 - [x] ? Handle resize better
@@ -47,7 +49,7 @@
 - [x] ~~"Show Only Hums" should be a toggle, not a button... maybe?~~
     * Usage of bulma switch extension was annoyingly hard
 - [x] Safari? Text shows up behind graphic
-    * Current solution is notification/alert
+    * This randomly went away?
 - [x] Make current notification for mobile and safari users fixed top 0
 - [x] Get rid of VW/VH (https://pudding.cool/process/responsive-scrollytelling/)
 - [x] Beautify charts a bit more
