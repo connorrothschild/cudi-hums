@@ -142,7 +142,7 @@ export default {
 			height: null,
 			// showSafariWarning: false,
 			showMobileNudge: false,
-			DEBUG: true,
+			DEBUG: false,
 			section: null,
 		};
 	},

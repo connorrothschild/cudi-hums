@@ -471,9 +471,9 @@ export default {
 			const xAxisBuffer = barWidth - barWidthPadding;
 
 			lines
-				// .attr("opacity", 1)
-				// .attr("y1", (d, i) => this.yScale(d.song_name))
-				// .attr("y2", (d, i) => this.yScale(d.song_name))
+				.attr("opacity", 1)
+				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
+				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
 				.transition("groupBySection")
 				.duration(1500)
 				.attr(
