@@ -87,7 +87,8 @@
 			<p class="content">
 				While in other songs like
 				<span class="highlight-text">She Knows This</span>, Cudi is much more
-				rhythmic in his hums.
+				rhythmic. In this song, Cudi spends the chorus alternating between the
+				phrase 'she knows this' and a flurry of hums.
 			</p>
 
 			<iframe
@@ -464,28 +465,38 @@ export default {
 				.range([0, this.width])
 				.padding(0.5);
 
+			// Width divided by 8 bars, plus padding between three of them
+			const barWidth = width / 8;
+			const barWidthPadding = barWidth * 0.3;
+			const xAxisBuffer = barWidth - barWidthPadding;
+
 			lines
-				.attr("opacity", 1)
-				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
-				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
+				// .attr("opacity", 1)
+				// .attr("y1", (d, i) => this.yScale(d.song_name))
+				// .attr("y2", (d, i) => this.yScale(d.song_name))
 				.transition("groupBySection")
-				.duration(700)
-				.attr("x1", (d) =>
-					d.category == "Hum"
-						? this.xScale(d.section_name) - 10
-						: this.xScale(d.section_name) + 10
+				.duration(1500)
+				.attr(
+					"x1",
+					(d) =>
+						d.category == "Hum"
+							? this.xScale(d.section_name) - xAxisBuffer // - 50
+							: this.xScale(d.section_name) - 0 // - 50
 				)
-				.attr("x2", (d) =>
-					d.category == "Hum"
-						? this.xScale(d.section_name) - 10
-						: this.xScale(d.section_name) + 10
+				.attr(
+					"x2",
+					(d) =>
+						d.category == "Hum"
+							? this.xScale(d.section_name) - 0 // + 50
+							: this.xScale(d.section_name) + xAxisBuffer // + 50
 				)
-				.attr("stroke", (d) => this.colorScale(d.category))
 				.transition("dropLines")
-				.duration(700)
+				.duration(1000)
 				.attr("y1", height)
 				.attr("y2", height)
-				.attr("stroke", (d) => this.colorScale(d.category));
+				.attr("opacity", 0);
+
+			lines.exit().remove();
 		},
 		createBars: function () {
 			// Grouped bar chart: https://observablehq.com/@d3/grouped-bar-chart
@@ -495,21 +506,17 @@ export default {
 			const groupKey = "section_name"; // sections_data.columns[0]; // Should be 'section_name'
 			const keys = ["Hum", "Regular"]; // sections_data.columns.slice(1); // Should be ['Hum','Regular']
 
-			console.log(keys);
-			console.log(data);
-
 			// Define scales
+			// Main x axis
 			const x0 = d3
 				.scaleBand()
 				.domain(data.map((d) => d[groupKey]))
 				.rangeRound([0, width])
-				.paddingInner(0.1);
+				.padding(0.1);
 
-			const x1 = d3
-				.scaleBand()
-				.domain(keys)
-				.rangeRound([0, x0.bandwidth()])
-				.padding(0.05);
+			// Subgroups
+			const x1 = d3.scaleBand().domain(keys).rangeRound([0, x0.bandwidth()]);
+			// .padding(0.05);
 
 			const y = d3
 				.scaleLinear()
@@ -517,15 +524,12 @@ export default {
 				.nice()
 				.rangeRound([height, 0]);
 
-			console.log(x0.bandwidth());
 			d3.select(".x.axis.stripplot").remove();
 			svg
 				.append("g")
 				.attr("transform", "translate(0," + height + ")")
 				.call(d3.axisBottom(this.xScale).ticks(0).tickSizeOuter(0))
 				.attr("class", "x axis stripplot");
-			// .selectAll(".tick text")
-			// .call(this.wrapXLabel, x0.bandwidth());
 
 			d3.select(".y.axis.stripplot").remove();
 			svg
@@ -561,7 +565,7 @@ export default {
 				.attr("fill", (d) => colorScale(d.key))
 				.attr("opacity", 1)
 				.transition("createBars")
-				.delay(1200)
+				.delay(2500)
 				.duration(1000)
 				.attr("height", (d) => y(0) - y(d.value))
 				.attr("y", (d) => y(d.value));
@@ -731,6 +735,10 @@ export default {
 	text {
 		font-size: 12px;
 		font-weight: 200;
+	}
+
+	@media screen and (max-width: 768px) {
+		font-size: 8px;
 	}
 }
 

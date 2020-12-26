@@ -1,5 +1,5 @@
 <template>
-	<div class="section">
+	<div class="p-1">
 		<div class="flex-button-container">
 			<!-- Each of the sections provided by SongSelector (all sections in the user-selected song)
             are printed here as buttons -->
