@@ -4,6 +4,7 @@
 
 # Because order matters:
 source(here::here('process/hums_list.R'))
-source(here::here('process/lyrics.R'))
+source(here::here('process/songs.R'))
 source(here::here('process/albums.R'))
 source(here::here('process/motm.R'))
+source(here::here('process/sections.R'))

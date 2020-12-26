@@ -339,7 +339,6 @@ export default {
 			this.svg = svg;
 		},
 		watchResize: function () {
-			console.log("here");
 			d3.select("#barchart > svg").remove();
 			this.setupChart();
 

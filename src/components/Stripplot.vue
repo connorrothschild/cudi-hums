@@ -138,6 +138,7 @@ export default {
 		data: Array,
 		major_albums: Array,
 		album_data: Array,
+		sections_data: Array,
 		containerWidth: Number,
 		containerHeight: Number,
 	},
@@ -151,6 +152,7 @@ export default {
 		return {
 			width: null,
 			height: null,
+			margin: null,
 			currStep: null,
 			xScale: null,
 			yScale: null,
@@ -230,14 +232,87 @@ export default {
 				this.stripByNormalizedPosition();
 				this.filterHums();
 			}
-			if (index == 7) {
-				// ! When does Cudi hum? Intro, chorus, bridge, outro
-				this.defaultHeight();
+			if (index == 6 && direction == "up") {
+				this.undoBars();
 				this.stripByNormalizedPosition();
-				this.filterHums();
+			}
+			if (index == 7 && direction == "down") {
+				// ! When does Cudi hum? Intro, chorus, bridge, outro
+				this.groupBySection();
+				this.createBars();
+				// this.defaultHeight();
+				// this.stripByNormalizedPosition();
+				// this.filterHums();
 				// this.groupBySection();
 			}
 		},
+		// TEXT WRAPPING
+		wrapYLabel: function (text, width) {
+			text.each(function () {
+				var text = d3.select(this),
+					words = text.text().split(/\s+/).reverse(),
+					word,
+					line = [],
+					lineNumber = 0,
+					lineHeight = 1, // ems
+					x = text.attr("x"),
+					dy = parseFloat(text.attr("dy")),
+					tspan = text
+						.text(null)
+						.append("tspan")
+						.attr("x", x)
+						.attr("y", 0)
+						.attr("dy", dy + "em");
+				while ((word = words.pop())) {
+					line.push(word);
+					tspan.text(line.join(" "));
+					if (tspan.node().getComputedTextLength() > width) {
+						line.pop();
+						tspan.text(line.join(" "));
+						line = [word];
+						tspan = text
+							.append("tspan")
+							.attr("x", x)
+							.attr("y", 0)
+							.attr("dy", ++lineNumber * lineHeight + dy + "em")
+							.text(word);
+					}
+				}
+			});
+		},
+		// wrapXLabel: function (text, width) {
+		// 	text.each(function () {
+		// 		var text = d3.select(this),
+		// 			words = text.text().split(/\s+/).reverse(),
+		// 			word,
+		// 			line = [],
+		// 			lineNumber = 0,
+		// 			lineHeight = 1.1, // ems
+		// 			y = text.attr("y"),
+		// 			dy = parseFloat(text.attr("dy")),
+		// 			tspan = text
+		// 				.text(null)
+		// 				.append("tspan")
+		// 				.attr("x", 0)
+		// 				.attr("y", y)
+		// 				.attr("dy", dy + "em");
+		// 		while ((word = words.pop())) {
+		// 			line.push(word);
+		// 			tspan.text(line.join(" "));
+		// 			if (tspan.node().getComputedTextLength() > width) {
+		// 				line.pop();
+		// 				tspan.text(line.join(" "));
+		// 				line = [word];
+		// 				tspan = text
+		// 					.append("tspan")
+		// 					.attr("x", 0)
+		// 					.attr("y", y)
+		// 					.attr("dy", ++lineNumber * lineHeight + dy + "em")
+		// 					.text(word);
+		// 			}
+		// 		}
+		// 	});
+		// },
 		handleFilter: function () {
 			this.onlyHumsToggled
 				? this.stripByNormalizedPosition()
@@ -291,9 +366,9 @@ export default {
 			const { lines } = this;
 
 			lines
+				.attr("opacity", (d) => (d.song_name == song ? 1 : 0.3))
 				.transition("highlightSong")
 				.duration(1000)
-				.attr("opacity", (d) => (d.song_name == song ? 1 : 0.3))
 				.attr("y1", (d) =>
 					d.song_name == song
 						? this.yScale(d.song_name) + this.computedHeightBuffer * 3
@@ -352,7 +427,7 @@ export default {
 						.tickFormat((d, i) => xAxisLabels[i])
 						.tickSizeOuter(0)
 				)
-				.attr("class", "x axis stripplot");
+				.attr("class", "x axis stripplot text-on-bounds ");
 		},
 		stripByPosition: function () {
 			const { lines, svg, data, width, height } = this;
@@ -380,6 +455,130 @@ export default {
 				.call(d3.axisBottom(this.xScale).ticks(0).tickSizeOuter(0))
 				.attr("class", "x axis stripplot");
 		},
+		groupBySection: function () {
+			const { lines, svg, data, width, height } = this;
+
+			this.xScale = d3
+				.scalePoint()
+				.domain(this.sections_data.map((d) => d.section_name))
+				.range([0, this.width])
+				.padding(0.5);
+
+			lines
+				.attr("opacity", 1)
+				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
+				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
+				.transition("groupBySection")
+				.duration(700)
+				.attr("x1", (d) =>
+					d.category == "Hum"
+						? this.xScale(d.section_name) - 10
+						: this.xScale(d.section_name) + 10
+				)
+				.attr("x2", (d) =>
+					d.category == "Hum"
+						? this.xScale(d.section_name) - 10
+						: this.xScale(d.section_name) + 10
+				)
+				.attr("stroke", (d) => this.colorScale(d.category))
+				.transition("dropLines")
+				.duration(700)
+				.attr("y1", height)
+				.attr("y2", height)
+				.attr("stroke", (d) => this.colorScale(d.category));
+		},
+		createBars: function () {
+			// Grouped bar chart: https://observablehq.com/@d3/grouped-bar-chart
+			const { svg, height, width, colorScale, sections_data } = this;
+			const data = sections_data;
+			// Define grouping column (section) and keys (category)
+			const groupKey = "section_name"; // sections_data.columns[0]; // Should be 'section_name'
+			const keys = ["Hum", "Regular"]; // sections_data.columns.slice(1); // Should be ['Hum','Regular']
+
+			console.log(keys);
+			console.log(data);
+
+			// Define scales
+			const x0 = d3
+				.scaleBand()
+				.domain(data.map((d) => d[groupKey]))
+				.rangeRound([0, width])
+				.paddingInner(0.1);
+
+			const x1 = d3
+				.scaleBand()
+				.domain(keys)
+				.rangeRound([0, x0.bandwidth()])
+				.padding(0.05);
+
+			const y = d3
+				.scaleLinear()
+				.domain([0, d3.max(data, (d) => d3.max(keys, (key) => d[key]))])
+				.nice()
+				.rangeRound([height, 0]);
+
+			console.log(x0.bandwidth());
+			d3.select(".x.axis.stripplot").remove();
+			svg
+				.append("g")
+				.attr("transform", "translate(0," + height + ")")
+				.call(d3.axisBottom(this.xScale).ticks(0).tickSizeOuter(0))
+				.attr("class", "x axis stripplot");
+			// .selectAll(".tick text")
+			// .call(this.wrapXLabel, x0.bandwidth());
+
+			d3.select(".y.axis.stripplot").remove();
+			svg
+				.append("g")
+				.call(d3.axisLeft(y).ticks(null, "~s").ticks(4).tickSize(-width))
+				.call((g) => g.select(".domain").remove())
+				.call((g) =>
+					g
+						.select(".tick:last-of-type text")
+						.clone()
+						.attr("x", 3)
+						.attr("text-anchor", "start")
+						.attr("font-weight", "bold")
+						.text(data.y)
+				)
+				.attr("class", "y axis stripplot");
+
+			const bars = svg
+				.append("g")
+				.selectAll("g")
+				.data(data)
+				.join("g")
+				.attr("transform", (d) => `translate(${x0(d[groupKey])},0)`)
+				.selectAll("rect")
+				.data((d) => keys.map((key) => ({ key, value: d[key] })))
+				.join("rect");
+
+			bars
+				.attr("y", y(0))
+				.attr("height", 0)
+				.attr("x", (d) => x1(d.key))
+				.attr("width", x1.bandwidth())
+				.attr("fill", (d) => colorScale(d.key))
+				.attr("opacity", 1)
+				.transition("createBars")
+				.delay(1200)
+				.duration(1000)
+				.attr("height", (d) => y(0) - y(d.value))
+				.attr("y", (d) => y(d.value));
+		},
+		undoBars: function () {
+			const { svg, width, margin } = this;
+			d3.select(".y.axis.stripplot").remove();
+			d3.selectAll("rect").remove().exit();
+
+			// Y axis
+			svg
+				.append("g")
+				.call(d3.axisLeft(this.yScale).tickSizeOuter(0).tickSize(-width))
+				.attr("class", "y axis stripplot")
+				.selectAll(".tick text")
+				.call(this.wrapYLabel, margin.left * 0.9);
+		},
 		setupChart: function () {
 			const { data, computedStrokeWidth } = this;
 			const computedStrokeWidthReg = computedStrokeWidth.toString();
@@ -390,6 +589,7 @@ export default {
 			const width = this.containerWidth - margin.left - margin.right;
 			const height = this.containerHeight - margin.top - margin.bottom;
 
+			this.margin = margin;
 			this.width = width;
 			this.height = height;
 
@@ -423,47 +623,13 @@ export default {
 				.domain(data.map((d) => d.category))
 				.range(["#4C6DBC", "#ce496a"]);
 
-			const wrap = function (text, width) {
-				text.each(function () {
-					var text = d3.select(this),
-						words = text.text().split(/\s+/).reverse(),
-						word,
-						line = [],
-						lineNumber = 0,
-						lineHeight = 1, // ems
-						x = text.attr("x"),
-						dy = parseFloat(text.attr("dy")),
-						tspan = text
-							.text(null)
-							.append("tspan")
-							.attr("x", x)
-							.attr("y", 0)
-							.attr("dy", dy + "em");
-					while ((word = words.pop())) {
-						line.push(word);
-						tspan.text(line.join(" "));
-						if (tspan.node().getComputedTextLength() > width) {
-							line.pop();
-							tspan.text(line.join(" "));
-							line = [word];
-							tspan = text
-								.append("tspan")
-								.attr("x", x)
-								.attr("y", 0)
-								.attr("dy", ++lineNumber * lineHeight + dy + "em")
-								.text(word);
-						}
-					}
-				});
-			};
-
 			// Y axis
 			svg
 				.append("g")
 				.call(d3.axisLeft(this.yScale).tickSizeOuter(0).tickSize(-width))
 				.attr("class", "y axis stripplot")
 				.selectAll(".tick text")
-				.call(wrap, margin.left * 0.9);
+				.call(this.wrapYLabel, margin.left * 0.9);
 
 			// X axis
 			svg
@@ -518,7 +684,6 @@ export default {
 			d3.select("#stripplot > svg").remove();
 			this.setupChart();
 
-			// ! FIXME: Resize really breaks this whole thing
 			// * My hacky workaround:
 			// On step enter (above), we saved the response which included index, direction, and element
 			// Now, we rereference those and pass them back into stepEnterHandler (to mimic the most recent method)
@@ -606,10 +771,10 @@ export default {
 	}
 }
 
-.x.axis.stripplot g.tick:nth-child(2) text {
+.x.axis.stripplot.text-on-bounds g.tick:nth-child(2) text {
 	text-anchor: start !important;
 }
-.x.axis.stripplot g.tick:nth-child(3) text {
+.x.axis.stripplot.text-on-bounds g.tick:nth-child(3) text {
 	text-anchor: end !important;
 }
 

@@ -1,10 +1,32 @@
 <template>
 	<div id="app">
-		<div class="absolute-bottom-right">
-			<p class="heading">{{ section }}</p>
+		<!-- LOADING SCREEN UNTIL ALL DATASETS ARE LOADED -->
+		<div
+			v-if="
+				(song_hums.length == 0) |
+					(major_albums.length == 0) |
+					(album_hums.length == 0) |
+					(sections_grouped.length == 0)
+			"
+			class="hero"
+		>
+			<div class="hero-body">
+				<div class="title">LOADING SCREEN</div>
+			</div>
 		</div>
-		<!-- If on Safari, nudge to another browser -->
-		<!-- <div class="notification is-fixed is-danger mb-0" v-if="showSafariWarning">
+		<div
+			v-if="
+				(song_hums.length > 0) &
+				(major_albums.length > 0) &
+				(album_hums.length > 0) &
+				(sections_grouped.length > 0)
+			"
+		>
+			<div class="absolute-bottom-right">
+				<p class="heading">{{ section }}</p>
+			</div>
+			<!-- If on Safari, nudge to another browser -->
+			<!-- <div class="notification is-fixed is-danger mb-0" v-if="showSafariWarning">
 			<button class="delete" @click="showSafariWarning = false"></button>
 			Thanks for visiting!
 			<span class="has-text-weight-semibold"
@@ -12,27 +34,20 @@
 			>
 			If possible, visit the page on another browser, such as Chrome or Firefox.
 		</div> -->
-		<!-- If mobile, nudge to larger screen -->
-		<!-- Only show mobile nudge on non-Safari browsers (don't want to duplicate) -->
-		<!-- Mobile safari users can attribute the bugginess to Safari, not mobile -->
-		<div class="notification is-fixed is-danger mb-0" v-if="showMobileNudge">
-			<button class="delete" @click="showMobileNudge = false"></button>
-			Pssst. You might have a better experience on a wider screen, such as a
-			desktop computer.
-		</div>
-		<Intro
-			:width="windowWidth"
-			v-observe-visibility="
-				(isVisible, entry) => visibilityChanged(isVisible, entry, '')
-			"
-		/>
-		<div
-			v-if="
-				(song_hums.length > 0) &
-				(major_albums.length > 0) &
-				(album_hums.length > 0)
-			"
-		>
+			<!-- If mobile, nudge to larger screen -->
+			<!-- Only show mobile nudge on non-Safari browsers (don't want to duplicate) -->
+			<!-- Mobile safari users can attribute the bugginess to Safari, not mobile -->
+			<div class="notification is-fixed is-danger mb-0" v-if="showMobileNudge">
+				<button class="delete" @click="showMobileNudge = false"></button>
+				Pssst. You might have a better experience on a wider screen, such as a
+				desktop computer.
+			</div>
+			<Intro
+				:width="windowWidth"
+				v-observe-visibility="
+					(isVisible, entry) => visibilityChanged(isVisible, entry, '')
+				"
+			/>
 			<Barchart
 				v-observe-visibility="
 					(isVisible, entry) =>
@@ -70,23 +85,24 @@
 				:data="motm_tokenized"
 				:major_albums="major_albums"
 				:album_data="album_hums"
+				:sections_data="sections_grouped"
 				:containerWidth="largerChartWidth"
 				:containerHeight="height"
 			/>
-		</div>
-		<div>
-			<SongSelector
-				:data="motm_tokenized"
-				:songData="song_hums"
-				:containerWidth="largerChartWidth"
-				:containerHeight="height"
+			<div>
+				<SongSelector
+					:data="motm_tokenized"
+					:songData="song_hums"
+					:containerWidth="largerChartWidth"
+					:containerHeight="height"
+				/>
+			</div>
+			<Outro
+				v-observe-visibility="
+					(isVisible, entry) => visibilityChanged(isVisible, entry, '')
+				"
 			/>
 		</div>
-		<Outro
-			v-observe-visibility="
-				(isVisible, entry) => visibilityChanged(isVisible, entry, '')
-			"
-		/>
 	</div>
 </template>
 
@@ -119,13 +135,14 @@ export default {
 			motm_tokenized: [],
 			major_albums: [],
 			song_names: [],
+			sections_grouped: [],
 			windowWidth: null,
 			width: null,
 			largerChartWidth: null,
 			height: null,
 			// showSafariWarning: false,
 			showMobileNudge: false,
-			DEBUG: false,
+			DEBUG: true,
 			section: null,
 		};
 	},
@@ -184,11 +201,26 @@ export default {
 		let song_names = [...new Set(motm_tokenized.map((d) => d.song_name))];
 		this.song_names = song_names;
 
+		let sections_grouped = await d3.csv("./data/sections_grouped.csv");
+		sections_grouped.forEach((d) => {
+			d.Hum = +d.Hum;
+			d.Regular = +d.Regular;
+		});
+		sections_grouped = sections_grouped.filter(
+			(d) =>
+				(d.section_name != "Pre-Chorus") &
+				(d.section_name != "Post-Chorus") &
+				(d.section_name != "Bridge") &
+				(d.section_name != "Interlude")
+		);
+		this.sections_grouped = sections_grouped;
+
 		if (this.DEBUG) {
 			console.log(album_hums);
 			console.log(song_hums);
 			console.log(motm_tokenized);
 			console.log(song_names);
+			console.log(sections_grouped);
 		}
 	},
 	methods: {
