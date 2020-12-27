@@ -182,9 +182,6 @@ export default {
 		responsiveOffset() {
 			return window.innerWidth > 600 ? 0.5 : 0.85;
 		},
-		isMobile() {
-			return window.innerWidth < 600;
-		},
 	},
 	methods: {
 		stepEnterHandler({ element, index, direction }) {
@@ -440,18 +437,7 @@ export default {
 			const barWidthPadding = barWidth * 0.3;
 			const xAxisBuffer = barWidth - barWidthPadding;
 
-			// Handle transition differently on mobile and desktop, because mobile devices can't handle this for some reason
-			// if (!this.isMobile) {
 			lines
-				// .attr("opacity", 1)
-				// .attr(
-				// 	"y1",
-				// 	(d) => this.yScale(d.song_name) + this.computedHeightBuffer
-				// )
-				// .attr(
-				// 	"y2",
-				// 	(d) => this.yScale(d.song_name) - this.computedHeightBuffer
-				// )
 				.transition("groupBySection")
 				.duration(1500)
 				.attr(
@@ -472,7 +458,6 @@ export default {
 				.duration(1000)
 				.attr("y1", height)
 				.attr("y2", height);
-			// }
 
 			// lines.exit().remove();
 		},
