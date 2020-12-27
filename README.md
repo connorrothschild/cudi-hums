@@ -6,16 +6,18 @@
 * ~~Hums over time, by album etc.~~
 * ~~Tokenized view of lyrics of a song, with all of the hums highlighted~~
     * ~~Spotify embed for each of the songs in this section~~
+* ~~Somewhere (intro?), explanation of the definition of 'hums'~~
 * The intro prose should include some prototypical example of Cudi hums
     * [Examples](https://www.youtube.com/watch?v=PZ_cpLwzBbw)
     * Sad People, The Void... (the songs should have hums in the beginning so the listener gets an idea early)
-* Somewhere (intro?), explanation of the definition of 'hums'
+* A table for user exploration
+    * Example: table in https://pudding.cool/2018/08/wiki-death/
+    * Tech: ttps://vuetifyjs.com/en/components/data-tables/
 * Conclusion prose? 
     * Before or after song/lyric exploration?
     * This should summarize the top level stats (e.g. *actually answer the question*)
         * Number of hums, total (including the breakdown of hmm, hum, ahhh, etc.)
         * Proportion over his entire discography
-* Some obvious separation (like a horizontal rule, but better) between intro prose and chart content
 
 ### Nice to have
 * ~~Where hums occur in a song (beginning, end, middle)~~
@@ -29,29 +31,26 @@
 ## Considerations
 * [Mobile responsiveness](https://pudding.cool/process/responsive-scrollytelling/)
 * [Techniques for Data Visualization on both Mobile & Desktop](https://www.visualcinnamon.com/2019/04/mobile-vs-desktop-dataviz)
-* A table might break up the story nicely and allow for user exploration
-    * See table in https://pudding.cool/2018/08/wiki-death/
 * [VH and VW on mobile](https://css-tricks.com/the-trick-to-viewport-units-on-mobile/)
 
 ## Things I need to fix
-- [ ] Finish stripplot grouping thing
 - [ ] Add axis titles
-- [ ] On mobile, the last step only lasts for a few pixels before losing `.active`
 - [ ] A lil explainer like 'Know literally nothing about Kid Cudi? Click here! With modal popup or smth
 
 ## Things I fixed
-- [x] Disable stripplot tooltip on mobile?
-- [x] On mobile, scrolling up causes URL bar to reappear and therefore triggers resize events...
+- [x] ~~On mobile, the last step only lasts for a few pixels before losing `.active`~~
+- [x] ~~Disable stripplot tooltip on mobile?~~
+- [x] ~~On mobile, scrolling up causes URL bar to reappear and therefore triggers resize events...~~
     * ~~Do this https://stackoverflow.com/a/24212316/14518978~~
-- [x] Add tooltips to barchart and beeswarm
-- [x] ? Handle resize better
-    * Resize currently breaks stripplot
+- [x] ~~Add tooltips to barchart and beeswarm~~
+- [x] ~~? Handle resize better~~
+    * ~~Resize currently breaks stripplot~~
 - [x] ~~"Show Only Hums" should be a toggle, not a button... maybe?~~
-    * Usage of bulma switch extension was annoyingly hard
-- [x] Safari? Text shows up behind graphic
-    * This randomly went away?
-- [x] Make current notification for mobile and safari users fixed top 0
-- [x] Get rid of VW/VH (https://pudding.cool/process/responsive-scrollytelling/)
-- [x] Beautify charts a bit more
-- [x] Consider different background color?
-- [x] Ordering of sections in LyricExplorer should be same (toggled view currently reorders them)
+    * ~~Usage of bulma switch extension was annoyingly hard~~
+- [x] ~~Safari? Text shows up behind graphic~~
+    * ~~This randomly went away?~~
+- [x] ~~Make current notification for mobile and safari users fixed top 0~~
+- [x] ~~Get rid of VW/VH (https://pudding.cool/process/responsive-scrollytelling/)~~
+- [x] ~~Beautify charts a bit more~~
+- [x] ~~Consider different background color?~~
+- [x] ~~Ordering of sections in LyricExplorer should be same (toggled view currently reorders them)~~

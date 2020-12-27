@@ -1,19 +1,14 @@
 <template>
 	<div id="app">
 		<!-- LOADING SCREEN UNTIL ALL DATASETS ARE LOADED -->
-		<div
+		<LoadingScreen
 			v-if="
 				(song_hums.length == 0) |
 					(major_albums.length == 0) |
 					(album_hums.length == 0) |
 					(sections_grouped.length == 0)
 			"
-			class="hero"
-		>
-			<div class="hero-body">
-				<div class="title">LOADING SCREEN</div>
-			</div>
-		</div>
+		/>
 		<div
 			v-if="
 				(song_hums.length > 0) &
@@ -117,6 +112,7 @@ import SongSelector from "./components/SongSelector.vue";
 
 import Intro from "./components/Intro.vue";
 import Outro from "./components/Outro.vue";
+import LoadingScreen from "./components/LoadingScreen.vue";
 
 export default {
 	name: "App",
@@ -127,6 +123,7 @@ export default {
 		SongSelector,
 		Intro,
 		Outro,
+		LoadingScreen,
 	},
 	data() {
 		return {

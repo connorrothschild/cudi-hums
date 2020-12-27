@@ -112,6 +112,7 @@ export default {
 			if (index == 1) {
 				this.sortBarsByHum();
 				this.highlightBars("Man on the Moon III: The Chosen", null);
+				d3.selectAll(".year-text").remove().exit();
 			}
 			if (index == 2) {
 				this.sortBarsByYear();
@@ -120,6 +121,15 @@ export default {
 					"Speedin’ Bullet 2 Heaven",
 					"Indicud"
 				);
+			}
+			if (index == 3) {
+				d3.selectAll(".year-text").remove().exit();
+				// this.sortBarsByYear();
+				// this.highlightBars(
+				// 	"Man on the Moon III: The Chosen",
+				// 	"Speedin’ Bullet 2 Heaven",
+				// 	"Indicud"
+				// );
 			}
 		},
 		percentFormat: d3.format(".1%"),
@@ -201,6 +211,30 @@ export default {
 				.attr("height", this.albumCoverSize)
 				.attr("x", -this.albumCoverSize / 2)
 				.attr("y", 1);
+
+			// Only append year text if its already empty
+			if (d3.selectAll(".year-text").empty()) {
+				svg
+					.append("g")
+					.attr("font-family", "sans-serif")
+					.attr("font-size", 10)
+					.attr("stroke-linecap", "round")
+					.attr("stroke-linejoin", "round")
+					.attr("text-anchor", "middle")
+					.attr("class", "year-text")
+					.selectAll("text")
+					.data(yearData)
+					.join("text")
+					.text((d) => d.year)
+					.attr("x", (d) => yearScale(d.year) + yearScale.bandwidth() / 2)
+					.attr("y", 0)
+					.attr("dy", "-.5em")
+					.transition("textFallsFromTop")
+					.duration(1000)
+					.attr("y", (d) => yScale(d.percent_hums))
+					.attr("fill", "white")
+					.attr("stroke", "none");
+			}
 		},
 		highlightBars: function (album1, album2, album3) {
 			const { bars } = this;
