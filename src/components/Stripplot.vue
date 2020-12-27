@@ -477,7 +477,7 @@ export default {
 				.attr("y2", height)
 				.attr("opacity", 0);
 
-			lines.exit().remove();
+			// lines.exit().remove();
 		},
 		createBars: function () {
 			// Grouped bar chart: https://observablehq.com/@d3/grouped-bar-chart
