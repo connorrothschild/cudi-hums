@@ -182,6 +182,9 @@ export default {
 		responsiveOffset() {
 			return window.innerWidth > 600 ? 0.5 : 0.85;
 		},
+		isMobile() {
+			return window.innerWidth < 600;
+		},
 	},
 	methods: {
 		stepEnterHandler({ element, index, direction }) {
@@ -281,39 +284,6 @@ export default {
 				}
 			});
 		},
-		// wrapXLabel: function (text, width) {
-		// 	text.each(function () {
-		// 		var text = d3.select(this),
-		// 			words = text.text().split(/\s+/).reverse(),
-		// 			word,
-		// 			line = [],
-		// 			lineNumber = 0,
-		// 			lineHeight = 1.1, // ems
-		// 			y = text.attr("y"),
-		// 			dy = parseFloat(text.attr("dy")),
-		// 			tspan = text
-		// 				.text(null)
-		// 				.append("tspan")
-		// 				.attr("x", 0)
-		// 				.attr("y", y)
-		// 				.attr("dy", dy + "em");
-		// 		while ((word = words.pop())) {
-		// 			line.push(word);
-		// 			tspan.text(line.join(" "));
-		// 			if (tspan.node().getComputedTextLength() > width) {
-		// 				line.pop();
-		// 				tspan.text(line.join(" "));
-		// 				line = [word];
-		// 				tspan = text
-		// 					.append("tspan")
-		// 					.attr("x", 0)
-		// 					.attr("y", y)
-		// 					.attr("dy", ++lineNumber * lineHeight + dy + "em")
-		// 					.text(word);
-		// 			}
-		// 		}
-		// 	});
-		// },
 		handleFilter: function () {
 			this.onlyHumsToggled
 				? this.stripByNormalizedPosition()
@@ -470,30 +440,38 @@ export default {
 			const barWidthPadding = barWidth * 0.3;
 			const xAxisBuffer = barWidth - barWidthPadding;
 
-			lines
-				.attr("opacity", 1)
-				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
-				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
-				.transition("groupBySection")
-				.duration(1500)
-				.attr(
-					"x1",
-					(d) =>
-						d.category == "Hum"
-							? this.xScale(d.section_name) - xAxisBuffer // - 50
-							: this.xScale(d.section_name) - 0 // - 50
-				)
-				.attr(
-					"x2",
-					(d) =>
-						d.category == "Hum"
-							? this.xScale(d.section_name) - 0 // + 50
-							: this.xScale(d.section_name) + xAxisBuffer // + 50
-				);
+			if (!this.isMobile) {
+				lines
+					.attr("opacity", 1)
+					.attr(
+						"y1",
+						(d) => this.yScale(d.song_name) + this.computedHeightBuffer
+					)
+					.attr(
+						"y2",
+						(d) => this.yScale(d.song_name) - this.computedHeightBuffer
+					)
+					.transition("groupBySection")
+					.duration(1500)
+					.attr(
+						"x1",
+						(d) =>
+							d.category == "Hum"
+								? this.xScale(d.section_name) - xAxisBuffer // - 50
+								: this.xScale(d.section_name) - 0 // - 50
+					)
+					.attr(
+						"x2",
+						(d) =>
+							d.category == "Hum"
+								? this.xScale(d.section_name) - 0 // + 50
+								: this.xScale(d.section_name) + xAxisBuffer // + 50
+					);
+			}
 
 			lines
 				.transition("dropLines")
-				.delay(1500)
+				.delay(this.isMobile ? 0 : 1500)
 				.duration(1000)
 				.attr("y1", height)
 				.attr("y2", height)
@@ -568,7 +546,7 @@ export default {
 				.attr("fill", (d) => colorScale(d.key))
 				.attr("opacity", 1)
 				.transition("createBars")
-				.delay(2500)
+				.delay(this.isMobile ? 1000 : 2500)
 				.duration(1000)
 				.attr("height", (d) => y(0) - y(d.value))
 				.attr("y", (d) => y(d.value));

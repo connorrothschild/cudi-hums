@@ -203,7 +203,4 @@ export default {
 		text-align: center;
 	}
 }
-
-.section {
-}
 </style>
