@@ -440,44 +440,39 @@ export default {
 			const barWidthPadding = barWidth * 0.3;
 			const xAxisBuffer = barWidth - barWidthPadding;
 
-			if (!this.isMobile) {
-				lines
-					.attr("opacity", 1)
-					.attr(
-						"y1",
-						(d) => this.yScale(d.song_name) + this.computedHeightBuffer
-					)
-					.attr(
-						"y2",
-						(d) => this.yScale(d.song_name) - this.computedHeightBuffer
-					)
-					.transition("groupBySection")
-					.duration(1500)
-					.attr(
-						"x1",
-						(d) =>
-							d.category == "Hum"
-								? this.xScale(d.section_name) - xAxisBuffer // - 50
-								: this.xScale(d.section_name) - 0 // - 50
-					)
-					.attr(
-						"x2",
-						(d) =>
-							d.category == "Hum"
-								? this.xScale(d.section_name) - 0 // + 50
-								: this.xScale(d.section_name) + xAxisBuffer // + 50
-					);
-			}
-
+			// Handle transition differently on mobile and desktop, because mobile devices can't handle this for some reason
+			// if (!this.isMobile) {
 			lines
-				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
-				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
+				// .attr("opacity", 1)
+				// .attr(
+				// 	"y1",
+				// 	(d) => this.yScale(d.song_name) + this.computedHeightBuffer
+				// )
+				// .attr(
+				// 	"y2",
+				// 	(d) => this.yScale(d.song_name) - this.computedHeightBuffer
+				// )
+				.transition("groupBySection")
+				.duration(1500)
+				.attr(
+					"x1",
+					(d) =>
+						d.category == "Hum"
+							? this.xScale(d.section_name) - xAxisBuffer // - 50
+							: this.xScale(d.section_name) - 0 // - 50
+				)
+				.attr(
+					"x2",
+					(d) =>
+						d.category == "Hum"
+							? this.xScale(d.section_name) - 0 // + 50
+							: this.xScale(d.section_name) + xAxisBuffer // + 50
+				)
 				.transition("dropLines")
-				.delay(this.isMobile ? 0 : 1500)
 				.duration(1000)
 				.attr("y1", height)
-				.attr("y2", height)
-				.attr("opacity", 0);
+				.attr("y2", height);
+			// }
 
 			// lines.exit().remove();
 		},
@@ -548,8 +543,8 @@ export default {
 				.attr("fill", (d) => colorScale(d.key))
 				.attr("opacity", 1)
 				.transition("createBars")
-				.delay(this.isMobile ? 1000 : 2500)
 				.duration(1000)
+				.delay(2500)
 				.attr("height", (d) => y(0) - y(d.value))
 				.attr("y", (d) => y(d.value));
 		},
