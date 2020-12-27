@@ -470,6 +470,8 @@ export default {
 			}
 
 			lines
+				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
+				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
 				.transition("dropLines")
 				.delay(this.isMobile ? 0 : 1500)
 				.duration(1000)
