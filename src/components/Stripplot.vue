@@ -489,8 +489,11 @@ export default {
 						d.category == "Hum"
 							? this.xScale(d.section_name) - 0 // + 50
 							: this.xScale(d.section_name) + xAxisBuffer // + 50
-				)
+				);
+
+			lines
 				.transition("dropLines")
+				.delay(1500)
 				.duration(1000)
 				.attr("y1", height)
 				.attr("y2", height)
