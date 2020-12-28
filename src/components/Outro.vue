@@ -20,15 +20,43 @@
 					</h1> -->
 					<!-- Outro subtitle -->
 					<div class="mt-6 max-width-600-container has-text-left">
-						<h2 class="mb-3 is-size-6 has-text-weight-semibold">
+						<h2 class="mb-3 is-size-5 has-text-weight-semibold">
 							Notes and methodology
 						</h2>
-						<p class="content has-text-weight-light">
-							Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-							Similique nobis debitis dolor quidem eligendi, dignissimos iste!
-							Quae consequatur iure incidunt exercitationem quidem? Repellendus
-							officia quaerat nisi, officiis iste atque! Suscipit?
-						</p>
+						<div class="has-text-weight-light methodology-section">
+							<p class="content">Lyric data came from the Genius API.</p>
+							<p class="content">
+								To calculate the proportion of hums per song, I flagged all
+								lyrics from Genius that were 'hum-like' in nature. (An exact
+								list of qualifying lyrics can be found
+								<a
+									href="https://github.com/connorrothschild/cudi-hums/blob/master/process/hums_list.R"
+									target="_blank"
+									rel="noopener"
+									>here</a
+								>.) In certain cases, this may lead to overcounts (if Kid Cudi
+								actually says 'oh' rather than hums in a way that sounds like
+								'oh').
+							</p>
+							<p class="content">
+								I manually verified my list of hums with a random selection of
+								songs. This was not scientific; I simply listened to music,
+								flagged hum-like sounds, and found their corresponding lyrics on
+								Genius.
+							</p>
+							<p class="content">
+								Data retrieval and pre-processing was done in R; code is
+								available
+								<a
+									href="https://github.com/connorrothschild/cudi-hums/tree/master/process"
+									target="_blank"
+									rel="noopener"
+									>here</a
+								>. FINISH THIS: The story and visualizations were composed using
+								Vue and D3.js. Scrollytelling capabilities were thanks to
+								vue-scrollama, scrollama, etc.
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -84,5 +112,12 @@ export default {
 .is-96x132 {
 	width: 92px;
 	height: 136px;
+}
+
+.methodology-section {
+	a {
+		color: white !important;
+		text-decoration: underline;
+	}
 }
 </style>

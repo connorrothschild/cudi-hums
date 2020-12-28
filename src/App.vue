@@ -353,7 +353,7 @@ text {
 }
 
 .scrollama-steps {
-	pointer-events: none;
+	// pointer-events: none;
 }
 
 .step iframe {

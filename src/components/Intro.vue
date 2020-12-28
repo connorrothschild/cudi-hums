@@ -35,53 +35,24 @@
 		<div class="section is-gradient">
 			<!-- Intro prose, with dropcap on first letter -->
 			<div class="container better-container">
-				<p class="has-dropcap">
-					Kid Cudi dolor sit amet consectetur adipisicing elit. Quisquam est
-					ipsum vitae quasi voluptatem reiciendis facilis eligendi eveniet
-					repellat quo tenetur molestias inventore, dolorum corporis, unde,
-					nobis nisi officia quos!
+				<p class="content has-dropcap">
+					Scott Ramon Seguro Mescudi is an international phenomenon. He's sold
+					16 million million records in the US and won two Grammys. Although his
+					primary genre is hip hop, he's also debuted an album at the top of
+					Billboard's Rock charts. His most listened to song has amassed nearly
+					<em>500 million</em> listens on Spotify.
 				</p>
-				<a
-					class="heading has-text-right content"
-					href="https://en.wikipedia.org/wiki/Kid_Cudi"
-					target="_blank"
-					rel="noopener"
-				>
-					(Who is Kid Cudi?)
-				</a>
-				<p class="content">
-					Kid Cudi's 'claim to fame,' or his most defining musical feature, is
-					his hum. As one illustration of this, a loop of Cudi humming for 9
-					minutes has garnered over 2 million views.
-				</p>
-				<div class="has-text-centered mb-4 mt-2">
-					<iframe
-						:width="properWidth"
-						height="450"
-						src="https://www.youtube.com/embed/X08tO_jxmyk?fs=0&disablekb=1&modestbranding=1"
-						frameborder="0"
-						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-						allowfullscreen
-					></iframe>
-				</div>
-				<div>
-					<p class="content">
-						Perhaps nothing captures it better than this Reddit post:
-					</p>
-					<div style="max-width: 600px; margin: 0 auto; background: whitesmoke">
-						<blockquote class="reddit-card" data-card-created="1608866419">
-							<a
-								href="https://www.reddit.com/r/KidCudi/comments/946pml/how_does_kid_cudi_just_hum_on_a_song_and_its_the/"
-								>HOW DOES KID CUDI JUST HUM ON A SONG AND ITS THE MOST FIRE
-								THING IVE HEARD?!?</a
-							>
-							from <a href="http://www.reddit.com/r/KidCudi">r/KidCudi</a>
-						</blockquote>
-					</div>
-				</div>
-				<p class="content after-embed">
-					And Kid Cudi is aware of the impact his hums have had on his fans. In
-					one song,
+				<div class="content">
+					Don't recognize the name Scott Ramon Seguro Mescudi? You might know
+					him as
+					<a
+						href="https://en.wikipedia.org/wiki/Kid_Cudi"
+						target="_blank"
+						rel="noopener"
+						>Kid Cudi.</a
+					>
+					And if you don't know Kid Cudi, you at least recognize his hums—his
+					most defining musical feature. Perhaps you've heard his song
 					<span
 						class="audio-clicker"
 						@click="
@@ -129,26 +100,59 @@
 										transform="matrix(0.16,0,0,0.16,0,0)"
 									/>
 								</g>
-							</svg> </span></span
-					>, he raps:
-				</p>
-				<div
-					class="is-flex is-justify-content-center is-align-items-center m-5"
-				>
-					<div style="max-width: 50px">
-						<!-- Intro image -->
-						<!-- <figure class="image is-3by4"> -->
-						<img src="../assets/cudi.png" />
-					</div>
+							</svg>
+						</span>
+					</span>
+					where he raps:
+					<div
+						class="is-flex is-justify-content-center is-align-items-center m-5"
+					>
+						<div style="max-width: 50px">
+							<!-- Intro image -->
+							<!-- <figure class="image is-3by4"> -->
+							<img src="../assets/cudi.png" />
+						</div>
 
-					<p class="speech-bubble">
-						Make ‘em go dumb with them hums <br />Mhmm, mhmm, mhmm
-					</p>
+						<p class="speech-bubble">
+							Make ‘em go dumb with them hums <br />Mhmm, mhmm, mhmm
+						</p>
+					</div>
 				</div>
 				<p class="content">
-					Despite the buzz, no one has analyzed the prevalence of hums in Kid
-					Cudi's discography. Given his most recent album's release, it's the
-					best time to ask:
+					Maybe you're one of the 2 million people who have watched this YouTube
+					video of Cudi humming for 9 minutes:
+				</p>
+				<div class="has-text-centered mb-4 mt-2">
+					<iframe
+						:width="properWidth"
+						height="450"
+						src="https://www.youtube.com/embed/X08tO_jxmyk?fs=0&disablekb=1&modestbranding=1"
+						frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						allowfullscreen
+					></iframe>
+				</div>
+				<div>
+					<p class="content">
+						Or maybe you've read this Reddit post from an unsuspecting fan:
+					</p>
+					<div style="max-width: 600px; margin: 0 auto; background: whitesmoke">
+						<blockquote class="reddit-card" data-card-created="1608866419">
+							<a
+								href="https://www.reddit.com/r/KidCudi/comments/946pml/how_does_kid_cudi_just_hum_on_a_song_and_its_the/"
+								>HOW DOES KID CUDI JUST HUM ON A SONG AND ITS THE MOST FIRE
+								THING IVE HEARD?!?</a
+							>
+							from <a href="http://www.reddit.com/r/KidCudi">r/KidCudi</a>
+						</blockquote>
+					</div>
+				</div>
+				<p class="content after-embed">
+					Chances are, you've heard Kid Cudi hum, or at least heard that he hums
+					<span class="has-text-weight-semibold">a lot</span>. But just how
+					much? Despite the buzz, no one has analyzed the prevalence of hums in
+					Kid Cudi's discography. Given his most recent album's release, it's
+					the best time to ask:
 					<span class="has-text-pink">how much does Kid Cudi hum?</span>
 				</p>
 				<!-- <div class="has-text-centered">
@@ -232,8 +236,8 @@ export default {
 .has-dropcap:first-child:first-letter {
 	float: left;
 	font-family: Georgia;
-	font-size: 55px;
-	line-height: 40px;
+	font-size: 120px;
+	// line-height: 60px;
 	padding-top: 4px;
 	padding-right: 8px;
 	padding-left: 3px;

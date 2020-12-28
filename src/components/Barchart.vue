@@ -368,6 +368,14 @@ export default {
 						.style("left", event.clientX - offset + "px")
 						.style("top", event.clientY + "px");
 				})
+				.on("mousemove", function (event, d) {
+					const right = event.clientX > window.innerWidth / 2;
+					const offset = right ? tip.node().offsetWidth + 15 : -15;
+
+					tip
+						.style("left", event.clientX - offset + "px")
+						.style("top", event.clientY + "px");
+				})
 				.on("mouseout", function (d) {
 					tip.transition(300).style("opacity", 0);
 				});
