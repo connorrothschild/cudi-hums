@@ -31,14 +31,15 @@
 ## Considerations
 * [Mobile responsiveness](https://pudding.cool/process/responsive-scrollytelling/)
 * [Techniques for Data Visualization on both Mobile & Desktop](https://www.visualcinnamon.com/2019/04/mobile-vs-desktop-dataviz)
-* [VH and VW on mobile](https://css-tricks.com/the-trick-to-viewport-units-on-mobile/)
 
 ## Things I need to fix
-- [ ] Add axis titles
+- [ ] Bar chart transitions race (heh) on scroll
+- [ ] Add legend to stripplot barchart?
 - [ ] A lil explainer like 'Know literally nothing about Kid Cudi? Click here! With modal popup or smth
 - [ ] Tooltip should follow mouse on mousemove? Or static positioning
 
 ## Things I fixed
+- [x] Add axis titles
 - [x] ~~On mobile, the last step only lasts for a few pixels before losing `.active`~~
 - [x] ~~Disable stripplot tooltip on mobile?~~
 - [x] ~~On mobile, scrolling up causes URL bar to reappear and therefore triggers resize events...~~

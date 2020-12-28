@@ -212,7 +212,7 @@ export default {
 				);
 		},
 		setupChart: function () {
-			const margin = { top: 30, right: 30, bottom: 30, left: 60 };
+			const margin = { top: 30, right: 30, bottom: 50, left: 60 };
 			const width = this.containerWidth - margin.left - margin.right;
 			const height = this.containerHeight - margin.top - margin.bottom;
 
@@ -269,6 +269,19 @@ export default {
 						.tickSizeOuter(0)
 				)
 				.attr("class", "x axis beeswarm");
+			// Axis title
+			svg
+				.append("text")
+				.attr(
+					"transform",
+					"translate(" +
+						width / 2 +
+						" ," +
+						(height + margin.top + margin.bottom / 3) +
+						")"
+				)
+				.text("Percent of lyrics that are hums")
+				.attr("class", "beeswarm-axis-title");
 
 			// Y axis
 			svg
@@ -388,6 +401,13 @@ export default {
 		stroke: $white-alt;
 		opacity: 0.35;
 	}
+}
+
+.beeswarm-axis-title {
+	font-size: 12px;
+	font-weight: 300;
+	text-anchor: middle;
+	fill: $white-alt;
 }
 
 .after-embed {

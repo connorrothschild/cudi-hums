@@ -81,7 +81,7 @@
 					</div>
 				</div>
 				<!-- Once the user selects a song, render LyricExplorer component -->
-				<div v-if="selectedSong">
+				<div v-if="selectedSong" class="flex-70-fixed">
 					<LyricExplorer
 						:songData="selectedSongLyrics"
 						:sections="allSongSections"
@@ -209,5 +209,11 @@ export default {
 	flex-basis: 30%;
 	flex-grow: 0;
 	flex-shrink: 0;
+}
+
+.flex-70-fixed {
+	flex-basis: 70%;
+	flex-shrink: 0;
+	flex-grow: 0;
 }
 </style>

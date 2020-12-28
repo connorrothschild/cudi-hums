@@ -1,5 +1,5 @@
 <template>
-	<div class="flex-70-fixed p-1">
+	<div class="p-1">
 		<div class="flex-button-container">
 			<!-- Each of the sections provided by SongSelector (all sections in the user-selected song)
             are printed here as buttons -->
@@ -105,12 +105,6 @@ export default {
 	place-items: center;
 	align-content: center;
 	flex-wrap: wrap;
-}
-
-.flex-70-fixed {
-	flex-basis: 70%;
-	flex-shrink: 0;
-	flex-grow: 0;
 }
 
 .button {

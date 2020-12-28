@@ -308,6 +308,15 @@ export default {
 						.tickSizeOuter(0)
 				)
 				.attr("class", "y axis barchart");
+			// Axis title
+			svg
+				.append("text")
+				// .attr("transform", "rotate(-90)")
+				.attr("y", 0 - margin.top / 1.5)
+				.attr("x", 10)
+				.attr("dy", "1em")
+				.text("Percent of lyrics that are hums")
+				.attr("class", "barchart-axis-title");
 
 			// X axis album cover ticks
 			// Select whichever is smaller; the chart width / data.length (so each square fits perfectly)
@@ -416,6 +425,13 @@ export default {
 		// stroke: whitesmoke;
 		// opacity: 0.35;
 	}
+}
+
+.barchart-axis-title {
+	font-size: 12px;
+	font-weight: 300;
+	text-anchor: start;
+	fill: $white-alt;
 }
 
 #barchart div.tooltip {

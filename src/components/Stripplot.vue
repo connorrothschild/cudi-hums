@@ -107,12 +107,25 @@
 				<em>define the structure of the song</em>.
 			</p>
 			<p class="content">
-				Kid Cudi uses hums like any other artist would use an instrument. MORE
-				HERE
+				In this way, Kid Cudi uses the hum like any other artist would use an
+				instrument. He utilizes hums to harmonize, to sing, and to ad-lib; the
+				hum's exact usage depends on the demands of the song.
 			</p>
 		</div>
 		<div class="step" :class="{ active: 7 == currStep }" data-step-no="7">
-			<p class="content">What if we group by song section...</p>
+			<p class="content">
+				A final way to analyze the placement of Cudi hums is to look at their
+				position within
+				<span class="has-text-weight-semibold">song sections</span>.
+				<br />Because songs differ in length, this method allows us to search
+				for hums' locations in a standardized and consistent way.
+			</p>
+			<p class="content">
+				Here, the height of each bars corresponds to the count of
+				<span class="highlight-text">hums</span> and
+				<span class="highlight-text blue">regular lyrics</span> within each song
+				section throughout Cudi's most recent album.
+			</p>
 		</div>
 		<div
 			class="step"
@@ -120,9 +133,14 @@
 			data-step-no="8"
 		>
 			<p class="content">
-				Rather than raw counts, which obviously inflate lyrics in verses and
-				choruses, we can look at
-				<span class="has-text-semibold">proportions</span>.
+				Rather than raw counts, which inflate lyrics in verses and choruses, we
+				can look at
+				<span class="has-text-weight-semibold">proportions</span>.
+			</p>
+			<p class="content">
+				Here, the two bars in each section will sum up to 100%. This allows us
+				to see how often Cudi hums in a section
+				<em>relative to how much time he spends in that section.</em>
 			</p>
 		</div>
 		<!-- Last step should remain active even when .step.empty enters viewport -->
@@ -177,6 +195,7 @@ export default {
 			margin: null,
 			currStep: null,
 			xScale: null,
+			currentXLabels: [],
 			yScale: null,
 			colorScale: null,
 			svg: null,
@@ -268,10 +287,8 @@ export default {
 				this.createBars("proportion");
 			}
 			if (index == 9) {
-				// this.createBars("proportion");
-				if (direction == "down") {
-					this.highlightBars("Outro");
-				}
+				this.createBars("proportion");
+				this.highlightBars("Outro");
 			}
 		},
 		// TEXT WRAPPING
@@ -410,21 +427,23 @@ export default {
 
 			this.onlyHumsToggled = false;
 
-			// X axis
-			d3.select(".x.axis.stripplot").remove();
-
 			let xAxisLabels = ["Beginning of song", "End of song"];
-			svg
-				.append("g")
-				.attr("transform", "translate(0," + height + ")")
-				.call(
-					d3
-						.axisBottom(this.xScale)
-						.ticks(1)
-						.tickFormat((d, i) => xAxisLabels[i])
-						.tickSizeOuter(0)
-				)
-				.attr("class", "x axis stripplot text-on-bounds ");
+			const xAxis = d3
+				.axisBottom(this.xScale)
+				.tickValues([0, 1])
+				.tickFormat((d, i) => xAxisLabels[i])
+				.tickSizeOuter(0);
+
+			// d3.selectAll(".x.axis.stripplot g.tick text")
+			// 	.transition("axis-text-out")
+			// 	.duration(1000)
+			// 	.attr("opacity", 0)
+			// 	.remove(); // Fade-out the old.
+			d3.select(".x.axis.stripplot").call(xAxis);
+			// d3.selectAll(".x.axis.stripplot g.tick text")
+			// 	.transition("axis-text-in")
+			// 	.duration(1000)
+			// 	.attr("opacity", 1); // Fade-in the new.
 		},
 		stripByPosition: function () {
 			const { lines, svg, data, width, height } = this;
@@ -445,12 +464,15 @@ export default {
 				.attr("stroke", (d) => this.colorScale(d.category));
 			this.onlyHumsToggled = false;
 
-			d3.select(".x.axis.stripplot").remove();
-			svg
-				.append("g")
-				.attr("transform", "translate(0," + height + ")")
-				.call(d3.axisBottom(this.xScale).ticks(0).tickSizeOuter(0))
-				.attr("class", "x axis stripplot");
+			let xAxisLabels = ["0:00", "5:25"];
+
+			const xAxis = d3
+				.axisBottom(this.xScale)
+				.tickValues([0, d3.max(data, (d) => d.position)])
+				.tickFormat((d, i) => xAxisLabels[i])
+				.tickSizeOuter(0);
+
+			d3.select(".x.axis.stripplot").call(xAxis);
 		},
 		groupBySection: function () {
 			const { lines, svg, data, width, height, yScale } = this;
@@ -477,36 +499,39 @@ export default {
 			const xAxisBuffer = barWidth - barWidthPadding;
 
 			// Only run this if the lines exist
-			// if (!lines.empty()) {
-			lines
-				.transition("groupBySection")
-				.duration(1000)
-				.attr("x1", (d) =>
-					sections_data_good.includes(d.section_name)
-						? d.category == "Hum"
-							? newXScale(d.section_name)
-							: newXScale(d.section_name) + xAxisBuffer
-						: width * 1.1
-				)
-				.attr("x2", (d) =>
-					sections_data_good.includes(d.section_name)
-						? d.category == "Hum"
-							? newXScale(d.section_name) - xAxisBuffer
-							: newXScale(d.section_name)
-						: width * 1.1
-				)
-				.attr("y1", (d) => yScale(d.song_name))
-				.attr("y2", (d) => yScale(d.song_name))
-				.transition("dropLines")
-				.duration(1000)
-				.attr("y1", height)
-				.attr("y2", height);
+			// ! FIXME:
+			if (!lines.empty()) {
+				lines
+					.transition("groupBySection")
+					.duration(1000)
+					.attr("x1", (d) =>
+						sections_data_good.includes(d.section_name)
+							? d.category == "Hum"
+								? newXScale(d.section_name)
+								: newXScale(d.section_name) + xAxisBuffer
+							: width * 1.1
+					)
+					.attr("x2", (d) =>
+						sections_data_good.includes(d.section_name)
+							? d.category == "Hum"
+								? newXScale(d.section_name) - xAxisBuffer
+								: newXScale(d.section_name)
+							: width * 1.1
+					)
+					.attr("y1", (d) => yScale(d.song_name))
+					.attr("y2", (d) => yScale(d.song_name))
+					.transition("dropLines")
+					.duration(1000)
+					.attr("y1", height)
+					.attr("y2", height);
 
-			lines.exit().remove();
+				lines.exit().remove();
+			}
 		},
 		createBars: function (type) {
 			// Grouped bar chart: https://observablehq.com/@d3/grouped-bar-chart
 			const { svg, height, width, sections_data } = this;
+
 			const data = sections_data.filter(
 				(d) =>
 					(d.section_name != "Pre-Chorus") &
@@ -547,14 +572,17 @@ export default {
 				.append("g")
 				.attr("transform", "translate(0," + height + ")")
 				.call(d3.axisBottom(x0).ticks(0).tickSizeOuter(0))
-				.attr("class", "x axis stripplot");
+				.attr("class", "x axis stripplot barchart");
 
 			// Y Axis
 			const yAxis = d3
 				.axisLeft(y)
 				.ticks(type == "proportion" ? 3 : 4, type == "proportion" ? "%" : null)
 				.tickSize(-width);
-			d3.select(".y.axis.stripplot").transition().duration(2000).call(yAxis);
+			d3.select(".y.axis.stripplot")
+				.transition("y-axis-in")
+				.duration(2000)
+				.call(yAxis);
 
 			// let bars = [];
 			// !! FIXME: I don't think below is working?
@@ -599,9 +627,9 @@ export default {
 			}
 		},
 		highlightBars: function (section) {
-			if (d3.selectAll(".stripplot-bars").empty()) {
-				this.createBars("proportion");
-			}
+			// if (d3.selectAll(".stripplot-bars").empty()) {
+			this.createBars("proportion");
+			// }
 			// The way that I processed data means I can't access d => d.section_name from the data
 			// Here, I manually define the sections and reverse lookup the index from domain
 			const sections = ["Intro", "Verse", "Chorus", "Outro"];
@@ -628,6 +656,7 @@ export default {
 		undoBars: function () {
 			const { svg, width, margin, lines, data } = this;
 			d3.select(".y.axis.stripplot").remove();
+			d3.select(".x.axis.stripplot").classed("barchart", false);
 			d3.selectAll(".stripplot-bars").remove();
 
 			// Y axis
@@ -694,7 +723,7 @@ export default {
 			svg
 				.append("g")
 				.attr("transform", "translate(0," + height + ")")
-				.call(d3.axisBottom(this.xScale).ticks(0).tickSizeOuter(0))
+				// .call(d3.axisBottom(this.xScale).ticks(0).tickSizeOuter(0))
 				.attr("class", "x axis stripplot");
 
 			//Binds data to strips
@@ -754,6 +783,8 @@ export default {
 			// Every other time, run stripByNormalizedPosition()
 			if (this.response.index == 0) {
 				this.stripByPosition();
+			} else if (this.response.index > 6) {
+				this.createBars();
 			} else {
 				this.stripByNormalizedPosition();
 			}
@@ -834,10 +865,10 @@ export default {
 	}
 }
 
-.x.axis.stripplot.text-on-bounds g.tick:nth-child(2) text {
+.x.axis.stripplot:not(.barchart) g.tick:nth-child(2) text {
 	text-anchor: start !important;
 }
-.x.axis.stripplot.text-on-bounds g.tick:nth-child(3) text {
+.x.axis.stripplot:not(.barchart) g.tick:nth-child(3) text {
 	text-anchor: end !important;
 }
 
