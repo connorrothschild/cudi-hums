@@ -1,8 +1,8 @@
 <template>
 	<div class="p-1">
 		<div class="container">
-			<div class="is-flex is-align-items-center flex-direction-column-mobile">
-				<div>
+			<div class="is-flex flex-direction-column-mobile">
+				<div class="flex-30-fixed">
 					<h1 class="title has-text-centered has-text-white font-alt">
 						Why don't you explore for yourself?
 					</h1>
@@ -21,7 +21,7 @@
 							</select>
 						</div>
 					</div>
-					<div v-if="selectedSongData" class="is-flex better-flex">
+					<div v-if="selectedSongData" class="better-flex">
 						<!-- Once the user selects a song, provide them a link to the Genius lyrics page -->
 						<div class="mb-2">
 							<!-- <a
@@ -154,6 +154,7 @@ export default {
 
 <style lang="scss">
 .better-flex {
+	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
 	place-items: center;
@@ -202,5 +203,11 @@ export default {
 		font-size: 0.5rem;
 		text-align: center;
 	}
+}
+
+.flex-30-fixed {
+	flex-basis: 30%;
+	flex-grow: 0;
+	flex-shrink: 0;
 }
 </style>

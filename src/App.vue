@@ -139,8 +139,8 @@ export default {
 			height: null,
 			// showSafariWarning: false,
 			showMobileNudge: false,
-			DEBUG: false,
 			section: null,
+			DEBUG: false,
 		};
 	},
 	async mounted() {
@@ -203,13 +203,6 @@ export default {
 			d.Hum = +d.Hum;
 			d.Regular = +d.Regular;
 		});
-		sections_grouped = sections_grouped.filter(
-			(d) =>
-				(d.section_name != "Pre-Chorus") &
-				(d.section_name != "Post-Chorus") &
-				(d.section_name != "Bridge") &
-				(d.section_name != "Interlude")
-		);
 		this.sections_grouped = sections_grouped;
 
 		if (this.DEBUG) {

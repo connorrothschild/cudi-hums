@@ -81,7 +81,6 @@ export default {
 			width: null,
 			currStep: null,
 			albumCoverSize: null,
-			alreadyTriggeredBars: false,
 			response: {},
 		};
 	},
@@ -96,18 +95,15 @@ export default {
 			this.response = { index, direction, element };
 			this.currStep = index;
 
-			// THE VERY FIRST TIME (AND ONLY GOING DOWN), TRANSITION
-			if (index == 0 && direction == "down") {
-				if (this.alreadyTriggeredBars == false) {
+			// * Direction-agnostic handling of transitions
+			// * Only trigger transition if elements don't yet have positions on chart (proxy: x)
+			if (index == 0) {
+				if (!d3.select(".barchart-bars").node().hasAttribute("x")) {
 					this.transitionBars();
-					// this.alreadyTriggeredBars = true;
 				} else {
 					this.sortBarsByHum();
+					this.unhighlightBars();
 				}
-			}
-			if (index == 0 && direction == "up") {
-				this.sortBarsByHum();
-				this.unhighlightBars();
 			}
 			if (index == 1) {
 				this.sortBarsByHum();
@@ -146,8 +142,6 @@ export default {
 				.duration(500)
 				.attr("y", (d) => yScale(d.percent_hums))
 				.attr("height", (d) => this.height - yScale(d.percent_hums));
-
-			this.alreadyTriggeredBars = true;
 		},
 		sortBarsByHum: function () {
 			const { bars, svg, data, xScale, yScale, colorScale } = this;

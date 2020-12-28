@@ -111,15 +111,36 @@
 				HERE
 			</p>
 		</div>
+		<div class="step" :class="{ active: 7 == currStep }" data-step-no="7">
+			<p class="content">What if we group by song section...</p>
+		</div>
+		<div
+			class="step"
+			:class="{ active: (8 == currStep) | (9 == currStep) }"
+			data-step-no="8"
+		>
+			<p class="content">
+				Rather than raw counts, which obviously inflate lyrics in verses and
+				choruses, we can look at
+				<span class="has-text-semibold">proportions</span>.
+			</p>
+		</div>
 		<!-- Last step should remain active even when .step.empty enters viewport -->
 		<div
 			class="step"
-			:class="{ active: (7 == currStep) | (8 == currStep) }"
-			data-step-no="7"
+			:class="{ active: (9 == currStep) | (10 == currStep) }"
+			data-step-no="9"
 		>
 			<p class="content">
-				Finally, group by song category: Intro, Chorus, Bridge, Outro, etc.
-				<i>some cool transition goes here for sure.</i>
+				This view makes it clear that Kid Cudi has a clear preference for
+				humming at the beginnings and ends of each song.
+			</p>
+			<p class="content">
+				In the outros on his most recent album,
+				<span class="has-text-weight-semibold"
+					>Cudi <span class="highlight-text">hummed</span> more often than he
+					used <span class="highlight-text blue">regular words</span>.
+				</span>
 			</p>
 		</div>
 		<!-- BUFFER CLASS -->
@@ -160,9 +181,9 @@ export default {
 			colorScale: null,
 			svg: null,
 			lines: null,
+			bars: null,
 			unclicked: true,
 			onlyHumsToggled: false,
-			alreadyTriggered: false,
 			response: {},
 		};
 	},
@@ -179,7 +200,7 @@ export default {
 		computedHeightBuffer: function () {
 			return this.height / 100;
 		},
-		responsiveOffset() {
+		responsiveOffset: function () {
 			return window.innerWidth > 600 ? 0.5 : 0.85;
 		},
 	},
@@ -188,18 +209,17 @@ export default {
 			this.response = { element, index, direction };
 			this.currStep = index;
 
-			if (index == 0 && direction == "down" && this.alreadyTriggered == false) {
-				this.transitionStrips();
-				this.stripByPosition();
+			// * Direction-agnostic handling of transitions
+			// * Only trigger transition if elements don't yet have positions on chart (proxy: x1)
+			if (index == 0) {
+				if (!d3.select(".stripplot-lines").node().hasAttribute("x1")) {
+					this.transitionStrips();
+					this.stripByPosition();
+				} else {
+					this.stripByPosition();
+				}
+			}
 
-				this.alreadyTriggered = true;
-			}
-			if (index == 0 && direction == "down" && this.alreadyTriggered == true) {
-				this.stripByPosition();
-			}
-			if (index == 0 && direction == "up") {
-				this.stripByPosition();
-			}
 			if (index == 1) {
 				this.stripByPosition();
 			}
@@ -229,22 +249,29 @@ export default {
 				this.highlightSong("She Knows This");
 			}
 			if (index == 6) {
+				if (direction == "up") {
+					this.undoBars();
+				}
+
+				this.stripByNormalizedPosition();
 				this.defaultHeight();
-				this.stripByNormalizedPosition();
-				this.filterHums();
 			}
-			if (index == 6 && direction == "up") {
-				this.undoBars();
-				this.stripByNormalizedPosition();
+			if (index == 7) {
+				// When does Cudi hum? Intro, chorus, bridge, outro
+				if (direction == "down") {
+					this.groupBySection();
+				}
+				this.createBars("counts");
 			}
-			if (index == 7 && direction == "down") {
-				// ! When does Cudi hum? Intro, chorus, bridge, outro
-				this.groupBySection();
-				this.createBars();
-				// this.defaultHeight();
-				// this.stripByNormalizedPosition();
-				// this.filterHums();
-				// this.groupBySection();
+			if (index == 8) {
+				this.bars.transition("barOpacity").duration(1000).attr("opacity", 1);
+				this.createBars("proportion");
+			}
+			if (index == 9) {
+				// this.createBars("proportion");
+				if (direction == "down") {
+					this.highlightBars("Outro");
+				}
 			}
 		},
 		// TEXT WRAPPING
@@ -313,6 +340,7 @@ export default {
 			const { lines } = this;
 			lines.transition("defaultOpacity").duration(1000).attr("opacity", 1);
 		},
+		// EDITS
 		filterHums: function () {
 			const { lines } = this;
 
@@ -379,6 +407,7 @@ export default {
 				.attr("x1", (d) => this.xScale(d.normalized_position))
 				.attr("x2", (d) => this.xScale(d.normalized_position))
 				.attr("stroke", (d) => this.colorScale(d.category));
+
 			this.onlyHumsToggled = false;
 
 			// X axis
@@ -424,11 +453,21 @@ export default {
 				.attr("class", "x axis stripplot");
 		},
 		groupBySection: function () {
-			const { lines, svg, data, width, height } = this;
+			const { lines, svg, data, width, height, yScale } = this;
 
-			this.xScale = d3
+			const sections_data_good = this.sections_data
+				.filter(
+					(d) =>
+						(d.section_name != "Pre-Chorus") &
+						(d.section_name != "Post-Chorus") &
+						(d.section_name != "Bridge") &
+						(d.section_name != "Interlude")
+				)
+				.map((d) => d.section_name);
+
+			const newXScale = d3
 				.scalePoint()
-				.domain(this.sections_data.map((d) => d.section_name))
+				.domain(sections_data_good)
 				.range([0, this.width])
 				.padding(0.5);
 
@@ -437,39 +476,55 @@ export default {
 			const barWidthPadding = barWidth * 0.3;
 			const xAxisBuffer = barWidth - barWidthPadding;
 
+			// Only run this if the lines exist
+			// if (!lines.empty()) {
 			lines
 				.transition("groupBySection")
-				.duration(1500)
-				.attr(
-					"x1",
-					(d) =>
-						d.category == "Hum"
-							? this.xScale(d.section_name) - xAxisBuffer // - 50
-							: this.xScale(d.section_name) - 0 // - 50
+				.duration(1000)
+				.attr("x1", (d) =>
+					sections_data_good.includes(d.section_name)
+						? d.category == "Hum"
+							? newXScale(d.section_name)
+							: newXScale(d.section_name) + xAxisBuffer
+						: width * 1.1
 				)
-				.attr(
-					"x2",
-					(d) =>
-						d.category == "Hum"
-							? this.xScale(d.section_name) - 0 // + 50
-							: this.xScale(d.section_name) + xAxisBuffer // + 50
+				.attr("x2", (d) =>
+					sections_data_good.includes(d.section_name)
+						? d.category == "Hum"
+							? newXScale(d.section_name) - xAxisBuffer
+							: newXScale(d.section_name)
+						: width * 1.1
 				)
+				.attr("y1", (d) => yScale(d.song_name))
+				.attr("y2", (d) => yScale(d.song_name))
 				.transition("dropLines")
 				.duration(1000)
 				.attr("y1", height)
 				.attr("y2", height);
 
-			// lines.exit().remove();
+			lines.exit().remove();
 		},
-		createBars: function () {
+		createBars: function (type) {
 			// Grouped bar chart: https://observablehq.com/@d3/grouped-bar-chart
-			const { svg, height, width, colorScale, sections_data } = this;
-			const data = sections_data;
+			const { svg, height, width, sections_data } = this;
+			const data = sections_data.filter(
+				(d) =>
+					(d.section_name != "Pre-Chorus") &
+					(d.section_name != "Post-Chorus") &
+					(d.section_name != "Bridge") &
+					(d.section_name != "Interlude")
+			);
 			// Define grouping column (section) and keys (category)
-			const groupKey = "section_name"; // sections_data.columns[0]; // Should be 'section_name'
-			const keys = ["Hum", "Regular"]; // sections_data.columns.slice(1); // Should be ['Hum','Regular']
+			const groupKey = "section_name";
+			const keys =
+				type == "proportion" ? ["Hum_pct", "Regular_pct"] : ["Hum", "Regular"];
 
 			// Define scales
+			const humColorScale = d3
+				.scaleOrdinal()
+				.domain(keys)
+				.range(["#CE496A", "#4C6DBC"]);
+
 			// Main x axis
 			const x0 = d3
 				.scaleBand()
@@ -479,64 +534,101 @@ export default {
 
 			// Subgroups
 			const x1 = d3.scaleBand().domain(keys).rangeRound([0, x0.bandwidth()]);
-			// .padding(0.05);
-
+			// Y scale
 			const y = d3
 				.scaleLinear()
 				.domain([0, d3.max(data, (d) => d3.max(keys, (key) => d[key]))])
 				.nice()
 				.rangeRound([height, 0]);
 
+			// X Axis
 			d3.select(".x.axis.stripplot").remove();
 			svg
 				.append("g")
 				.attr("transform", "translate(0," + height + ")")
-				.call(d3.axisBottom(this.xScale).ticks(0).tickSizeOuter(0))
+				.call(d3.axisBottom(x0).ticks(0).tickSizeOuter(0))
 				.attr("class", "x axis stripplot");
 
-			d3.select(".y.axis.stripplot").remove();
-			svg
-				.append("g")
-				.call(d3.axisLeft(y).ticks(null, "~s").ticks(4).tickSize(-width))
-				.call((g) => g.select(".domain").remove())
-				.call((g) =>
-					g
-						.select(".tick:last-of-type text")
-						.clone()
-						.attr("x", 3)
-						.attr("text-anchor", "start")
-						.attr("font-weight", "bold")
-						.text(data.y)
-				)
-				.attr("class", "y axis stripplot");
+			// Y Axis
+			const yAxis = d3
+				.axisLeft(y)
+				.ticks(type == "proportion" ? 3 : 4, type == "proportion" ? "%" : null)
+				.tickSize(-width);
+			d3.select(".y.axis.stripplot").transition().duration(2000).call(yAxis);
 
-			const bars = svg
-				.append("g")
-				.selectAll("g")
-				.data(data)
-				.join("g")
-				.attr("transform", (d) => `translate(${x0(d[groupKey])},0)`)
-				.selectAll("rect")
-				.data((d) => keys.map((key) => ({ key, value: d[key] })))
-				.join("rect");
+			// let bars = [];
+			// !! FIXME: I don't think below is working?
+			if (d3.selectAll(".stripplot-bars").empty()) {
+				this.bars = svg
+					.append("g")
+					.selectAll("g")
+					.data(data)
+					.join("g")
+					.attr("transform", (d) => `translate(${x0(d[groupKey])},0)`)
+					.selectAll("rect")
+					.data((d) => keys.map((key) => ({ key, value: d[key] })))
+					.join("rect")
+					.attr("class", "stripplot-bars");
 
-			bars
-				.attr("y", y(0))
-				.attr("height", 0)
-				.attr("x", (d) => x1(d.key))
-				.attr("width", x1.bandwidth())
-				.attr("fill", (d) => colorScale(d.key))
-				.attr("opacity", 1)
-				.transition("createBars")
+				this.bars
+					.attr("y", y(0))
+					.data((d) => keys.map((key) => ({ key, value: d[key] })))
+					.join("rect")
+					.attr("x", (d) => x1(d.key))
+					.attr("width", x1.bandwidth())
+					.attr("fill", (d) => humColorScale(d.key))
+					.attr("opacity", 1)
+					.attr("height", 0)
+					.transition("createBars")
+					.duration(1000)
+					.delay(2000)
+					.attr("height", (d) => y(0) - y(d.value))
+					.attr("y", (d) => y(d.value));
+			} else {
+				this.bars
+					.data((d) => keys.map((key) => ({ key, value: d[key] })))
+					.join("rect")
+					.attr("x", (d) => x1(d.key))
+					.attr("width", x1.bandwidth())
+					.attr("fill", (d) => humColorScale(d.key))
+					.transition("modifyBars")
+					.duration(1000)
+					.attr("height", (d) => y(0) - y(d.value))
+					.attr("y", (d) => y(d.value))
+					.attr("opacity", 1);
+			}
+		},
+		highlightBars: function (section) {
+			if (d3.selectAll(".stripplot-bars").empty()) {
+				this.createBars("proportion");
+			}
+			// The way that I processed data means I can't access d => d.section_name from the data
+			// Here, I manually define the sections and reverse lookup the index from domain
+			const sections = ["Intro", "Verse", "Chorus", "Outro"];
+			const sectionIndex = sections.indexOf(section);
+
+			// There are two bars per index,
+			const section1 = sectionIndex * 2;
+			const section2 = section1 + 1;
+
+			const val1 = this.bars.data()[section1].value;
+			const val2 = this.bars.data()[section2].value;
+
+			this.bars
+				.transition("highlightBars")
 				.duration(1000)
-				.delay(2500)
-				.attr("height", (d) => y(0) - y(d.value))
-				.attr("y", (d) => y(d.value));
+				.attr("opacity", function (d) {
+					if ((d.value == val1) | (d.value == val2)) {
+						return 1;
+					} else {
+						return 0.5;
+					}
+				});
 		},
 		undoBars: function () {
-			const { svg, width, margin } = this;
+			const { svg, width, margin, lines, data } = this;
 			d3.select(".y.axis.stripplot").remove();
-			d3.selectAll("rect").remove().exit();
+			d3.selectAll(".stripplot-bars").remove();
 
 			// Y axis
 			svg
@@ -622,7 +714,7 @@ export default {
 					// 	.duration(100)
 					// 	.style("stroke-width", computedStrokeWidthBig)
 
-					tip.transition(300).style("opacity", 1);
+					tip.transition(100).style("opacity", 1);
 					tip.html(
 						d.category == "Hum"
 							? "<span class='has-text-pink'>" + d.bigram + "</span>"
@@ -641,7 +733,7 @@ export default {
 					// 	.duration(100)
 					// 	.style("stroke-width", computedStrokeWidthReg)
 
-					tip.transition(300).style("opacity", 0);
+					tip.transition(100).style("opacity", 0);
 				});
 
 			this.lines = lines;

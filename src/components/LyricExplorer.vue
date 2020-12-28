@@ -1,5 +1,5 @@
 <template>
-	<div class="p-1">
+	<div class="flex-70-fixed p-1">
 		<div class="flex-button-container">
 			<!-- Each of the sections provided by SongSelector (all sections in the user-selected song)
             are printed here as buttons -->
@@ -107,6 +107,12 @@ export default {
 	flex-wrap: wrap;
 }
 
+.flex-70-fixed {
+	flex-basis: 70%;
+	flex-shrink: 0;
+	flex-grow: 0;
+}
+
 .button {
 	font-weight: 400;
 
@@ -161,7 +167,7 @@ export default {
 
 .list-enter {
 	opacity: 0;
-	transform: translateX(50px) scaleY(0.5);
+	transform: translateX(0) scaleY(0.5);
 }
 
 .list-enter-to {

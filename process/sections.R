@@ -24,5 +24,9 @@ sections_grouped <-
     )
   ))), ]
 
+sections_grouped <- sections_grouped %>% 
+  mutate(Hum_pct = Hum / (Hum+Regular),
+         Regular_pct = Regular / (Hum+Regular))
+
 readr::write_csv(sections_grouped,
                  here::here('public/data/sections_grouped.csv'))

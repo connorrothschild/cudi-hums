@@ -36,6 +36,7 @@
 ## Things I need to fix
 - [ ] Add axis titles
 - [ ] A lil explainer like 'Know literally nothing about Kid Cudi? Click here! With modal popup or smth
+- [ ] Tooltip should follow mouse on mousemove? Or static positioning
 
 ## Things I fixed
 - [x] ~~On mobile, the last step only lasts for a few pixels before losing `.active`~~

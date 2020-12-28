@@ -116,7 +116,6 @@ export default {
 			width: null,
 			height: null,
 			currStep: null,
-			alreadyTriggered: false,
 			defaultCircleRadius: 7.5,
 			response: {},
 		};
@@ -130,15 +129,15 @@ export default {
 		stepEnterHandler({ element, index, direction }) {
 			this.response = { element, index, direction };
 			this.currStep = index;
-			// THE VERY FIRST TIME (AND ONLY GOING DOWN), TRANSITION
-			if (index == 0 && direction == "down" && this.alreadyTriggered == false) {
-				this.transitionCircles();
-			}
-			if (index == 0 && direction == "down" && this.alreadyTriggered == true) {
-				this.regularCircles();
-			}
-			if (index == 0 && direction == "up") {
-				this.regularCircles();
+
+			// * Direction-agnostic handling of transitions
+			// * Only trigger transition if elements don't yet have positions on chart (proxy: cx)
+			if (index == 0) {
+				if (!d3.select(".beeswarm-circles").node().hasAttribute("cx")) {
+					this.transitionCircles();
+				} else {
+					this.regularCircles();
+				}
 			}
 			if (index == 1) {
 				this.highlightAlbum("Man on the Moon III: The Chosen");
