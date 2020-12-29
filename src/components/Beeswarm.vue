@@ -7,7 +7,7 @@
 		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="beeswarm">
 			<p
-				class="font-alt mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
+				class="mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
 			>
 				Hums by track
 			</p>

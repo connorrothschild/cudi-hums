@@ -52,9 +52,20 @@
 									target="_blank"
 									rel="noopener"
 									>here</a
-								>. FINISH THIS: The story and visualizations were composed using
-								Vue and D3.js. Scrollytelling capabilities were thanks to
-								vue-scrollama, scrollama, etc.
+								>. The story and visualizations were composed using Vue and
+								D3.js. Scrollytelling was made possible thanks to
+								<a
+									href="https://github.com/vgshenoy/vue-scrollama"
+									target="_blank"
+									rel="noopener"
+									>vue-scrollama</a
+								>, a library built on top of Russell Goldenberg's
+								<a
+									href="https://github.com/russellgoldenberg/scrollama"
+									target="_blank"
+									rel="noopener"
+									>Scrollama</a
+								>.
 							</p>
 						</div>
 					</div>

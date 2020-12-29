@@ -4,6 +4,26 @@ $background: #242424;
 $white-alt: white;
 $primary: $cudi-pink;
 
+//FONTS
+@import url(http://fonts.googleapis.com/css?family=Source+Serif+Pro|Nanum+Myeongjo:300,400,500,600,700);
+
+$font-alt: 
+'Source Serif Pro',
+'Nanum Myeongjo';
+// BlinkMacSystemFont,
+// -apple-system,
+// "Segoe UI",
+// "Roboto",
+// "Oxygen",
+// "Ubuntu",
+// "Cantarell",
+// "Fira Sans",
+// "Droid Sans",
+// "Helvetica Neue",
+// "Helvetica",
+// "Arial",
+// sans-serif;
+
 $font-stack: BlinkMacSystemFont,
 -apple-system,
 "Segoe UI",
@@ -16,12 +36,11 @@ $font-stack: BlinkMacSystemFont,
 "Helvetica Neue",
 "Helvetica",
 "Arial",
-sans-serif;
-
-$font-alt: 'Proxima Nova',
-"Open Sans",
-"Gill Sans MT",
-"Gill Sans",
-Corbel,
-Arial,
-sans-serif;
+// sans-serif,
+// 'Proxima Nova',
+// "Open Sans",
+// "Gill Sans MT",
+// "Gill Sans",
+// Corbel,
+// Arial,
+// sans-serif;

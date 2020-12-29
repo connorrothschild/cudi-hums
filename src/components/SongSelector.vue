@@ -3,10 +3,10 @@
 		<div class="container">
 			<div class="is-flex flex-direction-column-mobile">
 				<div class="flex-30-fixed">
-					<h1 class="title has-text-centered has-text-white font-alt">
+					<h1 class="title has-text-centered has-text-white">
 						Why don't you explore for yourself?
 					</h1>
-					<h2 class="subtitle mt-2 has-text-centered has-text-white font-alt">
+					<h2 class="subtitle mt-2 has-text-centered has-text-white">
 						Here, you can select a song from
 						<span class="has-text-weight-semibold">Man on the Moon III</span>
 						and read the hums from each section.

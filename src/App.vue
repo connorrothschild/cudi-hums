@@ -313,6 +313,7 @@ text {
 	line-height: 1.5;
 	z-index: 1000;
 	opacity: 0.85;
+	font-family: $font-alt;
 	// border-radius: 3px;
 
 	.highlight-text {
@@ -353,7 +354,7 @@ text {
 }
 
 .scrollama-steps {
-	// pointer-events: none;
+	pointer-events: none;
 }
 
 .step iframe {

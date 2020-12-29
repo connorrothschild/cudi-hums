@@ -7,7 +7,7 @@
 		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="stripplot">
 			<p
-				class="font-alt mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
+				class="mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
 			>
 				Hums by lyric position
 			</p>
@@ -665,7 +665,7 @@ export default {
 				.call(d3.axisLeft(this.yScale).tickSizeOuter(0).tickSize(-width))
 				.attr("class", "y axis stripplot")
 				.selectAll(".tick text")
-				.call(this.wrapYLabel, margin.left * 0.9);
+				.call(this.wrapYLabel, margin.left * 0.95);
 		},
 		setupChart: function () {
 			const { data, computedStrokeWidth } = this;
@@ -717,7 +717,7 @@ export default {
 				.call(d3.axisLeft(this.yScale).tickSizeOuter(0).tickSize(-width))
 				.attr("class", "y axis stripplot")
 				.selectAll(".tick text")
-				.call(this.wrapYLabel, margin.left * 0.9);
+				.call(this.wrapYLabel, margin.left * 0.95);
 
 			// X axis
 			svg
@@ -832,7 +832,9 @@ export default {
 	}
 
 	@media screen and (max-width: 768px) {
-		font-size: 8px;
+		text {
+			font-size: 6px;
+		}
 	}
 }
 
