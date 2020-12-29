@@ -9,6 +9,7 @@
     "deploy": "sh deploy.sh"
   },
   "dependencies": {
+    "buefy": "^0.9.4",
     "bulma": "^0.9.1",
     "core-js": "^3.6.5",
     "d3": "^6.3.1",
@@ -45,7 +46,8 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "no-unused-vars": "off"
+      "no-unused-vars": "off",
+      "no-mixed-spaces-and-tabs": "off"
     }
   },
   "browserslist": [

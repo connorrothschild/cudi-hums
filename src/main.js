@@ -1,6 +1,10 @@
 import Vue from 'vue';
 import './../node_modules/bulma/css/bulma.css';
 import { ObserveVisibility } from 'vue-observe-visibility';
+import Buefy from 'buefy';
+import 'buefy/dist/buefy.css';
+
+Vue.use(Buefy);
 
 import App from './App.vue';
 

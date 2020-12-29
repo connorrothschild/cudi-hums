@@ -6,7 +6,7 @@
 			<button
 				v-for="section in sections"
 				:key="section"
-				class="button font-alt no-border m-1"
+				class="button no-border m-1"
 				:class="{ toggled: selectedSections.includes(section) }"
 				@click="addSection(section)"
 			>
@@ -19,7 +19,7 @@
 		<transition-group tag="div" name="list">
 			<div v-for="(section, index) in sections" :key="index">
 				<div class="box m-5" v-if="selectedSections.includes(section)">
-					<p class="heading mb-4 is-size-5 has-text-centered font-alt">
+					<p class="heading mb-4 is-size-5 has-text-centered">
 						{{ section }}
 					</p>
 					<!-- This reactively filters and then renders each word (bigram) from the dataset that matches the user-specified section -->

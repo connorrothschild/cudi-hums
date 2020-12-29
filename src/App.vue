@@ -72,6 +72,24 @@
 				:containerWidth="width"
 				:containerHeight="height"
 			/>
+			<div class="container is-max-desktop">
+				<p class="content">
+					Here, you can look at each of these songs and their proportions of
+					hums. Feel free to search for a specific song or album. You can visit
+					the Genius page with corresponding lyrics by clicking on the song
+					name!
+				</p>
+				<Table
+					v-observe-visibility="
+						(isVisible, entry) =>
+							visibilityChanged(isVisible, entry, '02. Tracks')
+					"
+					:data="song_hums"
+					:major_albums="major_albums"
+				/>
+			</div>
+			<!-- Spacer -->
+			<div style="height: 500px"></div>
 			<Stripplot
 				v-observe-visibility="
 					(isVisible, entry) =>
@@ -84,13 +102,8 @@
 				:containerWidth="largerChartWidth"
 				:containerHeight="height"
 			/>
-			<div>
-				<SongSelector
-					:data="motm_tokenized"
-					:songData="song_hums"
-					:containerWidth="largerChartWidth"
-					:containerHeight="height"
-				/>
+			<div class="container">
+				<SongSelector :data="motm_tokenized" :songData="song_hums" />
 			</div>
 			<Outro
 				v-observe-visibility="
@@ -108,6 +121,7 @@ import debounce from "lodash/debounce";
 import Stripplot from "./components/Stripplot.vue";
 import Beeswarm from "./components/Beeswarm.vue";
 import Barchart from "./components/Barchart.vue";
+import Table from "./components/Table.vue";
 import SongSelector from "./components/SongSelector.vue";
 
 import Intro from "./components/Intro.vue";
@@ -120,6 +134,7 @@ export default {
 		Stripplot,
 		Beeswarm,
 		Barchart,
+		Table,
 		SongSelector,
 		Intro,
 		Outro,
@@ -311,7 +326,7 @@ text {
 	color: #cecece;
 	text-align: center;
 	line-height: 1.5;
-	z-index: 1000;
+	z-index: 999;
 	opacity: 0.85;
 	font-family: $font-alt;
 	// border-radius: 3px;
@@ -340,6 +355,7 @@ text {
 		border-left: 2px solid $cudi-pink;
 		box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.12);
 		opacity: 1;
+		pointer-events: auto;
 
 		.highlight-text {
 			color: $white-alt;
@@ -416,5 +432,6 @@ a[href] {
 	position: fixed;
 	bottom: 0;
 	right: 0;
+	z-index: 1000;
 }
 </style>

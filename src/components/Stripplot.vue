@@ -500,7 +500,7 @@ export default {
 
 			// Only run this if the lines exist
 			// ! FIXME:
-			if (!lines.empty()) {
+			if (d3.select(".stripplot-lines").node().hasAttribute("x1")) {
 				lines
 					.transition("groupBySection")
 					.duration(1000)

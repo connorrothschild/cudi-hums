@@ -7,12 +7,12 @@
 * ~~Tokenized view of lyrics of a song, with all of the hums highlighted~~
     * ~~Spotify embed for each of the songs in this section~~
 * ~~Somewhere (intro?), explanation of the definition of 'hums'~~
-* The intro prose should include some prototypical example of Cudi hums
-    * [Examples](https://www.youtube.com/watch?v=PZ_cpLwzBbw)
-    * Sad People, The Void... (the songs should have hums in the beginning so the listener gets an idea early)
-* A table for user exploration
-    * Example: table in https://pudding.cool/2018/08/wiki-death/
-    * Tech: ttps://vuetifyjs.com/en/components/data-tables/
+* ~~The intro prose should include some prototypical example of Cudi hums~~
+    * ~~[Examples](https://www.youtube.com/watch?v=PZ_cpLwzBbw)~~
+    * ~~Sad People, The Void... (the songs should have hums in the beginning so the listener gets an idea early)~~
+* ~~A table for user exploration~~
+    * ~~Example: table in https://pudding.cool/2018/08/wiki-death/~~
+    * ~~Tech: https://vuetifyjs.com/en/components/data-tables/~~
 * Conclusion prose? 
     * Before or after song/lyric exploration?
     * This should summarize the top level stats (e.g. *actually answer the question*)
@@ -39,7 +39,7 @@
 - [ ] Tooltip should follow mouse on mousemove? Or static positioning
 
 ## Things I fixed
-- [x] Add axis titles
+- [x] ~~Add axis titles~~
 - [x] ~~On mobile, the last step only lasts for a few pixels before losing `.active`~~
 - [x] ~~Disable stripplot tooltip on mobile?~~
 - [x] ~~On mobile, scrolling up causes URL bar to reappear and therefore triggers resize events...~~

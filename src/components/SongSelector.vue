@@ -1,94 +1,94 @@
 <template>
 	<div class="p-1">
-		<div class="container">
-			<div class="is-flex flex-direction-column-mobile">
-				<div class="flex-30-fixed">
-					<h1 class="title has-text-centered has-text-white">
-						Why don't you explore for yourself?
-					</h1>
-					<h2 class="subtitle mt-2 has-text-centered has-text-white">
-						Here, you can select a song from
-						<span class="has-text-weight-semibold">Man on the Moon III</span>
-						and read the hums from each section.
-					</h2>
-					<div class="has-text-centered content">
-						<label for="songs" class="heading">Select a song:</label>
-						<div class="select" v-if="songNames">
-							<select id="songs" name="songs" v-model="selectedSong">
-								<option v-for="song in songNames" :key="song" :value="song">
-									{{ song }}
-								</option>
-							</select>
-						</div>
+		<!-- <div class="container"> -->
+		<div class="is-flex flex-direction-column-mobile">
+			<div class="flex-30-fixed">
+				<h1 class="title has-text-centered has-text-white">
+					Why don't you explore for yourself?
+				</h1>
+				<h2 class="subtitle mt-2 has-text-centered has-text-white">
+					Here, you can select a song from
+					<span class="has-text-weight-semibold">Man on the Moon III</span>
+					and read the hums from each section.
+				</h2>
+				<div class="has-text-centered content">
+					<label for="songs" class="heading">Select a song:</label>
+					<div class="select" v-if="songNames">
+						<select id="songs" name="songs" v-model="selectedSong">
+							<option v-for="song in songNames" :key="song" :value="song">
+								{{ song }}
+							</option>
+						</select>
 					</div>
-					<div v-if="selectedSongData" class="better-flex">
-						<!-- Once the user selects a song, provide them a link to the Genius lyrics page -->
-						<div class="mb-2">
-							<!-- <a
+				</div>
+				<div v-if="selectedSongData" class="better-flex">
+					<!-- Once the user selects a song, provide them a link to the Genius lyrics page -->
+					<div class="mb-2">
+						<!-- <a
 					class="heading button genius-style"
 					target="_blank"
 					rel="noopener"
 					v-bind:href="selectedSongData.song_lyrics_url"
 					>See this song on Genius</a
 				> -->
-							<!-- Embed of spotify player -->
-							<iframe
-								:src="selectedSongEmbed"
-								width="300"
-								height="80"
-								frameborder="0"
-								allowtransparency="true"
-								allow="encrypted-media"
-							></iframe>
-						</div>
-						<!-- Here, user selects a song.
+						<!-- Embed of spotify player -->
+						<iframe
+							:src="selectedSongEmbed"
+							width="300"
+							height="80"
+							frameborder="0"
+							allowtransparency="true"
+							allow="encrypted-media"
+						></iframe>
+					</div>
+					<!-- Here, user selects a song.
             Their options are all of the songs in MOTM3, provided as a prop from App.vue -->
-						<!-- <p>{{ selectedSong }}</p> -->
-						<div class="is-flex">
+					<!-- <p>{{ selectedSong }}</p> -->
+					<div class="is-flex">
+						<div
+							class="card is-flex is-justify-content-center has-background-dark m-1"
+						>
 							<div
-								class="card is-flex is-justify-content-center has-background-dark m-1"
+								class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white font-alt"
 							>
-								<div
-									class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white font-alt"
-								>
-									<p class="card-title">
-										{{ percentFormat(selectedSongData.percent_hums) }} hums
-									</p>
-									<p class="small">
-										{{ commaFormat(selectedSongData.n_hums) }} hums
-									</p>
-									<p class="small">
-										{{
-											commaFormat(
-												selectedSongData.n_hums + selectedSongData.n_regulars
-											)
-										}}
-										regular lyrics
-									</p>
-								</div>
+								<p class="card-title">
+									{{ percentFormat(selectedSongData.percent_hums) }} hums
+								</p>
+								<p class="small">
+									{{ commaFormat(selectedSongData.n_hums) }} hums
+								</p>
+								<p class="small">
+									{{
+										commaFormat(
+											selectedSongData.n_hums + selectedSongData.n_regulars
+										)
+									}}
+									regular lyrics
+								</p>
 							</div>
+						</div>
+						<div
+							class="card is-flex is-justify-content-center has-background-dark m-1"
+						>
 							<div
-								class="card is-flex is-justify-content-center has-background-dark m-1"
+								class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white font-alt"
 							>
-								<div
-									class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white font-alt"
-								>
-									<p class="card-title">#{{ selectedSongData.rank }}</p>
-									<p class="small">Out of 16 songs</p>
-								</div>
+								<p class="card-title">#{{ selectedSongData.rank }}</p>
+								<p class="small">Out of 16 songs</p>
 							</div>
 						</div>
 					</div>
 				</div>
-				<!-- Once the user selects a song, render LyricExplorer component -->
-				<div v-if="selectedSong" class="flex-70-fixed">
-					<LyricExplorer
-						:songData="selectedSongLyrics"
-						:sections="allSongSections"
-					/>
-				</div>
+			</div>
+			<!-- Once the user selects a song, render LyricExplorer component -->
+			<div v-if="selectedSong" class="flex-70-fixed">
+				<LyricExplorer
+					:songData="selectedSongLyrics"
+					:sections="allSongSections"
+				/>
 			</div>
 		</div>
+		<!-- </div> -->
 	</div>
 </template>
 
@@ -101,8 +101,6 @@ export default {
 	props: {
 		data: Array,
 		songData: Array,
-		containerHeight: Number,
-		containerWidth: Number,
 	},
 	mounted() {},
 	components: {
