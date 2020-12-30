@@ -7,7 +7,7 @@
 		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="barchart">
 			<p
-				class="mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
+				class="mt-2 is-size-2 is-size-3-mobile has-text-weight-light has-text-centered"
 			>
 				Hums by album
 			</p>
@@ -53,7 +53,6 @@
 
 <script>
 import * as d3 from "d3";
-import debounce from "lodash/debounce";
 import "intersection-observer";
 import Scrollama from "vue-scrollama";
 
@@ -119,7 +118,7 @@ export default {
 				);
 			}
 			if (index == 3) {
-				d3.selectAll(".year-text").remove().exit();
+				// d3.selectAll(".year-text").remove().exit();
 				// this.sortBarsByYear();
 				// this.highlightBars(
 				// 	"Man on the Moon III: The Chosen",
@@ -402,12 +401,6 @@ export default {
 			this.watchResize();
 		},
 	},
-	// created() {
-	// 	window.addEventListener("resize", debounce(this.watchResize, 1000));
-	// },
-	// destroyed() {
-	// 	window.removeEventListener("resize", debounce(this.watchResize, 1000));
-	// },
 };
 </script>
 
@@ -445,14 +438,18 @@ export default {
 #barchart div.tooltip {
 	position: absolute;
 	text-align: center;
-	font-family: $font-alt;
+	font-family: $font-sans;
 	font-size: 14px;
 	pointer-events: none;
 	color: $white-alt;
 	background: #242424;
-	padding: 5px;
+	padding: 5px 10px;
 	border-radius: 3px;
 	z-index: 100;
 	border: 1px solid grey;
+
+	// @media screen and(max-width:480px) {
+	// 	display: none;
+	// }
 }
 </style>

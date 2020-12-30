@@ -7,7 +7,7 @@
 		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="beeswarm">
 			<p
-				class="mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
+				class="mt-2 is-size-2 is-size-3-mobile has-text-weight-light has-text-centered"
 			>
 				Hums by track
 			</p>
@@ -16,7 +16,12 @@
 		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
 			<p class="content">
 				By breaking down each album into its constituent songs, we can start to
-				see which tracks contribute the most to Cudi's hum-heavy albums.
+				see which tracks contribute the most to Cudi's hum-heavy albums. Here,
+				each circle
+				<svg width="10" height="10">
+					<circle cx="50%" cy="50%" r="4" fill="#cecece" stroke="black" />
+				</svg>
+				represents a Kid Cudi track.
 			</p>
 		</div>
 		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
@@ -72,12 +77,7 @@
 			:class="{ active: (4 == currStep) | (5 == currStep) }"
 			data-step-no="4"
 		>
-			<p class="content">
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus
-				quia deserunt fuga ipsam doloribus laboriosam fugit voluptatem incidunt
-				ducimus sequi, corrupti eius ullam repellat temporibus id quibusdam
-				maxime molestias libero?
-			</p>
+			<p class="content">FINISH THIS</p>
 		</div>
 		<!-- BUFFER CLASS -->
 		<div class="step empty"></div>
@@ -86,7 +86,6 @@
 
 <script>
 import * as d3 from "d3";
-import debounce from "lodash/debounce";
 import "intersection-observer";
 import Scrollama from "vue-scrollama";
 
@@ -161,7 +160,7 @@ export default {
 						: yScale(d.album_name) + Math.random() * jitterWidth
 				)
 				.attr("r", this.defaultCircleRadius)
-				.attr("stroke", "white")
+				.attr("stroke", "black")
 				.attr("opacity", 0.8)
 				.attr("fill", (d) => colorScale(d.album_name))
 				.transition("transitionCircles")
@@ -183,7 +182,7 @@ export default {
 						: yScale(d.album_name) + Math.random() * jitterWidth
 				)
 				.attr("r", this.defaultCircleRadius)
-				.attr("stroke", "white")
+				.attr("stroke", "black")
 				.attr("opacity", 0.8)
 				.attr("fill", (d) => colorScale(d.album_name));
 		},
@@ -371,12 +370,6 @@ export default {
 			this.watchResize();
 		},
 	},
-	// created() {
-	// 	window.addEventListener("resize", debounce(this.watchResize, 500));
-	// },
-	// destroyed() {
-	// 	window.removeEventListener("resize", debounce(this.watchResize, 500));
-	// },
 };
 </script>
 
@@ -425,14 +418,18 @@ export default {
 #beeswarm div.tooltip {
 	position: absolute;
 	text-align: center;
-	font-family: $font-alt;
+	font-family: $font-sans;
 	font-size: 14px;
 	pointer-events: none;
 	color: $white-alt;
 	background: #242424;
-	padding: 5px;
+	padding: 5px 10px;
 	border-radius: 3px;
 	z-index: 100;
 	border: 1px solid grey;
+
+	// @media screen and(max-width:480px) {
+	// 	display: none;
+	// }
 }
 </style>

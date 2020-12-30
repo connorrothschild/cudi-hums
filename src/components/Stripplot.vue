@@ -7,7 +7,7 @@
 		<!-- SCROLLAMA GRAPHIC -->
 		<div slot="graphic" class="graphic" id="stripplot">
 			<p
-				class="mt-2 is-size-2 is-size-4-mobile has-text-weight-light has-text-centered"
+				class="mt-2 is-size-2 is-size-3-mobile has-text-weight-light has-text-centered"
 			>
 				Hums by lyric position
 			</p>
@@ -54,7 +54,7 @@
 			</p>
 			<div class="is-flex is-flex-direction-column">
 				<button
-					class="button font-alt"
+					class="button"
 					@click="
 						handleFilter();
 						unclicked = false;
@@ -168,7 +168,6 @@
 
 <script>
 import * as d3 from "d3";
-import debounce from "lodash/debounce";
 import "intersection-observer";
 import Scrollama from "vue-scrollama";
 
@@ -804,12 +803,6 @@ export default {
 			this.watchResize();
 		},
 	},
-	// created() {
-	// 	window.addEventListener("resize", debounce(this.watchResize, 500));
-	// },
-	// destroyed() {
-	// 	window.removeEventListener("resize", debounce(this.watchResize, 500));
-	// },
 };
 </script>
 
@@ -833,7 +826,7 @@ export default {
 
 	@media screen and (max-width: 768px) {
 		text {
-			font-size: 6px;
+			font-size: 8px;
 		}
 	}
 }
@@ -847,7 +840,11 @@ export default {
 		letter-spacing: 1px;
 
 		@media screen and (max-width: 768px) {
-			font-size: 8px;
+			font-size: 9px;
+		}
+
+		@media screen and (max-width: 420px) {
+			font-size: 7px;
 		}
 	}
 
@@ -860,7 +857,7 @@ export default {
 #stripplot div.tooltip {
 	position: absolute;
 	text-align: left;
-	font-family: $font-alt;
+	font-family: $font-sans;
 	font-size: 14px;
 	pointer-events: none;
 	color: $white-alt;

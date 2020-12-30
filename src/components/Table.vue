@@ -1,6 +1,24 @@
 <template>
-	<section>
-		<div style="max-width: 900px; padding: 1%; margin: 0 auto">
+	<section class="container is-max-desktop p-2">
+		<p
+			class="title mb-2 is-size-2 is-size-3-mobile has-text-weight-light has-text-centered"
+		>
+			Hums by track
+		</p>
+		<!-- <p class="content p-1">
+					Here, you can look at each of these songs and their proportions of
+					hums. Feel free to search for a specific song or album. You can visit
+					the Genius page with corresponding lyrics by clicking on the song
+					name!
+				</p> -->
+		<h2
+			class="subtitle mt-2 has-text-centered has-text-white has-text-weight-light"
+		>
+			Here, you can look at each of Kid Cudi's songs and their proportions of
+			hums. <br />Feel free to search for a specific song or album, or view a
+			song's lyrics by clicking on its name!
+		</h2>
+		<div style="max-width: 1000px; margin: 0 auto">
 			<div
 				class="is-flex responsive-flex-direction is-justify-content-space-between"
 			>
@@ -16,15 +34,34 @@
 				:data="tableData"
 				:sticky-header="true"
 				:mobile-cards="false"
+				sort-icon="chevron-up"
 				height="500px"
 				class="myTable"
 				default-sort="tableData.percent_hums"
 			>
 				<b-table-column
+					field="album_name"
+					label="Album"
+					v-slot="tableData"
+					:width="albumColumnWidth"
+				>
+					<div class="is-flex">
+						<img
+							style="max-width: 50px; max-height: 50px"
+							:src="tableData.row.song_art_image_url"
+							:alt="tableData.row.album_name"
+						/>
+						<p class="ml-3" v-if="containerWidth > 1000">
+							{{ tableData.row.album_name }}
+						</p>
+					</div>
+				</b-table-column>
+
+				<b-table-column
 					field="song_name"
 					label="Song"
-					width="30%"
 					v-slot="tableData"
+					:width="songColumnWidth"
 					><a
 						:href="tableData.row.song_lyrics_url"
 						class="table-links"
@@ -32,24 +69,6 @@
 						rel="noopener"
 						>{{ tableData.row.song_name }}</a
 					>
-				</b-table-column>
-
-				<b-table-column
-					field="album_name"
-					label="Album"
-					width="30%"
-					v-slot="tableData"
-				>
-					<div class="is-flex">
-						<img
-							style="max-width: 50px; max-height: 50px"
-							:src="tableData.row.song_art_image_url"
-							alt="hello"
-						/>
-						<p class="ml-3">
-							{{ tableData.row.album_name }}
-						</p>
-					</div>
 				</b-table-column>
 
 				<b-table-column
@@ -76,6 +95,7 @@ export default {
 	props: {
 		data: Array,
 		major_albums: Array,
+		containerWidth: Number,
 	},
 	data() {
 		return {
@@ -84,6 +104,14 @@ export default {
 		};
 	},
 	computed: {
+		// Make the song column have a fixed width on large screens, to prevent jumpiness on album toggle
+		songColumnWidth() {
+			return this.containerWidth > 1000 ? "50%" : "80%";
+		},
+		// If album column contains text, don't specify width; if only image, make it size of image
+		albumColumnWidth() {
+			return this.containerWidth > 1000 ? null : "50";
+		},
 		goodData() {
 			return this.data.map(function (d) {
 				return {
@@ -116,8 +144,12 @@ export default {
 	methods: {
 		percentFormat: d3.format(".1%"),
 	},
-	mounted() {
-		console.log(this.data);
+	watch: {
+		containerWidth: function (newVal, oldVal) {
+			console.log(this.containerWidth);
+			console.log(this.albumColumnWidth);
+			console.log(this.songColumnWidth);
+		},
 	},
 };
 </script>
@@ -132,6 +164,12 @@ export default {
 			color: white;
 		}
 	}
+	.table-wrapper {
+		// On large screens, don't allow horizontal scroll
+		@media screen and (min-width: 468px) {
+			overflow-x: hidden;
+		}
+	}
 }
 
 .switch input[type="checkbox"]:checked + .check {
@@ -139,6 +177,7 @@ export default {
 }
 
 .table-links {
+	background-color: transparent;
 	color: white !important;
 
 	&::after {

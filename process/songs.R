@@ -69,7 +69,7 @@ for (row in 1:nrow(songs)) {
 final_hums_df <- final_hums_df %>%
   mutate(percent_hums = n_hums / (n_hums + n_regulars)) %>%
   ### Exclude all remixes of original songs and miscellaneous other 'songs'
-  filter(stringr::str_detect(song_name, '[Rr]emix|dub|TEDx Talk', negate = TRUE))
+  filter(stringr::str_detect(song_name, '[Rr]emix|dub|TEDx Talk|Twitter', negate = TRUE))
 
 # final_hums_df %>% arrange(desc(n_hums))
 
@@ -114,4 +114,4 @@ final_songs <- final_songs %>%
   ungroup()
 
 readr::write_csv(final_songs, here::here('public/data/song_hums.csv'))
-# lyrics <- readr::read_csv(here::here('public/data/song_hums.csv'))
+# final_songs <- readr::read_csv(here::here('public/data/song_hums.csv'))

@@ -1,134 +1,54 @@
 <template>
-	<div class="is-gradient-reverse">
-		<section class="hero is-fullheight has-text-centered">
-			<div class="hero-body">
-				<div class="container">
-					<!-- Image -->
-					<div class="is-inline-flex place-items-center">
-						<!-- Intro image -->
-						<figure class="image is-inline-block is-96x132">
-							<img class="is-inline-block shake" src="../assets/cudi.png" />
-						</figure>
-						<!-- Big intro title -->
-						<h1 class="title has-text-weight-light ml-3 has-text-white">
-							Hmmmmm
-						</h1>
-					</div>
-					<!-- Big outro text -->
-					<!-- <h1 class="title has-text-weight-light mt-5 has-text-black">
-						Awesome outro content goes here.
-					</h1> -->
-					<!-- Outro subtitle -->
-					<div class="mt-6 max-width-600-container has-text-left">
-						<h2 class="mb-3 is-size-5 has-text-weight-semibold">
-							Notes and methodology
-						</h2>
-						<div class="has-text-weight-light methodology-section">
-							<p class="content">Lyric data came from the Genius API.</p>
-							<p class="content">
-								To calculate the proportion of hums per song, I flagged all
-								lyrics from Genius that were 'hum-like' in nature. (An exact
-								list of qualifying lyrics can be found
-								<a
-									href="https://github.com/connorrothschild/cudi-hums/blob/master/process/hums_list.R"
-									target="_blank"
-									rel="noopener"
-									>here</a
-								>.) In certain cases, this may lead to overcounts (if Kid Cudi
-								actually says 'oh' rather than hums in a way that sounds like
-								'oh').
-							</p>
-							<p class="content">
-								I manually verified my list of hums with a random selection of
-								songs. This was not scientific; I simply listened to music,
-								flagged hum-like sounds, and found their corresponding lyrics on
-								Genius.
-							</p>
-							<p class="content">
-								Data retrieval and pre-processing was done in R; code is
-								available
-								<a
-									href="https://github.com/connorrothschild/cudi-hums/tree/master/process"
-									target="_blank"
-									rel="noopener"
-									>here</a
-								>. The story and visualizations were composed using Vue and
-								D3.js. Scrollytelling was made possible thanks to
-								<a
-									href="https://github.com/vgshenoy/vue-scrollama"
-									target="_blank"
-									rel="noopener"
-									>vue-scrollama</a
-								>, a library built on top of Russell Goldenberg's
-								<a
-									href="https://github.com/russellgoldenberg/scrollama"
-									target="_blank"
-									rel="noopener"
-									>Scrollama</a
-								>.
-							</p>
-						</div>
-					</div>
-				</div>
+	<section>
+		<div class="section">
+			<!-- Intro prose, with dropcap on first letter -->
+			<div class="container better-container">
+				<p class="content has-dropcap">
+					So, how much does Kid Cudi hum? Good question. The above shows that
+					the answer to that question depends on how you ask it. In some songs,
+					nearly half of Cudi's lyrics are hums or hum-like sounds. But most
+					often, those hums are concentrated in the intros and outros of songs,
+					not in their verses.
+				</p>
+				<p class="content">
+					If one thing's clear, its that Kid Cudi does hum a lot. Of the 226
+					songs attributed to Kid Cudi on Genius, only 53 contained zero hums.
+					The average Kid Cudi song had 11.5 hums—leading to an average of 3.6%
+					of total lyrics.
+				</p>
+				<p class="content">
+					The song that included the greatest number of Cudi hums was
+					<AudioPlayer
+						src="https://p.scdn.co/mp3-preview/168cc24ec737c08536d33d53215d511756d646dd?cid=774b29d4f13844c495f206cafdad9c86"
+						song="The Rage"
+					/>, which featured 129 hums. FINISH THIS
+				</p>
+				<hr
+					style="
+						height: 1px;
+						border-width: 0;
+						color: #cecece;
+						width: 30%;
+						margin: 1.5rem auto;
+					"
+				/>
+				<p class="content">ndfa</p>
+				<p class="content">jkdfha</p>
 			</div>
-		</section>
-	</div>
+		</div>
+	</section>
 </template>
 
 <script>
+import AudioPlayer from "@/components/AudioPlayer.vue";
+
 export default {
 	name: "Outro",
+	components: { AudioPlayer },
+	computed: {},
+	methods: {},
 };
 </script>
 
 <style lang="scss">
-.is-gradient-reverse {
-	background-image: linear-gradient($background, $cudi-pink);
-}
-
-.max-width-600-container {
-	max-width: 600px;
-	margin: 0 auto;
-}
-
-.shake {
-	animation: shake 1.5s infinite;
-	&:hover {
-		animation: none;
-	}
-}
-
-@keyframes shake {
-	0% {
-		transform: rotate(0deg);
-	}
-	80% {
-		transform: rotate(0deg);
-	}
-	85% {
-		transform: rotate(5deg);
-	}
-	95% {
-		transform: rotate(-5deg);
-	}
-	100% {
-		transform: rotate(0deg);
-	}
-}
-
-.place-items-center {
-	place-items: center;
-}
-
-.is-96x132 {
-	width: 92px;
-	height: 136px;
-}
-
-.methodology-section {
-	a {
-		color: white !important;
-		text-decoration: underline;
-	}
-}
 </style>

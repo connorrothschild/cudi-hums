@@ -53,56 +53,10 @@
 					>
 					And if you don't know Kid Cudi, you at least recognize his hums—his
 					most defining musical feature. Perhaps you've heard his song
-					<span
-						class="audio-clicker"
-						@click="
-							playAudio(
-								'https://p.scdn.co/mp3-preview/37adec4ab0523c1807ecd241624e168ab3501139?cid=774b29d4f13844c495f206cafdad9c86'
-							)
-						"
-						><span class="highlight-text-static blue"
-							>Surfin'
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								xmlns:xlink="http://www.w3.org/1999/xlink"
-								width="12"
-								height="12"
-								viewBox="0 0 12 12"
-								version="1.1"
-							>
-								<g id="surface1">
-									<path
-										style="
-											fill-rule: nonzero;
-											fill: white;
-											fill-opacity: 1;
-											stroke-width: 5;
-											stroke-linecap: butt;
-											stroke-linejoin: round;
-											stroke: white;
-											stroke-opacity: 1;
-											stroke-miterlimit: 4;
-										"
-										d="M 39.379883 13.769531 L 22.241211 28.613281 L 6.005859 28.613281 L 6.005859 47.705078 L 21.99707 47.705078 L 39.379883 62.744141 Z M 39.379883 13.769531 "
-										transform="matrix(0.16,0,0,0.16,0,0)"
-									/>
-									<path
-										style="
-											fill: none;
-											stroke-width: 5;
-											stroke-linecap: round;
-											stroke-linejoin: miter;
-											stroke: white;
-											stroke-opacity: 1;
-											stroke-miterlimit: 4;
-										"
-										d="M 47.998047 27.587891 C 52.270508 34.106445 52.270508 42.504883 47.998047 48.999023 M 55.102539 20.507812 C 62.890625 31.079102 62.890625 45.507812 55.102539 56.103516 M 61.59668 13.989258 C 72.998047 28.198242 72.998047 48.413086 61.59668 62.597656 "
-										transform="matrix(0.16,0,0,0.16,0,0)"
-									/>
-								</g>
-							</svg>
-						</span>
-					</span>
+					<AudioPlayer
+						src="https://p.scdn.co/mp3-preview/37adec4ab0523c1807ecd241624e168ab3501139?cid=774b29d4f13844c495f206cafdad9c86"
+						song="Surfin'"
+					/>
 					where he raps:
 					<div
 						class="is-flex is-justify-content-center is-align-items-center m-5"
@@ -196,12 +150,12 @@
 </template>
 
 <script>
+import AudioPlayer from "@/components/AudioPlayer.vue";
+
 export default {
 	name: "Intro",
 	props: { width: Number },
-	data() {
-		return { audio: null };
-	},
+	components: { AudioPlayer },
 	computed: {
 		properWidth() {
 			return Math.min(700, this.width) - 50;
@@ -233,14 +187,16 @@ export default {
 	background-image: linear-gradient(#0a0a0a, $background);
 }
 
-.has-dropcap:first-child:first-letter {
-	float: left;
-	font-family: Georgia;
-	font-size: 120px;
-	// line-height: 60px;
-	padding-top: 4px;
-	padding-right: 8px;
-	padding-left: 3px;
+.has-dropcap {
+	&:first-child:first-letter {
+		float: left;
+		font-family: Georgia;
+		font-size: 120px;
+		line-height: 120px;
+		padding-top: 4px;
+		padding-right: 8px;
+		padding-left: 3px;
+	}
 }
 
 .big-title {
@@ -289,7 +245,28 @@ export default {
 	max-width: 700px !important;
 }
 
-.audio-clicker {
-	cursor: pointer;
+.shake {
+	animation: shake 1.5s infinite;
+	&:hover {
+		animation: none;
+	}
+}
+
+@keyframes shake {
+	0% {
+		transform: rotate(0deg);
+	}
+	80% {
+		transform: rotate(0deg);
+	}
+	85% {
+		transform: rotate(5deg);
+	}
+	95% {
+		transform: rotate(-5deg);
+	}
+	100% {
+		transform: rotate(0deg);
+	}
 }
 </style>

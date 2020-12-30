@@ -52,15 +52,6 @@
 				:containerWidth="width"
 				:containerHeight="height"
 			/>
-			<!-- <div class="section container better-container">
-				<p class="content">
-					Kid Cudi hums a good amount—in some albums, up to 8% of his lyrics are
-					hums or hum-like sounds. But is this really an accurate statistic? Are
-					Cudi's hums equally distributed across songs, or could it be the case
-					that one song with two-hundred hums is artificially inflating the
-					proportions?
-				</p>
-			</div> -->
 			<Beeswarm
 				v-observe-visibility="
 					(isVisible, entry) =>
@@ -72,24 +63,19 @@
 				:containerWidth="width"
 				:containerHeight="height"
 			/>
-			<div class="container is-max-desktop">
-				<p class="content">
-					Here, you can look at each of these songs and their proportions of
-					hums. Feel free to search for a specific song or album. You can visit
-					the Genius page with corresponding lyrics by clicking on the song
-					name!
-				</p>
+			<div>
 				<Table
 					v-observe-visibility="
 						(isVisible, entry) =>
 							visibilityChanged(isVisible, entry, '02. Tracks')
 					"
+					:containerWidth="windowWidth"
 					:data="song_hums"
 					:major_albums="major_albums"
 				/>
 			</div>
 			<!-- Spacer -->
-			<div style="height: 500px"></div>
+			<div class="spacer"></div>
 			<Stripplot
 				v-observe-visibility="
 					(isVisible, entry) =>
@@ -103,9 +89,17 @@
 				:containerHeight="height"
 			/>
 			<div class="container">
+				<Outro
+					v-observe-visibility="
+						(isVisible, entry) => visibilityChanged(isVisible, entry, '')
+					"
+				/>
+			</div>
+			<div class="spacer"></div>
+			<div class="container">
 				<SongSelector :data="motm_tokenized" :songData="song_hums" />
 			</div>
-			<Outro
+			<Footer
 				v-observe-visibility="
 					(isVisible, entry) => visibilityChanged(isVisible, entry, '')
 				"
@@ -126,6 +120,7 @@ import SongSelector from "./components/SongSelector.vue";
 
 import Intro from "./components/Intro.vue";
 import Outro from "./components/Outro.vue";
+import Footer from "./components/Footer.vue";
 import LoadingScreen from "./components/LoadingScreen.vue";
 
 export default {
@@ -138,6 +133,7 @@ export default {
 		SongSelector,
 		Intro,
 		Outro,
+		Footer,
 		LoadingScreen,
 	},
 	data() {
@@ -253,8 +249,6 @@ export default {
 		},
 		visibilityChanged(isVisible, entry, section) {
 			this.isVisible = isVisible;
-			// console.log(entry);
-			// console.log(section);
 			if (entry.isIntersecting) {
 				this.section = section;
 			}
@@ -262,10 +256,10 @@ export default {
 	},
 	computed: {},
 	created() {
-		window.addEventListener("resize", debounce(this.watchResize, 500)); // this.watchResize
+		window.addEventListener("resize", debounce(this.watchResize, 100)); // this.watchResize
 	},
 	destroyed() {
-		window.removeEventListener("resize", debounce(this.watchResize, 500)); // this.watchResize
+		window.removeEventListener("resize", debounce(this.watchResize, 100)); // this.watchResize
 	},
 };
 </script>
@@ -281,7 +275,7 @@ text {
 }
 
 html {
-	font-family: $font-stack;
+	font-family: $font-sans;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	color: $white-alt;
@@ -289,7 +283,7 @@ html {
 }
 
 #app {
-	font-family: $font-stack;
+	font-family: $font-sans;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	color: $white-alt;
@@ -297,7 +291,7 @@ html {
 }
 
 text {
-	font-family: $font-stack;
+	font-family: $font-sans;
 }
 
 /* SCROLLAMA */
@@ -328,7 +322,7 @@ text {
 	line-height: 1.5;
 	z-index: 999;
 	opacity: 0.85;
-	font-family: $font-alt;
+	font-family: $font-serif;
 	// border-radius: 3px;
 
 	.highlight-text {
@@ -407,8 +401,12 @@ rect {
 	stroke: black;
 }
 
-.font-alt {
-	font-family: $font-alt;
+.place-items-center {
+	place-items: center;
+}
+
+.font-serif {
+	font-family: $font-serif;
 }
 
 // For notification/warnings
@@ -433,5 +431,16 @@ a[href] {
 	bottom: 0;
 	right: 0;
 	z-index: 1000;
+}
+
+.spacer {
+	height: 300px;
+}
+
+a {
+	color: $white-alt !important;
+	background: $cudi-blue;
+	padding: 5px;
+	border-radius: 5px;
 }
 </style>

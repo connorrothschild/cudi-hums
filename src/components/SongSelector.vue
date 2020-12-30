@@ -3,7 +3,9 @@
 		<!-- <div class="container"> -->
 		<div class="is-flex flex-direction-column-mobile">
 			<div class="flex-30-fixed">
-				<h1 class="title has-text-centered has-text-white">
+				<h1
+					class="title has-text-centered has-text-weight-semibold has-text-white"
+				>
 					Why don't you explore for yourself?
 				</h1>
 				<h2 class="subtitle mt-2 has-text-centered has-text-white">
@@ -49,7 +51,7 @@
 							class="card is-flex is-justify-content-center has-background-dark m-1"
 						>
 							<div
-								class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white font-alt"
+								class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white font-serif"
 							>
 								<p class="card-title">
 									{{ percentFormat(selectedSongData.percent_hums) }} hums
@@ -58,11 +60,7 @@
 									{{ commaFormat(selectedSongData.n_hums) }} hums
 								</p>
 								<p class="small">
-									{{
-										commaFormat(
-											selectedSongData.n_hums + selectedSongData.n_regulars
-										)
-									}}
+									{{ commaFormat(selectedSongData.n_regulars) }}
 									regular lyrics
 								</p>
 							</div>
@@ -71,7 +69,7 @@
 							class="card is-flex is-justify-content-center has-background-dark m-1"
 						>
 							<div
-								class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white font-alt"
+								class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white font-serif"
 							>
 								<p class="card-title">#{{ selectedSongData.rank }}</p>
 								<p class="small">Out of 16 songs</p>
@@ -193,12 +191,12 @@ export default {
 	.card-title {
 		text-align: center;
 		text-transform: uppercase;
-		font-size: 1.1rem;
+		font-size: 1.2rem;
 	}
 	.small {
 		text-transform: uppercase;
 		letter-spacing: 1px;
-		font-size: 0.5rem;
+		font-size: 0.7rem;
 		text-align: center;
 	}
 }

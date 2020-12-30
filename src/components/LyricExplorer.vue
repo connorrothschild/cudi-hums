@@ -16,7 +16,7 @@
 		<!-- Here, I am doing v-for="(section, index) in sections" and then a v-if to show, 
         rather than  v-for="(section, index) in selectedSections." 
         This is because I want to maintain ordering of sections (Intro -> Verse -> Chorus etc.)-->
-		<transition-group tag="div" name="list">
+		<transition-group tag="div" name="list" class="lyrics-container">
 			<div v-for="(section, index) in sections" :key="index">
 				<div class="box m-5" v-if="selectedSections.includes(section)">
 					<p class="heading mb-4 is-size-5 has-text-centered">
@@ -125,9 +125,9 @@ export default {
 }
 
 .speech-bubble {
-	font-family: $font-alt;
+	font-family: $font-serif;
 	position: relative;
-	background: $cudi-blue;
+	background: $cudi-pink;
 	border-radius: 0.4em;
 	// height: 100px;
 	display: flex;
@@ -143,11 +143,20 @@ export default {
 	width: 0;
 	height: 0;
 	border: 20px solid transparent;
-	border-right-color: $cudi-blue;
+	border-right-color: $cudi-pink;
 	border-left: 0;
 	border-bottom: 0;
 	margin-top: -10px;
 	margin-left: -10px;
+}
+
+.lyrics-container {
+	height: 90vh;
+	overflow: auto;
+
+	@media screen and(max-width:1000px) {
+		height: auto;
+	}
 }
 
 // Animations on above toggleable boxes
