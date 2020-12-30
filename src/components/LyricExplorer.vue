@@ -17,7 +17,7 @@
         rather than  v-for="(section, index) in selectedSections." 
         This is because I want to maintain ordering of sections (Intro -> Verse -> Chorus etc.)-->
 		<transition-group tag="div" name="list" class="lyrics-container">
-			<div v-for="(section, index) in sections" :key="index">
+			<div v-for="section in sections" :key="section">
 				<div class="box m-5" v-if="selectedSections.includes(section)">
 					<p class="heading mb-4 is-size-5 has-text-centered">
 						{{ section }}
@@ -133,6 +133,10 @@ export default {
 	display: flex;
 	place-items: center;
 	padding: 0.5rem 1rem;
+
+	@media screen and(max-width: 600px) {
+		font-size: 0.75em;
+	}
 }
 
 .speech-bubble:after {
@@ -151,11 +155,11 @@ export default {
 }
 
 .lyrics-container {
-	height: 90vh;
+	max-height: 90vh;
 	overflow: auto;
 
-	@media screen and(max-width:1000px) {
-		height: auto;
+	@media screen and (max-width: 1000px) {
+		max-height: none;
 	}
 }
 

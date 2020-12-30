@@ -35,8 +35,8 @@
 									rel="noopener"
 									>here</a
 								>.) In certain cases, this may lead to overcounts (if Kid Cudi
-								actually says 'oh' rather than hums in a way that sounds like
-								'oh').
+								actually says 'oh' rather than hums in a way that a transcriber
+								records as 'oh').
 							</p>
 							<p class="content">
 								I manually verified my list of hums with a random selection of

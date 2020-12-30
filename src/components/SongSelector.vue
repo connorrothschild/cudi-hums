@@ -1,7 +1,6 @@
 <template>
 	<div class="p-1">
-		<!-- <div class="container"> -->
-		<div class="is-flex flex-direction-column-mobile">
+		<div class="is-flex flex-direction-column-mobile is-align-items-center">
 			<div class="flex-30-fixed">
 				<h1
 					class="title has-text-centered has-text-weight-semibold has-text-white"
@@ -86,7 +85,6 @@
 				/>
 			</div>
 		</div>
-		<!-- </div> -->
 	</div>
 </template>
 

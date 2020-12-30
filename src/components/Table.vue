@@ -5,12 +5,6 @@
 		>
 			Hums by track
 		</p>
-		<!-- <p class="content p-1">
-					Here, you can look at each of these songs and their proportions of
-					hums. Feel free to search for a specific song or album. You can visit
-					the Genius page with corresponding lyrics by clicking on the song
-					name!
-				</p> -->
 		<h2
 			class="subtitle mt-2 has-text-centered has-text-white has-text-weight-light"
 		>
@@ -34,8 +28,8 @@
 				:data="tableData"
 				:sticky-header="true"
 				:mobile-cards="false"
-				sort-icon="chevron-up"
 				height="500px"
+				sort-icon="chevron-up"
 				class="myTable"
 				default-sort="tableData.percent_hums"
 			>
@@ -52,7 +46,11 @@
 							:alt="tableData.row.album_name"
 						/>
 						<p class="ml-3" v-if="containerWidth > 1000">
-							{{ tableData.row.album_name }}
+							{{
+								tableData.row.album_name == "NA"
+									? "Single"
+									: tableData.row.album_name
+							}}
 						</p>
 					</div>
 				</b-table-column>
@@ -165,6 +163,7 @@ export default {
 		}
 	}
 	.table-wrapper {
+		max-height: 60vh;
 		// On large screens, don't allow horizontal scroll
 		@media screen and (min-width: 468px) {
 			overflow-x: hidden;

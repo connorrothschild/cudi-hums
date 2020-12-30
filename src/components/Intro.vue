@@ -107,7 +107,9 @@
 					much? Despite the buzz, no one has analyzed the prevalence of hums in
 					Kid Cudi's discography. Given his most recent album's release, it's
 					the best time to ask:
-					<span class="has-text-pink">how much does Kid Cudi hum?</span>
+					<span class="has-text-weight-semibold"
+						>how much does Kid Cudi hum?</span
+					>
 				</p>
 				<!-- <div class="has-text-centered">
 					<p class="highlight-text-static heading is-size-4">
@@ -124,13 +126,22 @@
 					"
 				/>
 				<p class="content">
-					In the writing that follows, I go to painstaking lengths to explore
-					this question at a variety of levels of granularity. First, I look at
-					each of Kid Cudi's <span class="has-text-weight-bold">albums</span>,
-					then at each of those albums'
+					In the writing that follows, I go to great lengths to explore this
+					question at a variety of levels of granularity. First, I look at each
+					of Kid Cudi's <span class="has-text-weight-bold">albums</span>, then
+					at each of those albums'
 					<span class="has-text-weight-bold">songs</span>, until I finally look
 					at each individual song and analyze its
 					<span class="has-text-weight-bold">lyrics</span>.
+				</p>
+				<p class="content">
+					To measure hums, I used lyrics data from
+					<a href="https://genius.com/" target="_blank" rel="noopener"
+						>Genius</a
+					>
+					and flagged each hum-like sound from Kid Cudi's discography. I
+					analyzed which songs had the most hums, which songs had the least, and
+					even where in the song hums most frequently occured.
 				</p>
 				<p class="content">
 					Technically, a hum is defined as any noise that Kid Cudi makes that is
@@ -139,10 +150,11 @@
 					inclusive of all of these hums (rather than just 'hum') because my
 					data source,
 					<a href="https://genius.com/" target="_blank" rel="noopener">Genius</a
-					>, is comprised of
+					>, is composed of
 					<span class="has-text-weight-bold"
 						>community members' contributions</span
 					>, and different transcribers have different ways of recording hums.
+					More complete methodology can be found at the bottom of this site.
 				</p>
 			</div>
 		</div>

@@ -21,7 +21,24 @@
 		</div>
 		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
 			<p class="content">
-				In this view, every line represents a lyric from
+				In this view, every line
+				<svg
+					style="vertical-align: middle; display: inline-block"
+					width="8"
+					height="1em"
+					viewBox="0 0 8 20"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<line
+						x1="2"
+						y1="16"
+						x2="2"
+						y2="2"
+						stroke="#4c6dbc"
+						stroke-width="3"
+						stroke-linecap="round"
+					/></svg
+				>represents a lyric from
 				<span class="has-text-weight-semibold">Man on the Moon III</span>.
 				<span class="highlight-text blue">Blue lines</span>
 				represent "regular" lyrics while
@@ -161,8 +178,6 @@
 				</span>
 			</p>
 		</div>
-		<!-- BUFFER CLASS -->
-		<div class="step empty"></div>
 	</Scrollama>
 </template>
 
@@ -180,6 +195,8 @@ export default {
 		sections_data: Array,
 		containerWidth: Number,
 		containerHeight: Number,
+		windowWidth: Number,
+		responsiveOffset: Number,
 	},
 	components: {
 		Scrollama,
@@ -217,9 +234,6 @@ export default {
 		},
 		computedHeightBuffer: function () {
 			return this.height / 100;
-		},
-		responsiveOffset: function () {
-			return window.innerWidth > 600 ? 0.5 : 0.85;
 		},
 	},
 	methods: {
@@ -433,16 +447,7 @@ export default {
 				.tickFormat((d, i) => xAxisLabels[i])
 				.tickSizeOuter(0);
 
-			// d3.selectAll(".x.axis.stripplot g.tick text")
-			// 	.transition("axis-text-out")
-			// 	.duration(1000)
-			// 	.attr("opacity", 0)
-			// 	.remove(); // Fade-out the old.
 			d3.select(".x.axis.stripplot").call(xAxis);
-			// d3.selectAll(".x.axis.stripplot g.tick text")
-			// 	.transition("axis-text-in")
-			// 	.duration(1000)
-			// 	.attr("opacity", 1); // Fade-in the new.
 		},
 		stripByPosition: function () {
 			const { lines, svg, data, width, height } = this;
@@ -498,7 +503,6 @@ export default {
 			const xAxisBuffer = barWidth - barWidthPadding;
 
 			// Only run this if the lines exist
-			// ! FIXME:
 			if (d3.select(".stripplot-lines").node().hasAttribute("x1")) {
 				lines
 					.transition("groupBySection")
@@ -522,9 +526,8 @@ export default {
 					.transition("dropLines")
 					.duration(1000)
 					.attr("y1", height)
-					.attr("y2", height);
-
-				lines.exit().remove();
+					.attr("y2", height)
+					.attr("opacity", 0);
 			}
 		},
 		createBars: function (type) {
@@ -583,8 +586,6 @@ export default {
 				.duration(2000)
 				.call(yAxis);
 
-			// let bars = [];
-			// !! FIXME: I don't think below is working?
 			if (d3.selectAll(".stripplot-bars").empty()) {
 				this.bars = svg
 					.append("g")
@@ -626,9 +627,7 @@ export default {
 			}
 		},
 		highlightBars: function (section) {
-			// if (d3.selectAll(".stripplot-bars").empty()) {
 			this.createBars("proportion");
-			// }
 			// The way that I processed data means I can't access d => d.section_name from the data
 			// Here, I manually define the sections and reverse lookup the index from domain
 			const sections = ["Intro", "Verse", "Chorus", "Outro"];
@@ -689,12 +688,6 @@ export default {
 				.append("g")
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-			const tip = d3
-				.select("#stripplot")
-				.append("div")
-				.attr("class", "tooltip")
-				.style("opacity", 0);
-
 			//Creates the xScale
 			this.xScale = d3.scaleLinear().range([0, width]);
 
@@ -735,12 +728,25 @@ export default {
 				.attr("class", "stripplot-lines")
 				.style("stroke-width", computedStrokeWidthReg);
 
+			const tip = d3
+				.select("#stripplot")
+				.append("div")
+				.attr("class", "tooltip")
+				.style("opacity", 0);
+
+			const self = this;
 			lines
 				.on("mouseover", function (event, d) {
-					// d3.select(this)
-					// 	.transition("mouseover")
-					// 	.duration(100)
-					// 	.style("stroke-width", computedStrokeWidthBig)
+					d3.select(this)
+						.style("stroke-width", computedStrokeWidthBig)
+						.attr(
+							"y1",
+							(d) => self.yScale(d.song_name) + self.computedHeightBuffer * 3
+						)
+						.attr(
+							"y2",
+							(d) => self.yScale(d.song_name) - self.computedHeightBuffer * 3
+						);
 
 					tip.transition(100).style("opacity", 1);
 					tip.html(
@@ -749,25 +755,31 @@ export default {
 							: d.bigram
 					);
 
-					const right = event.clientX > window.innerWidth / 2;
-					const offset = right ? tip.node().offsetWidth + 15 : -15;
-					tip
-						.style("left", event.clientX - offset + "px")
-						.style("top", event.clientY + "px");
+					const largeScreen = self.windowWidth > 968;
+					const xPos = largeScreen
+						? event.clientX - width / 2 - margin.left
+						: event.clientX;
+					tip.style("left", xPos + "px").style("top", event.clientY + "px");
 				})
 				.on("mousemove", function (event, d) {
-					const right = event.clientX > window.innerWidth / 2;
-					const offset = right ? tip.node().offsetWidth + 15 : -15;
-					tip
-						.style("left", event.clientX - offset + "px")
-						.style("top", event.clientY + "px");
+					const largeScreen = self.windowWidth > 968;
+					const xPos = largeScreen
+						? event.clientX - width / 2 - margin.left
+						: event.clientX;
+					tip.style("left", xPos + "px").style("top", event.clientY + "px");
 				})
 
 				.on("mouseout", function (d) {
-					// d3.select(this)
-					// 	.transition("mouseout")
-					// 	.duration(100)
-					// 	.style("stroke-width", computedStrokeWidthReg)
+					d3.select(this)
+						.style("stroke-width", computedStrokeWidthReg)
+						.attr(
+							"y1",
+							(d) => self.yScale(d.song_name) + self.computedHeightBuffer
+						)
+						.attr(
+							"y2",
+							(d) => self.yScale(d.song_name) - self.computedHeightBuffer
+						);
 
 					tip.transition(100).style("opacity", 0);
 				});
@@ -800,6 +812,9 @@ export default {
 	},
 	watch: {
 		containerWidth: function () {
+			this.watchResize();
+		},
+		containerHeight: function () {
 			this.watchResize();
 		},
 	},
@@ -881,5 +896,9 @@ export default {
 
 .has-text-pink {
 	color: $cudi-pink;
+}
+
+.stripplot-lines {
+	stroke-linecap: round;
 }
 </style>

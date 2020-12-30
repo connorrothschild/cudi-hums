@@ -17,9 +17,6 @@
 				(sections_grouped.length > 0)
 			"
 		>
-			<div class="absolute-bottom-right">
-				<p class="heading">{{ section }}</p>
-			</div>
 			<!-- If on Safari, nudge to another browser -->
 			<!-- <div class="notification is-fixed is-danger mb-0" v-if="showSafariWarning">
 			<button class="delete" @click="showSafariWarning = false"></button>
@@ -32,78 +29,50 @@
 			<!-- If mobile, nudge to larger screen -->
 			<!-- Only show mobile nudge on non-Safari browsers (don't want to duplicate) -->
 			<!-- Mobile safari users can attribute the bugginess to Safari, not mobile -->
-			<div class="notification is-fixed is-danger mb-0" v-if="showMobileNudge">
+			<!-- <div class="notification is-fixed is-danger mb-0" v-if="showMobileNudge">
 				<button class="delete" @click="showMobileNudge = false"></button>
 				Pssst. You might have a better experience on a wider screen, such as a
 				desktop computer.
-			</div>
-			<Intro
-				:width="windowWidth"
-				v-observe-visibility="
-					(isVisible, entry) => visibilityChanged(isVisible, entry, '')
-				"
-			/>
+			</div> -->
+			<Intro :width="windowWidth" />
 			<Barchart
-				v-observe-visibility="
-					(isVisible, entry) =>
-						visibilityChanged(isVisible, entry, '01. Albums')
-				"
 				:data="album_hums"
 				:containerWidth="width"
 				:containerHeight="height"
+				:windowWidth="windowWidth"
+				:responsiveOffset="responsiveOffset"
 			/>
 			<Beeswarm
-				v-observe-visibility="
-					(isVisible, entry) =>
-						visibilityChanged(isVisible, entry, '02. Tracks')
-				"
 				:data="song_hums"
 				:major_albums="major_albums"
 				:album_data="album_hums"
 				:containerWidth="width"
 				:containerHeight="height"
+				:windowWidth="windowWidth"
+				:responsiveOffset="responsiveOffset"
 			/>
-			<div>
-				<Table
-					v-observe-visibility="
-						(isVisible, entry) =>
-							visibilityChanged(isVisible, entry, '02. Tracks')
-					"
-					:containerWidth="windowWidth"
-					:data="song_hums"
-					:major_albums="major_albums"
-				/>
-			</div>
+			<Table
+				:containerWidth="windowWidth"
+				:data="song_hums"
+				:major_albums="major_albums"
+			/>
 			<!-- Spacer -->
 			<div class="spacer"></div>
 			<Stripplot
-				v-observe-visibility="
-					(isVisible, entry) =>
-						visibilityChanged(isVisible, entry, '03. Lyrics')
-				"
 				:data="motm_tokenized"
 				:major_albums="major_albums"
 				:album_data="album_hums"
 				:sections_data="sections_grouped"
-				:containerWidth="largerChartWidth"
+				:containerWidth="width"
 				:containerHeight="height"
+				:windowWidth="windowWidth"
+				:responsiveOffset="responsiveOffset"
 			/>
-			<div class="container">
-				<Outro
-					v-observe-visibility="
-						(isVisible, entry) => visibilityChanged(isVisible, entry, '')
-					"
-				/>
-			</div>
-			<div class="spacer"></div>
-			<div class="container">
+			<Outro />
+			<div class="container is-widescreen">
 				<SongSelector :data="motm_tokenized" :songData="song_hums" />
 			</div>
-			<Footer
-				v-observe-visibility="
-					(isVisible, entry) => visibilityChanged(isVisible, entry, '')
-				"
-			/>
+			<Footer />
 		</div>
 	</div>
 </template>
@@ -146,11 +115,9 @@ export default {
 			sections_grouped: [],
 			windowWidth: null,
 			width: null,
-			largerChartWidth: null,
 			height: null,
 			// showSafariWarning: false,
-			showMobileNudge: false,
-			section: null,
+			// showMobileNudge: false,
 			DEBUG: false,
 		};
 	},
@@ -162,14 +129,16 @@ export default {
 		// ) {
 		// 	this.showSafariWarning = true;
 		// }
-		this.checkWidthForWarning();
+		// this.checkWidthForWarning();
 
 		this.windowWidth = window.innerWidth;
+		// Eventual chart container width is dependent on screensize
+		// On mobile devices, should take up nearly the whole viewport because step is overlayed on top
+		// On desktop, chart only takes up 2/3 width
 		this.width =
-			window.innerWidth < 1000
+			window.innerWidth < 968
 				? window.innerWidth * 0.9
-				: window.innerWidth * 0.5;
-		this.largerChartWidth = window.innerWidth * 0.8;
+				: window.innerWidth * 0.6;
 		this.height = window.innerHeight * 0.8;
 
 		const song_hums = await d3.csv("./data/song_hums.csv");
@@ -197,10 +166,6 @@ export default {
 			d.song_rank = +d.song_rank;
 		});
 		motm_tokenized.sort((a, b) => d3.descending(a.song_rank, b.song_rank));
-		// motm_tokenized = motm_tokenized.filter(
-		// 	(d) => d.song_name != "Beautiful Trip"
-		// );
-
 		this.motm_tokenized = motm_tokenized;
 
 		let major_albums = album_hums.map((d) => d.album_name);
@@ -227,34 +192,40 @@ export default {
 	methods: {
 		watchResize: function () {
 			// * Only trigger resize if width changes
-			// ! Make this for mobile only, in each of the charts resize events
+			// * Moreover, only change height if we are already on a large device
+			// * Prevents rerender on mobile scroll (with URL bar bug)
 			// https://stackoverflow.com/questions/8898412/iphone-ipad-triggering-unexpected-resize-events
-			if (window.innerWidth != this.windowWidth) {
-				this.width =
-					window.innerWidth < 1000
-						? window.innerWidth * 0.9
-						: window.innerWidth * 0.5;
-				this.height = window.innerHeight * 0.8;
-				this.largerChartWidth = window.innerWidth * 0.8;
-				this.windowWidth = window.innerWidth;
-				this.checkWidthForWarning();
-			}
-		},
-		checkWidthForWarning: function () {
-			if (window.innerWidth < 600) {
-				this.showMobileNudge = true;
+			if (window.innerWidth < 768) {
+				if (window.innerWidth != this.windowWidth) {
+					this.width =
+						window.innerWidth < 968
+							? window.innerWidth * 0.9
+							: window.innerWidth * 0.6;
+					this.height = window.innerHeight * 0.8;
+					this.windowWidth = window.innerWidth;
+					// this.checkWidthForWarning();
+				}
 			} else {
-				this.showMobileNudge = false;
+				this.width =
+					window.innerWidth < 968
+						? window.innerWidth * 0.9
+						: window.innerWidth * 0.6;
+				this.height = window.innerHeight * 0.8;
+				this.windowWidth = window.innerWidth;
+				// this.checkWidthForWarning();
 			}
 		},
-		visibilityChanged(isVisible, entry, section) {
-			this.isVisible = isVisible;
-			if (entry.isIntersecting) {
-				this.section = section;
-			}
+		// checkWidthForWarning: function () {
+		// 	window.innerWidth > 600
+		// 		? (this.showMobileNudge = false)
+		// 		: (this.showMobileNudge = true);
+		// },
+	},
+	computed: {
+		responsiveOffset() {
+			return this.windowWidth > 600 ? 0.5 : 0.85;
 		},
 	},
-	computed: {},
 	created() {
 		window.addEventListener("resize", debounce(this.watchResize, 100)); // this.watchResize
 	},
@@ -307,9 +278,9 @@ text {
 }
 
 .step {
-	padding: 2%;
+	padding: 3%;
 	min-width: 300px;
-	width: 60%;
+	width: 90%;
 	margin: 30rem auto; // 0 auto 50%
 	background-color: $white-alt;
 	border: 1px solid #cecece;
@@ -322,7 +293,7 @@ text {
 	line-height: 1.5;
 	z-index: 999;
 	opacity: 0.85;
-	font-family: $font-serif;
+	font-family: $font-sans;
 	// border-radius: 3px;
 
 	.highlight-text {
@@ -356,11 +327,6 @@ text {
 			background-position: left;
 		}
 	}
-
-	// Adding an empty modifier to the last section of each Scrollama instance
-	&.empty {
-		visibility: hidden;
-	}
 }
 
 .scrollama-steps {
@@ -374,6 +340,49 @@ text {
 .step button {
 	pointer-events: auto;
 }
+
+.scrollama-container {
+	display: flex;
+	flex-direction: row-reverse;
+	.scrollama-graphic {
+		flex: 2;
+		height: 95%;
+		// top: 10vh;
+	}
+	.scrollama-steps {
+		flex: 1;
+	}
+
+	@media screen and (max-width: 968px) {
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	margin-bottom: 500px;
+}
+
+.graphic {
+	height: 100%;
+	margin: 0 3rem;
+	// border: 1px solid #ccc;
+	font-size: 10rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+// .step {
+// 	padding: 20vh 0;
+// 	margin: 0 3rem;
+// 	margin-bottom: 10vh;
+// 	border: 1px solid #ccc;
+// 	display: flex;
+// 	align-items: center;
+// 	justify-content: center;
+// 	&:last-child {
+// 		margin-bottom: 0;
+// 	}
+// }
 
 // TEXT HIGHLIGHTING AND OTHER GLOBALs
 // no animation text-highlight

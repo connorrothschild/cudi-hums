@@ -32,8 +32,8 @@
 						margin: 1.5rem auto;
 					"
 				/>
-				<p class="content">ndfa</p>
-				<p class="content">jkdfha</p>
+				<p class="content"></p>
+				<p class="content"></p>
 			</div>
 		</div>
 	</section>

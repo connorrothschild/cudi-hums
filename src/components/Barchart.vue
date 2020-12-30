@@ -29,11 +29,7 @@
 			</p>
 		</div>
 		<!-- Last step should remain active even when .step.empty enters viewport -->
-		<div
-			class="step"
-			:class="{ active: (2 == currStep) | (3 == currStep) }"
-			data-step-no="2"
-		>
+		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
 			<p class="content">
 				When we organize these albums by their release year, it becomes evident
 				that Kid Cudi has been humming more and more as his discography has
@@ -46,8 +42,6 @@
 				Cudi's albums have become progressively more hum-centric over time.
 			</p>
 		</div>
-		<!-- BUFFER CLASS -->
-		<div class="step empty"></div>
 	</Scrollama>
 </template>
 
@@ -62,6 +56,8 @@ export default {
 		data: Array,
 		containerHeight: Number,
 		containerWidth: Number,
+		windowWidth: Number,
+		responsiveOffset: Number,
 	},
 	mounted() {
 		this.setupChart();
@@ -83,11 +79,7 @@ export default {
 			response: {},
 		};
 	},
-	computed: {
-		responsiveOffset() {
-			return window.innerWidth > 600 ? 0.5 : 0.85;
-		},
-	},
+	computed: {},
 	methods: {
 		stepEnterHandler: function ({ index, direction, element }) {
 			// Grab for resize, see below
@@ -116,15 +108,6 @@ export default {
 					"Speedin’ Bullet 2 Heaven",
 					"Indicud"
 				);
-			}
-			if (index == 3) {
-				// d3.selectAll(".year-text").remove().exit();
-				// this.sortBarsByYear();
-				// this.highlightBars(
-				// 	"Man on the Moon III: The Chosen",
-				// 	"Speedin’ Bullet 2 Heaven",
-				// 	"Indicud"
-				// );
 			}
 		},
 		percentFormat: d3.format(".1%"),
@@ -263,7 +246,7 @@ export default {
 			this.width = width;
 
 			// Append the svg object to the div
-			var svg = d3
+			const svg = d3
 				.select("#barchart")
 				.append("svg")
 				.attr("width", width + margin.left + margin.right)
@@ -337,7 +320,6 @@ export default {
 				.attr("x", -this.albumCoverSize / 2)
 				.attr("y", 1);
 
-			// Tooltip
 			const tip = d3
 				.select("#barchart")
 				.append("div")
@@ -358,22 +340,20 @@ export default {
 				.on("mouseover", function (event, d) {
 					tip.transition(300).style("opacity", 1);
 					tip.html(`<p class='heading'> ${d.album_name} </p>
-							  <p> ${self.percentFormat(d.percent_hums)} hums</p>`);
+					  <p> ${self.percentFormat(d.percent_hums)} hums</p>`);
 
-					const right = event.clientX > window.innerWidth / 2;
-					const offset = right ? tip.node().offsetWidth + 15 : -15;
-
-					tip
-						.style("left", event.clientX - offset + "px")
-						.style("top", event.clientY + "px");
+					const largeScreen = self.windowWidth > 968;
+					const xPos = largeScreen
+						? event.clientX - width / 2 - margin.left
+						: event.clientX;
+					tip.style("left", xPos + "px").style("top", event.clientY + "px");
 				})
 				.on("mousemove", function (event, d) {
-					const right = event.clientX > window.innerWidth / 2;
-					const offset = right ? tip.node().offsetWidth + 15 : -15;
-
-					tip
-						.style("left", event.clientX - offset + "px")
-						.style("top", event.clientY + "px");
+					const largeScreen = self.windowWidth > 968;
+					const xPos = largeScreen
+						? event.clientX - width / 2 - margin.left
+						: event.clientX;
+					tip.style("left", xPos + "px").style("top", event.clientY + "px");
 				})
 				.on("mouseout", function (d) {
 					tip.transition(300).style("opacity", 0);
@@ -398,6 +378,9 @@ export default {
 	},
 	watch: {
 		containerWidth: function () {
+			this.watchResize();
+		},
+		containerHeight: function () {
 			this.watchResize();
 		},
 	},
@@ -438,6 +421,7 @@ export default {
 #barchart div.tooltip {
 	position: absolute;
 	text-align: center;
+	text-anchor: start;
 	font-family: $font-sans;
 	font-size: 14px;
 	pointer-events: none;
@@ -446,6 +430,7 @@ export default {
 	padding: 5px 10px;
 	border-radius: 3px;
 	z-index: 100;
+	width: auto;
 	border: 1px solid grey;
 
 	// @media screen and(max-width:480px) {

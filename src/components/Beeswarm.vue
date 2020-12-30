@@ -72,15 +72,9 @@
 			</p>
 		</div>
 		<!-- Last step should remain active even when .step.empty enters viewport -->
-		<div
-			class="step"
-			:class="{ active: (4 == currStep) | (5 == currStep) }"
-			data-step-no="4"
-		>
+		<div class="step" :class="{ active: 4 == currStep }" data-step-no="4">
 			<p class="content">FINISH THIS</p>
 		</div>
-		<!-- BUFFER CLASS -->
-		<div class="step empty"></div>
 	</Scrollama>
 </template>
 
@@ -97,10 +91,11 @@ export default {
 		album_data: Array,
 		containerWidth: Number,
 		containerHeight: Number,
+		windowWidth: Number,
+		responsiveOffset: Number,
 	},
 	mounted() {
 		this.setupChart();
-		// this.transitionCircles();
 	},
 	components: {
 		Scrollama,
@@ -119,11 +114,7 @@ export default {
 			response: {},
 		};
 	},
-	computed: {
-		responsiveOffset() {
-			return window.innerWidth > 600 ? 0.5 : 0.85;
-		},
-	},
+	computed: {},
 	methods: {
 		stepEnterHandler({ element, index, direction }) {
 			this.response = { element, index, direction };
@@ -218,13 +209,17 @@ export default {
 			this.width = width;
 			this.height = height;
 
+			let data = this.data.filter((d) =>
+				this.major_albums.includes(d.album_name)
+			);
+
 			// Select whichever is smaller; the chart width / data.length (so each square fits perfectly)
 			// Or the left margin (rect size should never be greater than margin.left lest overflow)
 			const albumCoverSize = Math.min(
 				height / this.major_albums.length,
 				margin.left
 			);
-			this.jitterWidth = 0; // *Optional: remove jitter by making this 0
+			this.jitterWidth = 0; // * Optional: remove jitter by making this 0
 
 			// Append the svg object to the div
 			const svg = d3
@@ -234,10 +229,6 @@ export default {
 				.attr("height", height + margin.top + margin.bottom)
 				.append("g")
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-			let data = this.data.filter((d) =>
-				this.major_albums.includes(d.album_name)
-			);
 
 			this.xScale = d3.scaleLinear().domain([-0.005, 0.5]).range([0, width]);
 
@@ -329,21 +320,18 @@ export default {
 					tip.transition(300).style("opacity", 1);
 					tip.html(`<p class='heading'> ${d.song_name} </p>
 							  <p> ${self.percentFormat(d.percent_hums)} hums</p>`);
-
-					const right = event.clientX > window.innerWidth / 2;
-					const offset = right ? tip.node().offsetWidth + 15 : -15;
-
-					tip
-						.style("left", event.clientX - offset + "px")
-						.style("top", event.clientY + "px");
+					const largeScreen = self.windowWidth > 968;
+					const xPos = largeScreen
+						? event.clientX - width / 2 - margin.left
+						: event.clientX;
+					tip.style("left", xPos + "px").style("top", event.clientY + "px");
 				})
 				.on("mousemove", function (event, d) {
-					const right = event.clientX > window.innerWidth / 2;
-					const offset = right ? tip.node().offsetWidth + 15 : -15;
-
-					tip
-						.style("left", event.clientX - offset + "px")
-						.style("top", event.clientY + "px");
+					const largeScreen = self.windowWidth > 968;
+					const xPos = largeScreen
+						? event.clientX - width / 2 - margin.left
+						: event.clientX;
+					tip.style("left", xPos + "px").style("top", event.clientY + "px");
 				})
 				.on("mouseout", function (d) {
 					tip.transition(300).style("opacity", 0);
@@ -367,6 +355,9 @@ export default {
 	},
 	watch: {
 		containerWidth: function () {
+			this.watchResize();
+		},
+		containerHeight: function () {
 			this.watchResize();
 		},
 	},
@@ -427,6 +418,7 @@ export default {
 	border-radius: 3px;
 	z-index: 100;
 	border: 1px solid grey;
+	max-width: 300px;
 
 	// @media screen and(max-width:480px) {
 	// 	display: none;

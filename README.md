@@ -22,7 +22,7 @@
 ### Nice to have
 * ~~Where hums occur in a song (beginning, end, middle)~~
     * ~~Strip plot per song~~
-    * ~~When does Cudi hum? Intro, bridge, chorus, outro ~~
+    * ~~When does Cudi hum? Intro, bridge, chorus, outro~~
 * Hums compared to critical reception (Pitchfork, Metacritic)
 * Hums by popularity (`song_pageviews` in my data)
 * Hums per song compared to average sentiment per song (no way there's any relationship here?)
@@ -36,9 +36,9 @@
 - [ ] Bar chart transitions race (heh) on scroll
 - [ ] Add legend to stripplot barchart?
 - [ ] A lil explainer like 'Know literally nothing about Kid Cudi? Click here! With modal popup or smth
-- [ ] Tooltip should follow mouse on mousemove? Or static positioning
 
 ## Things I fixed
+- [x] ~~Tooltip should follow mouse on mousemove? Or static positioning~~
 - [x] ~~Add axis titles~~
 - [x] ~~On mobile, the last step only lasts for a few pixels before losing `.active`~~
 - [x] ~~Disable stripplot tooltip on mobile?~~
