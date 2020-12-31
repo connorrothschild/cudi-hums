@@ -15,9 +15,11 @@
 		<!-- SCROLLAMA STEPS -->
 		<div class="step" :class="{ active: 0 == currStep }" data-step-no="0">
 			<p class="content">
-				By breaking down each album into its constituent songs, we can start to
-				see which tracks contribute the most to Cudi's hum-heavy albums. Here,
-				each circle
+				By breaking down each album into its constituent songs, we start to see
+				which tracks contribute the most to Cudi's hum-heavy albums.
+			</p>
+			<p class="content">
+				Here, each circle
 				<svg width="10" height="10">
 					<circle cx="50%" cy="50%" r="4" fill="#cecece" stroke="black" />
 				</svg>
@@ -30,14 +32,14 @@
 				<span class="highlight-text">Man on the Moon III: The Chosen</span>.
 			</p>
 			<p class="content">
-				You'll notice that most of the songs have a moderate proportion of hums
-				(between 0 and 10%), but that there are a few 'top songs' that far
-				outpace the rest.
+				You'll notice that most of the songs on this album ave a moderate
+				proportion of hums (between 0 and 10%), but that there are a few 'top
+				songs' that far outpace the rest.
 			</p>
 		</div>
 		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
 			<p class="content">
-				This is the album's introduction, titled
+				Leading the field is the album's introduction, titled
 				<span class="highlight-text">Beautiful Trip</span>. In this track, a
 				remarkable 43% of the lyrics are hums.
 			</p>
@@ -69,16 +71,27 @@
 				allow="encrypted-media"
 			></iframe>
 			<p class="content after-embed">
-				Near the middle of this song, Kid Cudi alternates between various
-				ad-libs such as 'na', 'hmmm', and 'ooh.'
+				Near the middle of this song, Kid Cudi alternates between various sounds
+				such as 'nah' and 'hmm.'
 				<br /><span class="has-text-weight-semibold"
-					>In total, the track includes 84 hums (26% of the song).</span
+					>In total, the track includes 84 hums (making hums 26% of this song's
+					lyrics).</span
 				>
 			</p>
 		</div>
 		<!-- Last step should remain active even when .step.empty enters viewport -->
 		<div class="step" :class="{ active: 4 == currStep }" data-step-no="4">
-			<p class="content">FINISH THIS</p>
+			<p class="content">
+				It seems as if Kid Cudi has a 'sweet spot' for his proportion of
+				hums—somewhere in the range of 0 to 10%. Occasionally, he goes above and
+				beyond and delivers especially hum-heavy tracks.
+			</p>
+			<p class="content">
+				Of note, Kid Cudi rarely omits hums entirely from a song.
+				<span class="has-text-weight-semibold"
+					>Of the 132 songs in this view, only 20 had zero hums.</span
+				>
+			</p>
 		</div>
 	</Scrollama>
 </template>
@@ -143,6 +156,9 @@ export default {
 			if (index == 3) {
 				this.highlightSong("Sept. 16");
 			}
+			if (index == 4) {
+				this.regularCircles();
+			}
 		},
 		percentFormat: d3.format(".1%"),
 		transitionCircles: function () {
@@ -162,8 +178,6 @@ export default {
 				.transition("transitionCircles")
 				.duration(1000)
 				.attr("cx", (d) => xScale(d.percent_hums));
-
-			this.alreadyTriggered = true;
 		},
 		regularCircles: function () {
 			const { circles, xScale, yScale, colorScale, jitterWidth } = this;
@@ -196,7 +210,7 @@ export default {
 			const { circles } = this;
 			circles
 				.transition("highlightSong")
-				.duration(2000)
+				.duration(1000)
 				.attr("stroke", (d) => (d.song_name == song ? "white" : "black"))
 				.attr("opacity", (d) => (d.song_name == song ? 1 : 0.3))
 				.attr("fill", (d) => (d.song_name == song ? "#ce496a" : "#4C6DBC"))

@@ -300,18 +300,22 @@ export default {
 				} else {
 					// Handle small screens differently
 					d3.selectAll(".stripplot-lines")
-						.transition("mobile-remove")
-						.duration(1000)
+						// .transition("mobile-remove")
+						// .duration(1000)
 						.attr("opacity", 0);
 				}
 				this.createBars("counts");
 			}
 			if (index == 8) {
-				this.bars.transition("barOpacity").duration(1000).attr("opacity", 1);
-				this.createBars("proportion");
+				if (direction == "down") {
+					this.createBars("proportion");
+				}
+				if (direction == "up") {
+					this.bars.transition("barOpacity").duration(1000).attr("opacity", 1);
+				}
 			}
 			if (index == 9) {
-				this.createBars("proportion");
+				// this.createBars("proportion");
 				this.highlightBars("Outro");
 			}
 		},
@@ -608,10 +612,11 @@ export default {
 				.attr("height", (d) => this.yBar(0) - this.yBar(d.value))
 				.attr("y", (d) => this.yBar(d.value))
 				.attr("opacity", 1);
-			// }
 		},
 		highlightBars: function (section) {
-			this.createBars("proportion");
+			if (this.keys != ["Hum_pct", "Regular_pct"]) {
+				this.createBars("proportion");
+			}
 			// The way that I processed data means I can't access d => d.section_name from the data
 			// Here, I manually define the sections and reverse lookup the index from domain
 			const sections = ["Intro", "Verse", "Chorus", "Outro"];
@@ -639,7 +644,12 @@ export default {
 			const { svg, width, margin, lines, data } = this;
 			d3.select(".y.axis.stripplot").remove();
 			d3.select(".x.axis.stripplot").classed("barchart", false);
-			d3.selectAll(".stripplot-bars").attr("height", 0);
+			d3.selectAll(".stripplot-bars")
+				.transition("undoBars")
+				.duration(2000)
+				// .delay(1000)
+				.attr("y", this.yBar(0))
+				.attr("height", 0);
 
 			// Y axis
 			svg
@@ -712,61 +722,70 @@ export default {
 				.attr("class", "stripplot-lines")
 				.style("stroke-width", computedStrokeWidthReg);
 
+			lines
+				.attr("y1", (d) => this.yScale(d.song_name) + this.computedHeightBuffer)
+				.attr("y2", (d) => this.yScale(d.song_name) - this.computedHeightBuffer)
+				.attr("x1", 0)
+				.attr("x2", 0);
+
 			const tip = d3
 				.select("#stripplot")
 				.append("div")
 				.attr("class", "tooltip")
 				.style("opacity", 0);
 
-			const self = this;
-			lines
-				.on("mouseover", function (event, d) {
-					d3.select(this)
-						.style("stroke-width", computedStrokeWidthBig)
-						.attr(
-							"y1",
-							(d) => self.yScale(d.song_name) + self.computedHeightBuffer * 3
-						)
-						.attr(
-							"y2",
-							(d) => self.yScale(d.song_name) - self.computedHeightBuffer * 3
+			// Only enable tooltip and touch interactions on non-mobile devices
+			if (this.windowWidth > 480) {
+				const self = this;
+				lines
+					.on("mouseover", function (event, d) {
+						d3.select(this)
+							.style("stroke-width", computedStrokeWidthBig)
+							.attr(
+								"y1",
+								(d) => self.yScale(d.song_name) + self.computedHeightBuffer * 3
+							)
+							.attr(
+								"y2",
+								(d) => self.yScale(d.song_name) - self.computedHeightBuffer * 3
+							);
+
+						tip.transition(100).style("opacity", 1);
+						tip.html(
+							d.category == "Hum"
+								? "<span class='has-text-pink'>" + d.bigram + "</span>"
+								: d.bigram
 						);
 
-					tip.transition(100).style("opacity", 1);
-					tip.html(
-						d.category == "Hum"
-							? "<span class='has-text-pink'>" + d.bigram + "</span>"
-							: d.bigram
-					);
+						const largeScreen = self.windowWidth > 968;
+						const xPos = largeScreen
+							? event.clientX - width / 2 - margin.left - 25
+							: event.clientX;
+						tip.style("left", xPos + "px").style("top", event.clientY + "px");
+					})
+					.on("mousemove", function (event, d) {
+						const largeScreen = self.windowWidth > 968;
+						const xPos = largeScreen
+							? event.clientX - width / 2 - margin.left - 25
+							: event.clientX;
+						tip.style("left", xPos + "px").style("top", event.clientY + "px");
+					})
 
-					const largeScreen = self.windowWidth > 968;
-					const xPos = largeScreen
-						? event.clientX - width / 2 - margin.left
-						: event.clientX;
-					tip.style("left", xPos + "px").style("top", event.clientY + "px");
-				})
-				.on("mousemove", function (event, d) {
-					const largeScreen = self.windowWidth > 968;
-					const xPos = largeScreen
-						? event.clientX - width / 2 - margin.left
-						: event.clientX;
-					tip.style("left", xPos + "px").style("top", event.clientY + "px");
-				})
+					.on("mouseout", function (d) {
+						d3.select(this)
+							.style("stroke-width", computedStrokeWidthReg)
+							.attr(
+								"y1",
+								(d) => self.yScale(d.song_name) + self.computedHeightBuffer
+							)
+							.attr(
+								"y2",
+								(d) => self.yScale(d.song_name) - self.computedHeightBuffer
+							);
 
-				.on("mouseout", function (d) {
-					d3.select(this)
-						.style("stroke-width", computedStrokeWidthReg)
-						.attr(
-							"y1",
-							(d) => self.yScale(d.song_name) + self.computedHeightBuffer
-						)
-						.attr(
-							"y2",
-							(d) => self.yScale(d.song_name) - self.computedHeightBuffer
-						);
-
-					tip.transition(100).style("opacity", 0);
-				});
+						tip.transition(100).style("opacity", 0);
+					});
+			}
 
 			this.lines = lines;
 			this.svg = svg;
@@ -927,10 +946,6 @@ export default {
 	padding: 5px;
 	border-radius: 3px;
 	// border: 1px solid $white-alt
-
-	@media screen and(max-width:480px) {
-		display: none;
-	}
 }
 
 .x.axis.stripplot:not(.barchart) g.tick:nth-child(2) text {
