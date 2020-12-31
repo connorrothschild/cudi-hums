@@ -32,7 +32,7 @@
 				<span class="highlight-text">Man on the Moon III: The Chosen</span>.
 			</p>
 			<p class="content">
-				You'll notice that most of the songs on this album ave a moderate
+				You'll notice that most of the songs on this album have a moderate
 				proportion of hums (between 0% and 10%), but that there are a few 'top
 				songs' that far outpace the rest.
 			</p>
@@ -83,8 +83,8 @@
 		<div class="step" :class="{ active: 4 == currStep }" data-step-no="4">
 			<p class="content">
 				It seems as if Kid Cudi has a 'sweet spot' for his proportion of
-				hums—somewhere in the range of 0 to 10%. Occasionally, he goes above and
-				beyond and delivers especially hum-heavy tracks.
+				hums—somewhere in the range of 0% to 10%. Occasionally, he goes above
+				and beyond and delivers especially hum-heavy tracks.
 			</p>
 			<p class="content">
 				Of note, Kid Cudi rarely omits hums entirely from a song.

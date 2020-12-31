@@ -22,8 +22,7 @@
 								>
 									<!-- Subtitle -->
 									<span class="highlight-text-static mobile-toggle px-2 py-1"
-										>An in-depth exploration of a question you never knew needed
-										asking.</span
+										>An extensive analysis of music's most famous hum.</span
 									>
 								</p>
 							</div>
@@ -88,7 +87,7 @@
 				</div>
 				<div>
 					<p class="content">
-						Or maybe you've read this Reddit post from an unsuspecting fan:
+						Or maybe you've read this Reddit post from a surprised listener:
 					</p>
 					<div style="max-width: 600px; margin: 0 auto; background: whitesmoke">
 						<blockquote class="reddit-card" data-card-created="1608866419">
@@ -204,7 +203,7 @@ export default {
 		float: left;
 		font-family: Georgia;
 		font-size: 120px;
-		line-height: 120px;
+		line-height: 80px;
 		padding-top: 4px;
 		padding-right: 8px;
 		padding-left: 3px;
@@ -224,13 +223,13 @@ export default {
 }
 
 .big-subtitle {
-	font-size: 1.7vw;
+	font-size: 2vw;
 	text-align: left;
 	color: $white-alt;
 
 	@media screen and (max-width: 768px) {
 		text-align: center;
-		font-size: 1rem;
+		font-size: 1.25rem;
 	}
 }
 

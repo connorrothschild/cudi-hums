@@ -28,7 +28,8 @@
 				:data="tableData"
 				:sticky-header="true"
 				:mobile-cards="false"
-				no-border-collapse="true"
+				:no-border-collapse="true"
+				:borderless="true"
 				class="myTable"
 				default-sort="tableData.percent_hums"
 			>
@@ -155,6 +156,7 @@ export default {
 			color: white;
 			border-collapse: separate;
 			border-spacing: 0;
+			border: none !important;
 		}
 	}
 	.table-wrapper {
@@ -164,6 +166,12 @@ export default {
 		overflow-x: hidden;
 		// }
 	}
+}
+
+.b-table .table,
+.b-table,
+.table {
+	border: none !important;
 }
 
 .switch input[type="checkbox"]:checked + .check {
