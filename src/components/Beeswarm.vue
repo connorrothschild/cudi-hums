@@ -50,7 +50,7 @@
 				allow="encrypted-media"
 			></iframe>
 			<p class="content after-embed">
-				But this intro track lasts a mere 37 seconds, and around half of that
+				But the intro track lasts a mere 37 seconds, and around half of that
 				duration is spent humming. Clearly, this is a poor example for our
 				purposes.
 			</p>
@@ -72,7 +72,7 @@
 				Near the middle of this song, Kid Cudi alternates between various
 				ad-libs such as 'na', 'hmmm', and 'ooh.'
 				<br /><span class="has-text-weight-semibold"
-					>In total, the track includes 84 hums (out of 324 total words).</span
+					>In total, the track includes 84 hums (26% of the song).</span
 				>
 			</p>
 		</div>

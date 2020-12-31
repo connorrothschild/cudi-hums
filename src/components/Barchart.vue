@@ -46,7 +46,7 @@
 				Although revealing, an album-by-album breakdown doesn't fully answer the
 				question of how often Kid Cudi hums. Sure, we know that Kid Cudi has
 				been humming more in recent years, and that his most recent album was
-				composed of 9% of hums.
+				composed of 8% of hums.
 			</p>
 			<p class="content">
 				But there's much more complexity to our question, which can be
