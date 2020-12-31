@@ -28,8 +28,7 @@
 				:data="tableData"
 				:sticky-header="true"
 				:mobile-cards="false"
-				height="500px"
-				sort-icon="chevron-up"
+				no-border-collapse="true"
 				class="myTable"
 				default-sort="tableData.percent_hums"
 			>
@@ -154,14 +153,16 @@ export default {
 		th {
 			background-color: $background !important;
 			color: white;
+			border-collapse: separate;
+			border-spacing: 0;
 		}
 	}
 	.table-wrapper {
 		max-height: 60vh;
-		// On large screens, don't allow horizontal scroll
-		@media screen and (min-width: 468px) {
-			overflow-x: hidden;
-		}
+		// On small screens, don't allow horizontal scroll
+		// @media screen and (max-width: 468px) {
+		overflow-x: hidden;
+		// }
 	}
 }
 

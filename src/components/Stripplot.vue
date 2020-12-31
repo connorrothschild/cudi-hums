@@ -43,8 +43,8 @@
 				<span class="has-text-weight-semibold">Man on the Moon III</span>.
 				<span class="highlight-text blue">Blue lines</span>
 				represent "regular" lyrics while
-				<span class="highlight-text">pink lines</span> represent "hums" and
-				other sounds, such as as 'oooh' and 'nah.'
+				<span class="highlight-text">pink lines</span> represent hums and
+				similar sounds, such as as 'oooh' and 'nah.'
 			</p>
 			<p class="content">
 				The songs are different durations (notice how short
@@ -232,6 +232,9 @@ export default {
 			x0Bar: null,
 			x1Bar: null,
 			yBar: null,
+			groupedSectionData: null,
+			groupedXScale: null,
+			groupedXAxisBuffer: null,
 			unclicked: true,
 			onlyHumsToggled: false,
 			response: {},
@@ -259,6 +262,9 @@ export default {
 			// * Direction-agnostic handling of transitions
 			// * Only trigger transition if elements don't yet have positions on chart (proxy: x1)
 			if (index == 0) {
+				// Remove bars if they exist bc of super quick scrolling
+				this.undoBars();
+
 				if (!d3.select(".stripplot-lines").node().hasAttribute("x1")) {
 					this.transitionStrips();
 					this.stripByPosition();
@@ -268,71 +274,77 @@ export default {
 			}
 
 			if (index == 1) {
+				this.undoBars();
 				this.stripByPosition();
 			}
 			if (index == 2) {
+				this.undoBars();
+
 				// * Normalize
 				this.stripByNormalizedPosition();
 			}
 			if (index == 3 && direction == "down") {
+				this.undoBars();
+
 				// * Highlight hums only
 				this.stripByNormalizedPosition();
 				this.filterHums();
 			}
 			if (index == 3 && direction == "up") {
+				this.undoBars();
+
 				this.defaultHeight();
 				this.defaultOpacity();
 			}
 			if (index == 4) {
-				// ! Highlight a few hums...
+				this.undoBars();
 
+				// Highlight a few hums...
 				this.filterHums();
 				this.highlightSong("The Void");
 			}
 			if (index == 5) {
-				// ! Highlight a few hums...
+				this.undoBars();
 
-				this.filterHums();
+				// Highlight a few hums...
+				if (direction == "up") {
+					this.filterHums();
+				}
 				this.highlightSong("She Knows This");
 			}
 			if (index == 6) {
+				this.undoBars();
+
 				this.stripByNormalizedPosition();
 				this.defaultHeight();
 			}
 			if (index == 7) {
 				// When does Cudi hum? Intro, chorus, bridge, outro
-				// if (this.windowWidth > 968) {
-				// if (direction == "down") {
-				this.groupBySection();
-				// }
-				// } else {
-				// 	// Handle small screens differently
-				// 	d3.selectAll(".stripplot-lines")
-				// 		// .transition("mobile-remove")
-				// 		// .duration(1000)
-				// 		.attr("opacity", 0);
-				// }
-				// this.createBars("counts");
 				if (direction == "up") {
-					this.undoBars();
+					this.undoBarsAndGroup();
+				}
+				if (direction == "down") {
 					this.groupBySection();
 				}
 			}
 			if (index == 8) {
-				// When does Cudi hum? Intro, chorus, bridge, outro
-				this.dropLines();
-				this.createBars("counts");
+				if (this.windowWidth > 600) {
+					this.dropLines();
+				} else {
+					// Handle mobile differently
+					this.lines
+						.transition("mobileTransitionLines")
+						.attr("opacity", 0)
+						.end()
+						.then(() => {
+							this.rawCountBars();
+						});
+				}
 			}
 			if (index == 9) {
-				if (direction == "down") {
-					this.createBars("proportion");
-				}
-				if (direction == "up") {
-					this.bars.transition("barOpacity").duration(1000).attr("opacity", 1);
-				}
+				this.proportionBars();
 			}
 			if (index == 10) {
-				// this.createBars("proportion");
 				this.highlightBars("Outro");
 			}
 		},
@@ -511,23 +523,18 @@ export default {
 			d3.select(".x.axis.stripplot").call(xAxis);
 		},
 		groupBySection: function () {
-			const { lines, svg, data, width, height, yScale, x0Bar } = this;
-
-			const sections_data_good = this.sections_data
-				.filter(
-					(d) =>
-						(d.section_name != "Pre-Chorus") &
-						(d.section_name != "Post-Chorus") &
-						(d.section_name != "Bridge") &
-						(d.section_name != "Interlude")
-				)
-				.map((d) => d.section_name);
-
-			const newXScale = d3
-				.scalePoint()
-				.domain(sections_data_good)
-				.range([0, this.width])
-				.padding(0.5);
+			const {
+				lines,
+				svg,
+				data,
+				width,
+				height,
+				yScale,
+				x0Bar,
+				groupedSectionData,
+				groupedXScale,
+				groupedXAxisBuffer,
+			} = this;
 
 			// X Axis
 			d3.select(".x.axis.stripplot").remove();
@@ -537,28 +544,23 @@ export default {
 				.call(d3.axisBottom(x0Bar).ticks(0).tickSizeOuter(0))
 				.attr("class", "x axis stripplot barchart");
 
-			// Width divided by 8 bars, plus padding between three of them
-			const barWidth = width / 8;
-			const barWidthPadding = barWidth * 0.3;
-			const xAxisBuffer = barWidth - barWidthPadding;
-
 			// Only run this if the lines exist
 			// if (d3.select(".stripplot-lines").node().hasAttribute("x1")) {
 			lines
 				.transition("groupBySection")
 				.duration(1000)
 				.attr("x1", (d) =>
-					sections_data_good.includes(d.section_name)
+					groupedSectionData.includes(d.section_name)
 						? d.category == "Hum"
-							? newXScale(d.section_name)
-							: newXScale(d.section_name) + xAxisBuffer
+							? groupedXScale(d.section_name)
+							: groupedXScale(d.section_name) + groupedXAxisBuffer
 						: width * 1.1
 				)
 				.attr("x2", (d) =>
-					sections_data_good.includes(d.section_name)
+					groupedSectionData.includes(d.section_name)
 						? d.category == "Hum"
-							? newXScale(d.section_name) - xAxisBuffer
-							: newXScale(d.section_name)
+							? groupedXScale(d.section_name) - groupedXAxisBuffer
+							: groupedXScale(d.section_name)
 						: width * 1.1
 				)
 				.attr("y1", (d) => yScale(d.song_name))
@@ -567,79 +569,101 @@ export default {
 			// }
 		},
 		dropLines: function () {
-			const { lines, svg, height, x0Bar } = this;
+			const { lines, svg, height, x0Bar, yScale } = this;
 
 			lines
 				.transition("dropLines")
 				.duration(1000)
 				.attr("y1", height)
 				.attr("y2", height)
-				.attr("opacity", 0);
+				.attr("opacity", 0)
+				.end()
+				.then(() => {
+					this.rawCountBars();
+				})
+				.catch((e) => {
+					console.log(e);
+				});
 		},
-		createBars: function (type) {
+		rawCountBars: function () {
 			// Grouped bar chart: https://observablehq.com/@d3/grouped-bar-chart
-			const {
-				svg,
-				height,
-				width,
-				sections_data,
-				barData,
-				groupKey,
-				keys,
-				humColorScale,
-				x0Bar,
-				x1Bar,
-				yBar,
-			} = this;
-
-			this.keys =
-				type == "proportion" ? ["Hum_pct", "Regular_pct"] : ["Hum", "Regular"];
-
-			// Define scales
-			this.humColorScale = d3
-				.scaleOrdinal()
-				.domain(this.keys)
-				.range(["#CE496A", "#4C6DBC"]);
-
-			// Subgroups
-			this.x1Bar = d3
-				.scaleBand()
-				.domain(this.keys)
-				.rangeRound([0, x0Bar.bandwidth()]);
-
-			// Y scale
-			this.yBar = d3
-				.scaleLinear()
-				.domain([0, d3.max(barData, (d) => d3.max(this.keys, (key) => d[key]))])
-				.nice()
-				.rangeRound([height, 0]);
+			const { svg, width } = this;
 
 			// Y Axis
-			const yAxisBar = d3
-				.axisLeft(this.yBar)
-				.ticks(type == "proportion" ? 3 : 4, type == "proportion" ? "%" : null)
-				.tickSize(-width);
+			const yAxisBar = d3.axisLeft(this.yBar).ticks(4).tickSize(-width);
 
 			svg
 				.select(".y.axis.stripplot")
 				.transition("y-axis-in")
 				.duration(1000)
-				.call(yAxisBar);
+				.call(yAxisBar)
+				.end()
+				.then(() => {
+					this.bars
+						.data((d) => this.keys.map((key) => ({ key, value: d[key] })))
+						.join("rect")
+						.transition("rawCountBars")
+						.duration(1000)
+						.attr("height", (d) => this.yBar(0) - this.yBar(d.value))
+						.attr("y", (d) => this.yBar(d.value))
+						.attr("opacity", 1);
+				})
+				.catch((e) => {
+					console.log(e);
+				});
+		},
+		proportionBars: function (type) {
+			// Grouped bar chart: https://observablehq.com/@d3/grouped-bar-chart
+			const { svg, height, width, barData, groupKey } = this;
 
-			this.bars
-				.data((d) => this.keys.map((key) => ({ key, value: d[key] })))
-				.join("rect")
-				.transition("modifyBars")
+			const keys = ["Hum_pct", "Regular_pct"];
+
+			// Define scales
+			const humColorScale = d3
+				.scaleOrdinal()
+				.domain(this.keys)
+				.range(["#CE496A", "#4C6DBC"]);
+
+			// Subgroups
+			const x1Bar = d3
+				.scaleBand()
+				.domain(this.keys)
+				.rangeRound([0, this.x0Bar.bandwidth()]);
+
+			// Y scale
+			const yBar = d3
+				.scaleLinear()
+				.domain([0, d3.max(barData, (d) => d3.max(keys, (key) => d[key]))])
+				.nice()
+				.rangeRound([height, 0]);
+
+			// Y Axis
+			const yAxisBar = d3.axisLeft(yBar).ticks(3, "%").tickSize(-width);
+
+			svg
+				.select(".y.axis.stripplot")
+				.transition("y-axis-in")
 				.duration(1000)
-				.delay(1000)
-				.attr("height", (d) => this.yBar(0) - this.yBar(d.value))
-				.attr("y", (d) => this.yBar(d.value))
-				.attr("opacity", 1);
+				.call(yAxisBar)
+				.end()
+				.then(() => {
+					this.bars
+						.data((d) => keys.map((key) => ({ key, value: d[key] })))
+						.join("rect")
+						.transition("proportionBars")
+						.duration(1000)
+						.attr("height", (d) => yBar(0) - yBar(d.value))
+						.attr("y", (d) => yBar(d.value))
+						.attr("opacity", 1);
+				})
+				.catch((e) => {
+					console.log(e);
+				});
 		},
 		highlightBars: function (section) {
-			if (this.keys != ["Hum_pct", "Regular_pct"]) {
-				this.createBars("proportion");
-			}
+			// if (this.keys != ["Hum_pct", "Regular_pct"]) {
+			// 	this.proportionBars();
+			// }
 			// The way that I processed data means I can't access d => d.section_name from the data
 			// Here, I manually define the sections and reverse lookup the index from domain
 			const sections = ["Intro", "Verse", "Chorus", "Outro"];
@@ -664,23 +688,46 @@ export default {
 				});
 		},
 		undoBars: function () {
-			const { svg, width, margin, lines, data } = this;
-			d3.select(".y.axis.stripplot").remove();
 			d3.select(".x.axis.stripplot").classed("barchart", false);
 			d3.selectAll(".stripplot-bars")
 				.transition("undoBars")
-				.duration(2000)
-				// .delay(1000)
 				.attr("y", this.yBar(0))
-				.attr("height", 0);
+				.attr("height", 0)
+				.end()
+				.then(() => {
+					d3.select(".y.axis.stripplot")
+						.transition("y-axis-in")
+						.duration(1000)
+						.call(
+							d3.axisLeft(this.yScale).tickSizeOuter(0).tickSize(-this.width)
+						);
+				});
+		},
+		undoBarsAndGroup: function () {
+			const { svg, width, margin, lines, data } = this;
 
-			// Y axis
-			svg
-				.append("g")
+			d3.select(".y.axis.stripplot")
+				.transition("y-axis-in")
+				.duration(1000)
 				.call(d3.axisLeft(this.yScale).tickSizeOuter(0).tickSize(-width))
-				.attr("class", "y axis stripplot")
-				.selectAll(".tick text")
-				.call(this.wrapYLabel, margin.left * 0.95);
+				.end()
+				.then(() => {
+					d3.selectAll(".stripplot-bars")
+						.transition("undoBarsAndGroup")
+						.attr("y", this.yBar(0))
+						.attr("height", 0)
+						// .attr("opacity", 0)
+						.end()
+						.then(() => {
+							this.groupBySection();
+						})
+						.catch((e) => {
+							console.log(e);
+						});
+				})
+				.catch((e) => {
+					console.log(e);
+				});
 		},
 		setupChart: function () {
 			const { data, computedStrokeWidth } = this;
@@ -732,7 +779,6 @@ export default {
 			svg
 				.append("g")
 				.attr("transform", "translate(0," + height + ")")
-				// .call(d3.axisBottom(this.xScale).ticks(0).tickSizeOuter(0))
 				.attr("class", "x axis stripplot");
 
 			//Binds data to strips
@@ -813,6 +859,28 @@ export default {
 			this.lines = lines;
 			this.svg = svg;
 
+			// SECTION GROUPING INFO
+			this.groupedSectionData = this.sections_data
+				.filter(
+					(d) =>
+						(d.section_name != "Pre-Chorus") &
+						(d.section_name != "Post-Chorus") &
+						(d.section_name != "Bridge") &
+						(d.section_name != "Interlude")
+				)
+				.map((d) => d.section_name);
+
+			this.groupedXScale = d3
+				.scalePoint()
+				.domain(this.groupedSectionData)
+				.range([0, width])
+				.padding(0.5);
+
+			// Width divided by 8 bars, plus padding between three of them
+			const groupedBarWidth = width / 8;
+			const groupedBarWidthPadding = groupedBarWidth * 0.3;
+			this.groupedXAxisBuffer = groupedBarWidth - groupedBarWidthPadding;
+
 			// BARCHART
 			this.barData = this.sections_data.filter(
 				(d) =>
@@ -891,7 +959,7 @@ export default {
 			if (this.response.index == 0) {
 				this.stripByPosition();
 			} else if (this.response.index > 6) {
-				this.createBars();
+				this.rawCountBars();
 			} else {
 				this.stripByNormalizedPosition();
 			}

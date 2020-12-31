@@ -4,16 +4,14 @@
 			<div class="hero-body">
 				<div class="container">
 					<!-- Image -->
-					<div class="is-inline-flex place-items-center">
-						<!-- Intro image -->
+					<!-- <div class="is-inline-flex place-items-center">
 						<figure class="image is-inline-block is-96x132">
 							<img class="is-inline-block shake" src="../assets/cudi.png" />
 						</figure>
-						<!-- Big intro title -->
 						<h1 class="title has-text-weight-light ml-3 has-text-white">
 							Hmmmmm
 						</h1>
-					</div>
+					</div> -->
 					<!-- Big outro text -->
 					<!-- <h1 class="title has-text-weight-light mt-5 has-text-black">
 						Awesome outro content goes here.

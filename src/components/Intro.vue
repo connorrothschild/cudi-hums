@@ -37,9 +37,9 @@
 			<div class="container better-container">
 				<p class="content has-dropcap">
 					Scott Ramon Seguro Mescudi is an international phenomenon. He's sold
-					16 million million records in the US and won two Grammys. Although his
-					primary genre is hip hop, he's also debuted an album at the top of
-					Billboard's Rock charts. His most listened to song has amassed nearly
+					16 million records in the US and won two Grammys. Although his primary
+					genre is hip hop, he's also debuted an album at the top of Billboard's
+					Rock charts. His most listened to song has amassed nearly
 					<em>500 million</em> listens on Spotify.
 				</p>
 				<div class="content">
@@ -141,7 +141,7 @@
 					>
 					and flagged each hum-like sound from Kid Cudi's discography. I
 					analyzed which songs had the most hums, which songs had the least, and
-					even where in the song hums most frequently occured.
+					even where in the song hums most frequently occurred.
 				</p>
 				<p class="content">
 					Technically, a hum is defined as any noise that Kid Cudi makes that is
@@ -154,7 +154,7 @@
 					<span class="has-text-weight-bold"
 						>community members' contributions</span
 					>, and different transcribers have different ways of recording hums.
-					More complete methodology can be found at the bottom of this site.
+					More complete methodology can be found at the bottom of the site.
 				</p>
 			</div>
 		</div>

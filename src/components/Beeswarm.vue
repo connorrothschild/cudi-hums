@@ -33,7 +33,7 @@
 			</p>
 			<p class="content">
 				You'll notice that most of the songs on this album ave a moderate
-				proportion of hums (between 0 and 10%), but that there are a few 'top
+				proportion of hums (between 0% and 10%), but that there are a few 'top
 				songs' that far outpace the rest.
 			</p>
 		</div>

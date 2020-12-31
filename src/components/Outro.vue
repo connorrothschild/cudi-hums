@@ -11,17 +11,19 @@
 					not in their verses.
 				</p>
 				<p class="content">
-					If one thing's clear, its that Kid Cudi does hum a lot. Of the 226
+					If one thing's clear, it's that Kid Cudi does hum a lot. Of the 226
 					songs attributed to Kid Cudi on Genius, only 53 contained zero hums.
-					The average Kid Cudi song had 11.5 hums—leading to an average of 3.6%
-					of total lyrics.
-				</p>
-				<p class="content">
 					The song that included the greatest number of Cudi hums was
 					<AudioPlayer
 						src="https://p.scdn.co/mp3-preview/168cc24ec737c08536d33d53215d511756d646dd?cid=774b29d4f13844c495f206cafdad9c86"
 						song="The Rage"
-					/>, which featured 129 hums. FINISH THIS
+					/>, which featured 129 hums. The average Kid Cudi song had 11.5
+					hums—leading to an average of 3.6% of total lyrics.
+				</p>
+				<p class="content">
+					You've heard of Scott Ramon Seguro Mescudi—also known as Kid Cudi.
+					You've heard his hums. And now you know how much he
+					<em>actually</em> hums.
 				</p>
 				<hr
 					style="
@@ -32,8 +34,6 @@
 						margin: 1.5rem auto;
 					"
 				/>
-				<p class="content"></p>
-				<p class="content"></p>
 			</div>
 		</div>
 	</section>

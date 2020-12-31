@@ -1,8 +1,6 @@
 # How Much Does Kid Cudi Hum?
 
-## Ideas 
-
-#### Need to have
+### Need to have
 * ~~Hums over time, by album etc.~~
 * ~~Tokenized view of lyrics of a song, with all of the hums highlighted~~
     * ~~Spotify embed for each of the songs in this section~~
@@ -13,11 +11,10 @@
 * ~~A table for user exploration~~
     * ~~Example: table in https://pudding.cool/2018/08/wiki-death/~~
     * ~~Tech: https://vuetifyjs.com/en/components/data-tables/~~
-* Conclusion prose? 
-    * Before or after song/lyric exploration?
-    * This should summarize the top level stats (e.g. *actually answer the question*)
-        * Number of hums, total (including the breakdown of hmm, hum, ahhh, etc.)
-        * Proportion over his entire discography
+* ~~Conclusion prose?~~
+    * ~~This should summarize the top level stats (e.g. *actually answer the question*)~~
+        * ~~Number of hums, total (including the breakdown of hmm, hum, ahhh, etc.)~~
+        * ~~Proportion over his entire discography~~
 
 ### Nice to have
 * ~~Where hums occur in a song (beginning, end, middle)~~
@@ -32,12 +29,11 @@
 * [Mobile responsiveness](https://pudding.cool/process/responsive-scrollytelling/)
 * [Techniques for Data Visualization on both Mobile & Desktop](https://www.visualcinnamon.com/2019/04/mobile-vs-desktop-dataviz)
 
-## Things I need to fix
-- [ ] Bar chart transitions race (heh) on scroll
-- [ ] Add legend to stripplot barchart?
-- [ ] A lil explainer like 'Know literally nothing about Kid Cudi? Click here! With modal popup or smth
+## Things I ~~need to~~ couldn't fix
+- [ ] The transition from stripplot to barchart doesn't render correctly on mobile
 
 ## Things I fixed
+- [x] Bar chart transitions race (heh) on scroll
 - [x] ~~Tooltip should follow mouse on mousemove? Or static positioning~~
 - [x] ~~Add axis titles~~
 - [x] ~~On mobile, the last step only lasts for a few pixels before losing `.active`~~
