@@ -138,7 +138,7 @@
 				for hums' locations in a standardized and consistent way.
 			</p>
 			<p class="content">
-				Here, the height of each bars corresponds to the count of
+				Here, the height of each bar corresponds to the count of
 				<span class="highlight-text">hums</span> and
 				<span class="highlight-text blue">regular lyrics</span> within each song
 				section throughout Cudi's most recent album.
@@ -161,11 +161,7 @@
 			</p>
 		</div>
 		<!-- Last step should remain active even when .step.empty enters viewport -->
-		<div
-			class="step"
-			:class="{ active: (9 == currStep) | (10 == currStep) }"
-			data-step-no="9"
-		>
+		<div class="step" :class="{ active: 9 == currStep }" data-step-no="9">
 			<p class="content">
 				This view makes it clear that Kid Cudi has a clear preference for
 				humming at the beginnings and ends of each song.
@@ -217,6 +213,13 @@ export default {
 			svg: null,
 			lines: null,
 			bars: null,
+			barData: null,
+			groupKey: null,
+			keys: null,
+			humColorScale: null,
+			x0Bar: null,
+			x1Bar: null,
+			yBar: null,
 			unclicked: true,
 			onlyHumsToggled: false,
 			response: {},
@@ -290,8 +293,16 @@ export default {
 			}
 			if (index == 7) {
 				// When does Cudi hum? Intro, chorus, bridge, outro
-				if (direction == "down") {
-					this.groupBySection();
+				if (this.windowWidth > 968) {
+					if (direction == "down") {
+						this.groupBySection();
+					}
+				} else {
+					// Handle small screens differently
+					d3.selectAll(".stripplot-lines")
+						.transition("mobile-remove")
+						.duration(1000)
+						.attr("opacity", 0);
 				}
 				this.createBars("counts");
 			}
@@ -532,39 +543,39 @@ export default {
 		},
 		createBars: function (type) {
 			// Grouped bar chart: https://observablehq.com/@d3/grouped-bar-chart
-			const { svg, height, width, sections_data } = this;
+			const {
+				svg,
+				height,
+				width,
+				sections_data,
+				barData,
+				groupKey,
+				keys,
+				humColorScale,
+				x0Bar,
+				x1Bar,
+				yBar,
+			} = this;
 
-			const data = sections_data.filter(
-				(d) =>
-					(d.section_name != "Pre-Chorus") &
-					(d.section_name != "Post-Chorus") &
-					(d.section_name != "Bridge") &
-					(d.section_name != "Interlude")
-			);
-			// Define grouping column (section) and keys (category)
-			const groupKey = "section_name";
-			const keys =
+			this.keys =
 				type == "proportion" ? ["Hum_pct", "Regular_pct"] : ["Hum", "Regular"];
 
 			// Define scales
-			const humColorScale = d3
+			this.humColorScale = d3
 				.scaleOrdinal()
-				.domain(keys)
+				.domain(this.keys)
 				.range(["#CE496A", "#4C6DBC"]);
 
-			// Main x axis
-			const x0 = d3
-				.scaleBand()
-				.domain(data.map((d) => d[groupKey]))
-				.rangeRound([0, width])
-				.padding(0.1);
-
 			// Subgroups
-			const x1 = d3.scaleBand().domain(keys).rangeRound([0, x0.bandwidth()]);
+			this.x1Bar = d3
+				.scaleBand()
+				.domain(this.keys)
+				.rangeRound([0, x0Bar.bandwidth()]);
+
 			// Y scale
-			const y = d3
+			this.yBar = d3
 				.scaleLinear()
-				.domain([0, d3.max(data, (d) => d3.max(keys, (key) => d[key]))])
+				.domain([0, d3.max(barData, (d) => d3.max(this.keys, (key) => d[key]))])
 				.nice()
 				.rangeRound([height, 0]);
 
@@ -573,58 +584,31 @@ export default {
 			svg
 				.append("g")
 				.attr("transform", "translate(0," + height + ")")
-				.call(d3.axisBottom(x0).ticks(0).tickSizeOuter(0))
+				.call(d3.axisBottom(x0Bar).ticks(0).tickSizeOuter(0))
 				.attr("class", "x axis stripplot barchart");
 
 			// Y Axis
-			const yAxis = d3
-				.axisLeft(y)
+			const yAxisBar = d3
+				.axisLeft(this.yBar)
 				.ticks(type == "proportion" ? 3 : 4, type == "proportion" ? "%" : null)
 				.tickSize(-width);
-			d3.select(".y.axis.stripplot")
+
+			svg
+				.select(".y.axis.stripplot")
 				.transition("y-axis-in")
-				.duration(2000)
-				.call(yAxis);
+				.duration(1000)
+				.call(yAxisBar);
 
-			if (d3.selectAll(".stripplot-bars").empty()) {
-				this.bars = svg
-					.append("g")
-					.selectAll("g")
-					.data(data)
-					.join("g")
-					.attr("transform", (d) => `translate(${x0(d[groupKey])},0)`)
-					.selectAll("rect")
-					.data((d) => keys.map((key) => ({ key, value: d[key] })))
-					.join("rect")
-					.attr("class", "stripplot-bars");
-
-				this.bars
-					.attr("y", y(0))
-					.data((d) => keys.map((key) => ({ key, value: d[key] })))
-					.join("rect")
-					.attr("x", (d) => x1(d.key))
-					.attr("width", x1.bandwidth())
-					.attr("fill", (d) => humColorScale(d.key))
-					.attr("opacity", 1)
-					.attr("height", 0)
-					.transition("createBars")
-					.duration(1000)
-					.delay(2000)
-					.attr("height", (d) => y(0) - y(d.value))
-					.attr("y", (d) => y(d.value));
-			} else {
-				this.bars
-					.data((d) => keys.map((key) => ({ key, value: d[key] })))
-					.join("rect")
-					.attr("x", (d) => x1(d.key))
-					.attr("width", x1.bandwidth())
-					.attr("fill", (d) => humColorScale(d.key))
-					.transition("modifyBars")
-					.duration(1000)
-					.attr("height", (d) => y(0) - y(d.value))
-					.attr("y", (d) => y(d.value))
-					.attr("opacity", 1);
-			}
+			this.bars
+				.data((d) => this.keys.map((key) => ({ key, value: d[key] })))
+				.join("rect")
+				.transition("modifyBars")
+				.duration(1000)
+				.delay(1000)
+				.attr("height", (d) => this.yBar(0) - this.yBar(d.value))
+				.attr("y", (d) => this.yBar(d.value))
+				.attr("opacity", 1);
+			// }
 		},
 		highlightBars: function (section) {
 			this.createBars("proportion");
@@ -655,7 +639,7 @@ export default {
 			const { svg, width, margin, lines, data } = this;
 			d3.select(".y.axis.stripplot").remove();
 			d3.select(".x.axis.stripplot").classed("barchart", false);
-			d3.selectAll(".stripplot-bars").remove();
+			d3.selectAll(".stripplot-bars").attr("height", 0);
 
 			// Y axis
 			svg
@@ -671,7 +655,7 @@ export default {
 			const computedStrokeWidthBig = (computedStrokeWidth * 5).toString();
 
 			// Margin conventions
-			const margin = { top: 30, right: 10, bottom: 30, left: 100 };
+			const margin = { top: 30, right: 10, bottom: 30, left: 120 };
 			const width = this.containerWidth - margin.left - margin.right;
 			const height = this.containerHeight - margin.top - margin.bottom;
 
@@ -786,6 +770,68 @@ export default {
 
 			this.lines = lines;
 			this.svg = svg;
+
+			// BARCHART
+			this.barData = this.sections_data.filter(
+				(d) =>
+					(d.section_name != "Pre-Chorus") &
+					(d.section_name != "Post-Chorus") &
+					(d.section_name != "Bridge") &
+					(d.section_name != "Interlude")
+			);
+			// Define grouping column (section) and keys (category)
+			this.groupKey = "section_name";
+			this.keys = ["Hum", "Regular"];
+
+			// Define scales
+			this.humColorScale = d3
+				.scaleOrdinal()
+				.domain(this.keys)
+				.range(["#CE496A", "#4C6DBC"]);
+
+			// Main x axis
+			this.x0Bar = d3
+				.scaleBand()
+				.domain(this.barData.map((d) => d[this.groupKey]))
+				.rangeRound([0, width])
+				.padding(0.1);
+
+			// Subgroups
+			this.x1Bar = d3
+				.scaleBand()
+				.domain(this.keys)
+				.rangeRound([0, this.x0Bar.bandwidth()]);
+			// Y scale
+			this.yBar = d3
+				.scaleLinear()
+				.domain([
+					0,
+					d3.max(this.barData, (d) => d3.max(this.keys, (key) => d[key])),
+				])
+				.nice()
+				.rangeRound([height, 0]);
+
+			const bars = svg
+				.append("g")
+				.selectAll("g")
+				.data(this.barData)
+				.join("g")
+				.attr(
+					"transform",
+					(d) => `translate(${this.x0Bar(d[this.groupKey])},0)`
+				)
+				.selectAll("rect")
+				.data((d) => this.keys.map((key) => ({ key, value: d[key] })))
+				.join("rect")
+				.attr("y", this.yBar(0))
+				.attr("x", (d) => this.x1Bar(d.key))
+				.attr("width", this.x1Bar.bandwidth())
+				.attr("fill", (d) => this.humColorScale(d.key))
+				.attr("opacity", 1)
+				.attr("height", 0)
+				.attr("class", "stripplot-bars");
+
+			this.bars = bars;
 		},
 		watchResize: function () {
 			d3.select("#stripplot > svg").remove();

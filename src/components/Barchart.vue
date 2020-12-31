@@ -28,7 +28,6 @@
 				greatest proportion of hums.
 			</p>
 		</div>
-		<!-- Last step should remain active even when .step.empty enters viewport -->
 		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
 			<p class="content">
 				When we organize these albums by their release year, it becomes evident
@@ -40,6 +39,19 @@
 				<span class="highlight-text blue">Indicud</span> and
 				<span class="highlight-text blue">Speedin' Bullet 2 Heaven</span>,
 				Cudi's albums have become progressively more hum-centric over time.
+			</p>
+		</div>
+		<div class="step" :class="{ active: 3 == currStep }" data-step-no="3">
+			<p class="content">
+				Although revealing, an album-by-album breakdown doesn't fully answer the
+				question of how often Kid Cudi hums. Sure, we know that Kid Cudi has
+				been humming more in recent years, and that his most recent album was
+				composed of 9% of hums.
+			</p>
+			<p class="content">
+				But there's much more complexity to our question, which can be
+				understood in part by an analysis of Kid Cudi's
+				<span class="has-text-weight-semibold">songs.</span>
 			</p>
 		</div>
 	</Scrollama>
@@ -108,6 +120,10 @@ export default {
 					"Speedin’ Bullet 2 Heaven",
 					"Indicud"
 				);
+			}
+			if (index == 3) {
+				this.sortBarsByYear();
+				this.unhighlightBars();
 			}
 		},
 		percentFormat: d3.format(".1%"),

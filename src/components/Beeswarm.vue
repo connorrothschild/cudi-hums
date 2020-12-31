@@ -25,9 +25,14 @@
 			</p>
 		</div>
 		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
-			<p>
-				For example, we can take a look at Kid Cudi's most recent album,
+			<p class="content">
+				For an example, we can take a look at Kid Cudi's most recent album,
 				<span class="highlight-text">Man on the Moon III: The Chosen</span>.
+			</p>
+			<p class="content">
+				You'll notice that most of the songs have a moderate proportion of hums
+				(between 0 and 10%), but that there are a few 'top songs' that far
+				outpace the rest.
 			</p>
 		</div>
 		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">

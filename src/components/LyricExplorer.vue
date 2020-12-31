@@ -125,7 +125,7 @@ export default {
 }
 
 .speech-bubble {
-	font-family: $font-serif;
+	// font-family: $font-serif;
 	position: relative;
 	background: $cudi-pink;
 	border-radius: 0.4em;

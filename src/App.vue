@@ -239,6 +239,7 @@ export default {
 body,
 text {
 	color: $white-alt;
+	font-family: $font-sans;
 }
 
 .title {
@@ -261,16 +262,10 @@ html {
 	background-color: $background;
 }
 
-text {
-	font-family: $font-sans;
-}
-
 /* SCROLLAMA */
 .graphic {
-	/* height: 50%; */
 	border: none;
 	background-color: $background;
-	/* font-size: 10rem; */
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -279,11 +274,11 @@ text {
 
 .step {
 	padding: 3%;
-	min-width: 300px;
+	// min-width: 300px;
 	width: 90%;
 	margin: 30rem auto; // 0 auto 50%
 	background-color: $white-alt;
-	border: 1px solid #cecece;
+	border-left: 2px solid #cecece;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -333,10 +328,7 @@ text {
 	pointer-events: none;
 }
 
-.step iframe {
-	pointer-events: auto;
-}
-
+.step iframe,
 .step button {
 	pointer-events: auto;
 }
@@ -347,7 +339,6 @@ text {
 	.scrollama-graphic {
 		flex: 2;
 		height: 95%;
-		// top: 10vh;
 	}
 	.scrollama-steps {
 		flex: 1;
@@ -355,34 +346,12 @@ text {
 
 	@media screen and (max-width: 968px) {
 		flex-direction: column;
-		align-items: center;
-		justify-content: center;
+		// align-items: center;
+		// justify-content: center;
 	}
 
 	margin-bottom: 500px;
 }
-
-.graphic {
-	height: 100%;
-	margin: 0 3rem;
-	// border: 1px solid #ccc;
-	font-size: 10rem;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-// .step {
-// 	padding: 20vh 0;
-// 	margin: 0 3rem;
-// 	margin-bottom: 10vh;
-// 	border: 1px solid #ccc;
-// 	display: flex;
-// 	align-items: center;
-// 	justify-content: center;
-// 	&:last-child {
-// 		margin-bottom: 0;
-// 	}
-// }
 
 // TEXT HIGHLIGHTING AND OTHER GLOBALs
 // no animation text-highlight
@@ -447,9 +416,7 @@ a[href] {
 }
 
 a {
-	color: $white-alt !important;
-	background: $cudi-blue;
-	padding: 5px;
-	border-radius: 5px;
+	color: #0091ea !important;
+	font-weight: 700;
 }
 </style>

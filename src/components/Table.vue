@@ -1,5 +1,5 @@
 <template>
-	<section class="container is-max-desktop p-2">
+	<section class="container is-max-desktop p-3" style="overflow-x: hidden">
 		<p
 			class="title mb-2 is-size-2 is-size-3-mobile has-text-weight-light has-text-centered"
 		>
@@ -142,13 +142,7 @@ export default {
 	methods: {
 		percentFormat: d3.format(".1%"),
 	},
-	watch: {
-		containerWidth: function (newVal, oldVal) {
-			console.log(this.containerWidth);
-			console.log(this.albumColumnWidth);
-			console.log(this.songColumnWidth);
-		},
-	},
+	watch: {},
 };
 </script>
 
