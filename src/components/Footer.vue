@@ -24,9 +24,17 @@
 							Notes and methodology
 						</h2>
 						<div class="has-text-weight-light methodology-section">
-							<p class="content">Lyric data came from the Genius API.</p>
+							<h2 class="mb-3 is-size-6 has-text-weight-semibold">
+								Methodology
+							</h2>
 							<p class="content">
-								To calculate the proportion of hums per song, I flagged all
+								Lyric data came from the
+								<a
+									href="https://docs.genius.com/"
+									target="_blank"
+									rel="noopener"
+									>Genius API</a
+								>. To calculate the proportion of hums per song, I flagged all
 								lyrics from Genius that were 'hum-like' in nature. (An exact
 								list of qualifying lyrics can be found
 								<a
@@ -34,16 +42,28 @@
 									target="_blank"
 									rel="noopener"
 									>here</a
-								>.) In certain cases, this may lead to overcounts (if Kid Cudi
-								actually says 'oh' rather than hums in a way that a transcriber
-								records as 'oh').
+								>.) I manually verified my list of hums with a random selection
+								of songs. This was not scientific; I simply listened to Kid
+								Cudi's music, flagged hum-like sounds, and found their
+								corresponding lyrics on Genius.
 							</p>
+							<h2 class="mb-3 is-size-6 has-text-weight-semibold">
+								Limitations
+							</h2>
 							<p class="content">
-								I manually verified my list of hums with a random selection of
-								songs. This was not scientific; I simply listened to music,
-								flagged hum-like sounds, and found their corresponding lyrics on
-								Genius.
+								In certain cases, my method may lead to overcounts (if Kid Cudi
+								actually says 'oh' rather than hums in a way that a transcriber
+								records as 'oh'). The only solution to this would be a more
+								selective list of 'hum-like' sounds (which would then undercount
+								hums), or a manual coding of hums, which would be
+								time-intensive. There may also be instances where I
+								<em>miss</em> hums, in particular when Kid Cudi uses them to
+								accompany the melody of his song. In these instances, hums are
+								not recorded on Genius and therefore omitted by my methodology.
 							</p>
+							<h2 class="mb-3 is-size-6 has-text-weight-semibold">
+								Tech & Code
+							</h2>
 							<p class="content">
 								Data retrieval and pre-processing was done in R; code is
 								available
@@ -80,7 +100,10 @@
 									target="_blank"
 									rel="noopener"
 									>@CL_Rothschild</a
-								>
+								>, or email
+								<a href="mailto:me@connorrothschild.com"
+									>me@connorrothschild.com</a
+								>.
 							</p>
 						</div>
 					</div>
@@ -98,7 +121,7 @@ export default {
 
 <style lang="scss">
 .is-gradient-reverse {
-	background-image: linear-gradient($background, $cudi-pink);
+	background-image: linear-gradient($background, #0a0a0a);
 }
 
 .max-width-600-container {
@@ -111,12 +134,12 @@ export default {
 	height: 136px;
 }
 
-.methodology-section {
-	a {
-		color: white !important;
-		background-color: transparent;
-		padding: 0;
-		text-decoration: underline;
-	}
-}
+// .methodology-section {
+// 	a {
+// 		color: white !important;
+// 		background-color: transparent;
+// 		padding: 0;
+// 		text-decoration: underline;
+// 	}
+// }
 </style>

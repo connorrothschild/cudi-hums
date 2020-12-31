@@ -50,7 +50,7 @@
 							class="card is-flex is-justify-content-center has-background-dark m-1"
 						>
 							<div
-								class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white font-serif"
+								class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white"
 							>
 								<p class="card-title">
 									{{ percentFormat(selectedSongData.percent_hums) }} hums
@@ -68,7 +68,7 @@
 							class="card is-flex is-justify-content-center has-background-dark m-1"
 						>
 							<div
-								class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white font-serif"
+								class="card-content is-flex is-flex-direction-column is-justify-content-space-around less-padding has-text-white"
 							>
 								<p class="card-title">#{{ selectedSongData.rank }}</p>
 								<p class="small">Out of 16 songs</p>

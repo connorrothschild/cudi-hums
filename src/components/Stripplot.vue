@@ -19,6 +19,7 @@
 				the beginnings and ends of each song, or somewhere in the middle?
 			</p>
 		</div>
+
 		<div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
 			<p class="content">
 				In this view, every line
@@ -51,6 +52,7 @@
 				is?), which is why the lengths of each bar are different.
 			</p>
 		</div>
+
 		<div class="step" :class="{ active: 2 == currStep }" data-step-no="2">
 			<p class="content">
 				For better reference, we can normalize the position of each lyric. Here,
@@ -64,6 +66,7 @@
 				>).
 			</p>
 		</div>
+
 		<div class="step" :class="{ active: 3 == currStep }" data-step-no="3">
 			<p class="content">
 				By focusing only on hum-type sounds, we can isolate the noises that Cudi
@@ -85,6 +88,7 @@
 				</p>
 			</div>
 		</div>
+
 		<div class="step" :class="{ active: 4 == currStep }" data-step-no="4">
 			<p class="content">
 				Different songs utilize hums in different ways. For example,
@@ -100,6 +104,7 @@
 				allow="encrypted-media"
 			></iframe>
 		</div>
+
 		<div class="step" :class="{ active: 5 == currStep }" data-step-no="5">
 			<p class="content">
 				While in other songs like
@@ -117,6 +122,7 @@
 				allow="encrypted-media"
 			></iframe>
 		</div>
+
 		<div class="step" :class="{ active: 6 == currStep }" data-step-no="6">
 			<p class="content">
 				And so, in some songs, Cudi interlaces hums alongside the rest of his
@@ -129,6 +135,7 @@
 				hum's exact usage depends on the demands of the song.
 			</p>
 		</div>
+
 		<div class="step" :class="{ active: 7 == currStep }" data-step-no="7">
 			<p class="content">
 				A final way to analyze the placement of Cudi hums is to look at their
@@ -137,18 +144,23 @@
 				<br />Because songs differ in length, this method allows us to search
 				for hums' locations in a standardized and consistent way.
 			</p>
+		</div>
+
+		<div class="step" :class="{ active: 8 == currStep }" data-step-no="8">
 			<p class="content">
 				Here, the height of each bar corresponds to the count of
 				<span class="highlight-text">hums</span> and
 				<span class="highlight-text blue">regular lyrics</span> within each song
 				section throughout Cudi's most recent album.
 			</p>
+			<p class="content">
+				Notice how lyrics are much more common in Kid Cudi's
+				<span class="has-text-weight-semibold">verses</span> and
+				<span class="has-text-weight-semibold">choruses</span>.
+			</p>
 		</div>
-		<div
-			class="step"
-			:class="{ active: (8 == currStep) | (9 == currStep) }"
-			data-step-no="8"
-		>
+
+		<div class="step" :class="{ active: 9 == currStep }" data-step-no="9">
 			<p class="content">
 				Rather than raw counts, which inflate lyrics in verses and choruses, we
 				can look at
@@ -160,8 +172,8 @@
 				<em>relative to how much time he spends in that section.</em>
 			</p>
 		</div>
-		<!-- Last step should remain active even when .step.empty enters viewport -->
-		<div class="step" :class="{ active: 9 == currStep }" data-step-no="9">
+
+		<div class="step" :class="{ active: 10 == currStep }" data-step-no="10">
 			<p class="content">
 				This view makes it clear that Kid Cudi has a clear preference for
 				humming at the beginnings and ends of each song.
@@ -284,29 +296,34 @@ export default {
 				this.highlightSong("She Knows This");
 			}
 			if (index == 6) {
-				if (direction == "up") {
-					this.undoBars();
-				}
-
 				this.stripByNormalizedPosition();
 				this.defaultHeight();
 			}
 			if (index == 7) {
 				// When does Cudi hum? Intro, chorus, bridge, outro
-				if (this.windowWidth > 968) {
-					if (direction == "down") {
-						this.groupBySection();
-					}
-				} else {
-					// Handle small screens differently
-					d3.selectAll(".stripplot-lines")
-						// .transition("mobile-remove")
-						// .duration(1000)
-						.attr("opacity", 0);
+				// if (this.windowWidth > 968) {
+				// if (direction == "down") {
+				this.groupBySection();
+				// }
+				// } else {
+				// 	// Handle small screens differently
+				// 	d3.selectAll(".stripplot-lines")
+				// 		// .transition("mobile-remove")
+				// 		// .duration(1000)
+				// 		.attr("opacity", 0);
+				// }
+				// this.createBars("counts");
+				if (direction == "up") {
+					this.undoBars();
+					this.groupBySection();
 				}
-				this.createBars("counts");
 			}
 			if (index == 8) {
+				// When does Cudi hum? Intro, chorus, bridge, outro
+				this.dropLines();
+				this.createBars("counts");
+			}
+			if (index == 9) {
 				if (direction == "down") {
 					this.createBars("proportion");
 				}
@@ -314,7 +331,7 @@ export default {
 					this.bars.transition("barOpacity").duration(1000).attr("opacity", 1);
 				}
 			}
-			if (index == 9) {
+			if (index == 10) {
 				// this.createBars("proportion");
 				this.highlightBars("Outro");
 			}
@@ -494,7 +511,7 @@ export default {
 			d3.select(".x.axis.stripplot").call(xAxis);
 		},
 		groupBySection: function () {
-			const { lines, svg, data, width, height, yScale } = this;
+			const { lines, svg, data, width, height, yScale, x0Bar } = this;
 
 			const sections_data_good = this.sections_data
 				.filter(
@@ -512,38 +529,52 @@ export default {
 				.range([0, this.width])
 				.padding(0.5);
 
+			// X Axis
+			d3.select(".x.axis.stripplot").remove();
+			svg
+				.append("g")
+				.attr("transform", "translate(0," + height + ")")
+				.call(d3.axisBottom(x0Bar).ticks(0).tickSizeOuter(0))
+				.attr("class", "x axis stripplot barchart");
+
 			// Width divided by 8 bars, plus padding between three of them
 			const barWidth = width / 8;
 			const barWidthPadding = barWidth * 0.3;
 			const xAxisBuffer = barWidth - barWidthPadding;
 
 			// Only run this if the lines exist
-			if (d3.select(".stripplot-lines").node().hasAttribute("x1")) {
-				lines
-					.transition("groupBySection")
-					.duration(1000)
-					.attr("x1", (d) =>
-						sections_data_good.includes(d.section_name)
-							? d.category == "Hum"
-								? newXScale(d.section_name)
-								: newXScale(d.section_name) + xAxisBuffer
-							: width * 1.1
-					)
-					.attr("x2", (d) =>
-						sections_data_good.includes(d.section_name)
-							? d.category == "Hum"
-								? newXScale(d.section_name) - xAxisBuffer
-								: newXScale(d.section_name)
-							: width * 1.1
-					)
-					.attr("y1", (d) => yScale(d.song_name))
-					.attr("y2", (d) => yScale(d.song_name))
-					.transition("dropLines")
-					.duration(1000)
-					.attr("y1", height)
-					.attr("y2", height)
-					.attr("opacity", 0);
-			}
+			// if (d3.select(".stripplot-lines").node().hasAttribute("x1")) {
+			lines
+				.transition("groupBySection")
+				.duration(1000)
+				.attr("x1", (d) =>
+					sections_data_good.includes(d.section_name)
+						? d.category == "Hum"
+							? newXScale(d.section_name)
+							: newXScale(d.section_name) + xAxisBuffer
+						: width * 1.1
+				)
+				.attr("x2", (d) =>
+					sections_data_good.includes(d.section_name)
+						? d.category == "Hum"
+							? newXScale(d.section_name) - xAxisBuffer
+							: newXScale(d.section_name)
+						: width * 1.1
+				)
+				.attr("y1", (d) => yScale(d.song_name))
+				.attr("y2", (d) => yScale(d.song_name))
+				.attr("opacity", 1);
+			// }
+		},
+		dropLines: function () {
+			const { lines, svg, height, x0Bar } = this;
+
+			lines
+				.transition("dropLines")
+				.duration(1000)
+				.attr("y1", height)
+				.attr("y2", height)
+				.attr("opacity", 0);
 		},
 		createBars: function (type) {
 			// Grouped bar chart: https://observablehq.com/@d3/grouped-bar-chart
@@ -582,14 +613,6 @@ export default {
 				.domain([0, d3.max(barData, (d) => d3.max(this.keys, (key) => d[key]))])
 				.nice()
 				.rangeRound([height, 0]);
-
-			// X Axis
-			d3.select(".x.axis.stripplot").remove();
-			svg
-				.append("g")
-				.attr("transform", "translate(0," + height + ")")
-				.call(d3.axisBottom(x0Bar).ticks(0).tickSizeOuter(0))
-				.attr("class", "x axis stripplot barchart");
 
 			// Y Axis
 			const yAxisBar = d3

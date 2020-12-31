@@ -383,10 +383,6 @@ rect {
 	place-items: center;
 }
 
-.font-serif {
-	font-family: $font-serif;
-}
-
 // For notification/warnings
 .is-fixed {
 	position: fixed !important;

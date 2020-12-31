@@ -10,7 +10,7 @@
 		>
 			Here, you can look at each of Kid Cudi's songs and their proportions of
 			hums. <br />Feel free to search for a specific song or album, or view a
-			song's lyrics by clicking on its name!
+			song's lyrics by clicking on its name.
 		</h2>
 		<div style="max-width: 1000px; margin: 0 auto">
 			<div
