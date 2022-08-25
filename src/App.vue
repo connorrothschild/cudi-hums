@@ -223,7 +223,7 @@ export default {
   },
   computed: {
     responsiveOffset() {
-      return this.windowWidth > 600 ? 0.5 : 0.8;
+      return this.windowWidth > 600 ? 0.8 : 0.8;
     },
   },
   created() {
