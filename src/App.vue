@@ -277,18 +277,19 @@ html {
   width: 90%;
   max-width: 568px;
   margin: 30rem auto; // 0 auto 50%
-  background-color: $white-alt;
-  border-left: 2px solid #cecece;
   display: flex;
   flex-direction: column;
-  color: #cecece;
   text-align: left;
   line-height: 1.5;
   font-weight: 300;
   z-index: 999;
   opacity: 0.85;
+
+  background: transparent;
+  color: white;
+  border: none;
+
   font-family: $font-sans;
-  border-radius: 0 5px 5px 0;
 
   .highlight-text {
     font-weight: 600;
@@ -298,22 +299,19 @@ html {
     display: inline;
     box-decoration-break: clone;
     background: $cudi-pink;
-    background: linear-gradient(to left, $white-alt 50%, $cudi-pink 50%) right;
+    background: linear-gradient(to left, transparent 50%, $cudi-pink 50%) right;
     background-size: 200% 1.2em;
     transition: 1s ease-out 200ms;
 
     &.blue {
       background: #4c6dbc;
-      background: linear-gradient(to left, $white-alt 50%, #4c6dbc 50%) right;
+      background: linear-gradient(to left, transparent 50%, #4c6dbc 50%) right;
       background-size: 200% 1.2em;
       transition: 1s ease-out 200ms;
     }
   }
 
   &.active {
-    color: #272727;
-    border-left: 4px solid $cudi-pink;
-    box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.12);
     opacity: 1;
     pointer-events: auto;
 
@@ -325,6 +323,24 @@ html {
 
   & p:not(:last-child) {
     margin-bottom: 1rem;
+  }
+  @media screen and (max-width: 968px) {
+    @supports (-webkit-backdrop-filter: blur(7px)) or (backdrop-filter: blur(7px)) {
+      background: rgba(0, 0, 0, .25);
+      color: white;
+      backdrop-filter: blur(10px) contrast(90%);
+      border-radius: 2px;
+
+      & .content {
+        text-shadow: 1px 1px 1px black;
+      }
+    }
+
+    @supports ((not (-webkit-backdrop-filter: blur(7px))) and (not (backdrop-filter: blur(7px)))) {
+          background: rgba(0, 0, 0, 0.9);
+          color: white;
+          border-radius: 2px;
+      }
   }
 }
 
