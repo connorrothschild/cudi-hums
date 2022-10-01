@@ -3,7 +3,7 @@ library(dplyr)
 library(tidytext)
 
 source(here::here('process/hums_list.R'))
-song_hums <- readr::read_csv(here::here('public/data/song_hums.csv'))
+song_hums <- final_songs # readr::read_csv(here::here('public/data/song_hums.csv'))
 
 #### AGGREGATE BY ALBUM
 album_hums <- song_hums %>%
@@ -23,10 +23,12 @@ major_albums <-
     "Man on the Moon: The End of Day",
     "A Kid Named Cudi",
     "KiD CuDi presents SATELLITE FLIGHT: The journey to Mother Moon",
-    "Man on the Moon III: The Chosen"
+    "Man on the Moon III: The Chosen",
+    "Entergalactic"
   )
 
-album_id_lookup <- song_hums %>% distinct(album_name, album_id)
+album_id_lookup <- song_hums %>% 
+  distinct(album_name, album_id)
 
 albums <- album_hums %>%
   filter(album_name %in% major_albums) %>%

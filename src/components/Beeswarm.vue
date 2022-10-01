@@ -28,7 +28,7 @@
     </div>
     <div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
       <p class="content">
-        For an example, we can take a look at Kid Cudi's most recent album,
+        For an example, we can take a look at Kid Cudi's 2020 album,
         <span class="highlight-text">Man on the Moon III: The Chosen</span>.
       </p>
       <p class="content">

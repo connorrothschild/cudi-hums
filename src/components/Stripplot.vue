@@ -157,7 +157,7 @@
         Here, the height of each bar corresponds to the count of
         <span class="highlight-text">hums</span> and
         <span class="highlight-text blue">regular lyrics</span> within each song
-        section throughout Cudi's most recent album.
+        section throughout Cudi's Man on the Moon III.
       </p>
       <p class="content">
         Notice how lyrics are much more common in Kid Cudi's
@@ -185,7 +185,7 @@
         humming at the beginnings and ends of each song.
       </p>
       <p class="content">
-        In the outros on his most recent album,
+        In the outros on Man on the Moon III,
         <span class="has-text-weight-semibold"
           >Cudi <span class="highlight-text">hummed</span> more often than he
           used <span class="highlight-text blue">regular words</span>.
@@ -847,15 +847,19 @@ export default {
           })
 
           .on("mouseout", function (d) {
+            const isCurrent = function (j) {
+              return self.currStep == 4 && j.song_name == 'The Void' ||
+                    self.currStep == 5 && j.song_name == 'She Knows This'
+            }
             d3.select(this)
               .style("stroke-width", computedStrokeWidthReg)
               .attr(
                 "y1",
-                (d) => self.yScale(d.song_name) + self.computedHeightBuffer
+                (d) => self.yScale(d.song_name) + (self.computedHeightBuffer * (isCurrent(d) ? 3 : 1))
               )
               .attr(
                 "y2",
-                (d) => self.yScale(d.song_name) - self.computedHeightBuffer
+                (d) => self.yScale(d.song_name) - (self.computedHeightBuffer * (isCurrent(d) ? 3 : 1))
               );
 
             tip.transition(100).style("opacity", 0);

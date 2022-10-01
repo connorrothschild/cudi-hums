@@ -395,9 +395,9 @@ html {
   background: $cudi-blue;
 }
 
-rect {
-  stroke: black;
-}
+// rect {
+//   stroke: black;
+// }
 
 .place-items-center {
   place-items: center;

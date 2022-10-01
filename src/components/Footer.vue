@@ -58,6 +58,7 @@
                 <em>miss</em> hums, in particular when Kid Cudi uses them to
                 accompany the melody of his song. In these instances, hums are
                 not recorded on Genius and therefore omitted by my methodology.
+                As of 2022, Genius stopped transcribing lyrics for "instrumental tracks" (even if the instrumental was composed of an artist's hums). This slightly changed the results from the project's last publication in 2019.
               </p>
               <h2 class="mb-3 is-size-6 has-text-weight-semibold">
                 Tech & Code

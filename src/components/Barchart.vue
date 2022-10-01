@@ -22,11 +22,11 @@
     </div>
     <div class="step" :class="{ active: 1 == currStep }" data-step-no="1">
       <p class="content">
-        Most recently, Kid Cudi came out with his 7th studio album,
+        Kid Cudi recently came out with his 7th studio album,
         <span class="highlight-text">Man on the Moon III: The Chosen</span>.
       </p>
       <p class="content">
-        Not only is this album Cudi's most recent, it also has the greatest
+        Not only is this album one of Cudi's best, it also has the greatest
         proportion of hums.
       </p>
     </div>
@@ -37,9 +37,8 @@
         developed.
       </p>
       <p class="content">
-        With the exceptions of
-        <span class="highlight-text blue">Indicud</span> and
-        <span class="highlight-text blue">Speedin' Bullet 2 Heaven</span>,
+        With the exceptions of his
+        <span class="highlight-text blue">middle three albums</span>,
         Cudi's albums have become progressively more hum-centric over time.
       </p>
     </div>
@@ -47,7 +46,7 @@
       <p class="content">
         Although revealing, an album-by-album breakdown doesn't fully answer the
         question of how often Kid Cudi hums. Sure, we know that Kid Cudi has
-        been humming more in recent years, and that his most recent album was
+        been humming more in recent years, and that Man on the Moon III was
         composed of 8% hums.
       </p>
       <p class="content">
@@ -120,7 +119,8 @@ export default {
         this.highlightBars(
           "Man on the Moon III: The Chosen",
           "Speedin’ Bullet 2 Heaven",
-          "Indicud"
+          "Indicud",
+          "KiD CuDi presents SATELLITE FLIGHT: The journey to Mother Moon"
         );
       }
       if (index == 3) {
@@ -137,7 +137,7 @@ export default {
         .attr("x", (d) => xScale(d.album_name))
         .attr("y", yScale(0))
         .attr("height", 0)
-        .attr("fill", (d) => colorScale(d.album_name))
+        .attr("fill", 'url(#linear-gradient)')
         .transition("transition")
         .duration(500)
         .attr("y", (d) => yScale(d.percent_hums))
@@ -174,6 +174,7 @@ export default {
       const { bars, svg, data, yScale, colorScale, width } = this;
 
       const yearData = [...data.sort((a, b) => d3.ascending(a.year, b.year))];
+      const labels = yearData.map((d) => d.percent_hums);
 
       const yearScale = d3
         .scaleBand()
@@ -219,10 +220,11 @@ export default {
           .selectAll("text")
           .data(yearData)
           .join("text")
-          .text((d) => d.year)
+          .text((d, i) => this.percentFormat(labels[i]))
           .attr("x", (d) => yearScale(d.year) + yearScale.bandwidth() / 2)
           .attr("y", 0)
           .attr("dy", "-.5em")
+          .attr('font-size', 12)
           .transition("textFallsFromTop")
           .duration(1000)
           .attr("y", (d) => yScale(d.percent_hums))
@@ -230,7 +232,7 @@ export default {
           .attr("stroke", "none");
       }
     },
-    highlightBars: function (album1, album2, album3) {
+    highlightBars: function (album1, album2, album3, album4) {
       const { bars } = this;
 
       bars
@@ -239,17 +241,28 @@ export default {
         .attr("fill", function (d) {
           if (d.album_name == album1) {
             return "#ce496a";
-          } else if ((d.album_name == album2) | (d.album_name == album3)) {
+          } else if (album2 && album3 && album4 && [album2, album3, album4].includes(d.album_name)) {
             return "#4C6DBC";
           } else {
-            return "#cecece";
+            return "url(#linear-gradient)";
+          }
+        })
+        .attr('opacity', function (d) {
+          if (d.album_name == album1) {
+            return 1;
+          } else if (album2 && album3 && album4 && [album2, album3, album4].includes(d.album_name)) {
+            return 1;
+          } else {
+            return 0.5;
           }
         });
     },
     unhighlightBars: function () {
       const { bars } = this;
 
-      bars.transition("unhighlightBars").duration(1000).attr("fill", "#cecece");
+      bars.transition("unhighlightBars").duration(1000)
+        .attr("fill", "url(#linear-gradient)")
+        .attr('opacity', 1);
     },
     setupChart: function () {
       const margin = { top: 30, right: 0, bottom: 100, left: 30 };
@@ -272,6 +285,26 @@ export default {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+      const defs = svg.append("defs");
+        // Linear gradient for bars
+      defs.append("linearGradient")
+        .attr("id", "linear-gradient")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .attr("x1", 0)
+        .attr("y1", 0)
+        .attr("x2", 0)
+        .attr("y2", height)
+
+      defs.select("linearGradient")
+        .append("stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "#ce496a");
+
+      defs.select("linearGradient")
+        .append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#4C6DBC");
+
       this.xScale = d3
         .scaleBand()
         .domain(data.map((d) => d.album_name))
@@ -287,7 +320,7 @@ export default {
       this.colorScale = d3
         .scaleOrdinal()
         .domain(data.map((d) => d.album_name))
-        .range(["#cecece"]); // #4C6DBC // d3.schemeSet3
+        .range(["url(#linear-gradient)"]); // #4C6DBC // d3.schemeSet3
 
       // X axis
       svg
@@ -351,6 +384,8 @@ export default {
         .data(data)
         .enter()
         .append("rect")
+        .attr("fill", 'url(#linear-gradient)')
+        .attr('opacity', 1)
         .attr("class", "barchart-bars");
 
       const self = this;

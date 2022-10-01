@@ -39,7 +39,7 @@
           16 million records in the US and won two Grammys. Although his primary
           genre is hip hop, he's also debuted an album at the top of Billboard's
           Rock charts. His most listened to song has amassed nearly
-          <em>500 million</em> listens on Spotify.
+          <em>650 million</em> listens on Spotify.
         </p>
         <div class="content">
           Don't recognize the name Scott Ramon Seguro Mescudi? You might know

@@ -20,20 +20,22 @@ saved_colnames <- colnames(final_hums_df)
 
 for (row in 1:nrow(songs)) {
   ### Grab song names and IDs
-  song_id <- songs[row, 'song_id']
-  song_name <- songs[row, 'song_name']
+  song_id <- 369644 # songs[row, 'song_id']
+  song_name <- 'Copernicus Landing' # songs[row, 'song_name']
   
   # Count frequency of hums
   lyrics <- tryCatch({
     get_lyrics_search(artist_name = "Kid Cudi",
                       song_title = song_name)
-  },
-  error = function(e)
-    e)
+  }, error = function(e) e)
   
   if (inherits(lyrics, "error") ||
       is.na(lyrics$section_name) || nrow(lyrics) == 0) {
     print(paste('Error in', song_name))
+    if (is.na(lyrics$line)) {
+      print(paste(song_name, 'is likely an instrumental'))
+    }
+    print(lyrics)
   } else {
     song_hums <- lyrics %>%
       # get lyric bigrams
@@ -73,7 +75,7 @@ final_hums_df <- final_hums_df %>%
 
 # final_hums_df %>% arrange(desc(n_hums))
 
-### Bring in song_art_image, song_release_data, song_pageviews, and album_name
+### Bring in song_art_image, song_release_data, song_pageviews, and album_name 
 for (row in 1:nrow(songs)) {
   # Grab song id
   song_id <- songs[row, 'song_id']
@@ -102,15 +104,15 @@ final_songs <-
     song_art_image_url,
     song_pageviews,
     everything()
-  ) %>% 
+  ) %>%
   # Replace problematic
   mutate(song_name = ifelse(song_id == 6250779, "Lovin’ Me", song_name))
 
 ## Add rankings per album
-final_songs <- final_songs %>% 
-  group_by(album_name) %>% 
-  arrange(desc(percent_hums)) %>% 
-  mutate(rank = row_number()) %>% 
+final_songs <- final_songs %>%
+  group_by(album_name) %>%
+  arrange(desc(percent_hums)) %>%
+  mutate(rank = row_number()) %>%
   ungroup()
 
 readr::write_csv(final_songs, here::here('public/data/song_hums.csv'))
